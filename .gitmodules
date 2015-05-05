@@ -1,0 +1,3 @@
+[submodule "pydrill/less/bootstrap"]
+	path = pydrill/less/bootstrap
+	url = git@github.com:twbs/bootstrap.git
