@@ -8,5 +8,5 @@ setup(
     url='https://github.com/alexandershov/pydrill',
     version='0.1.0',
     packages=find_packages(),
-    install_requires=['flask', 'Flask-SQLAlchemy'],
+    install_requires=['flask', 'Flask-SQLAlchemy', 'flask-redis'],
 )
