@@ -1,9 +1,7 @@
 import os
-
 os.environ['PYDRILL_CONFIG'] = os.path.join(os.path.dirname(__file__), 'pydrill.cfg')
 
 import pytest
-
 from flask import session
 
 from pydrill.app import app, redis_store

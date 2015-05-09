@@ -13,7 +13,7 @@ def question():
 @app.before_request
 def set_user():
     if 'user' not in session:
-        g.user = utils.create(request)
+        g.user = utils.create_user(request)
     else:
         g.user = utils.User(**session['user'])
 

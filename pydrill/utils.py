@@ -14,7 +14,7 @@ class User(object):
         self.teams = teams or []
 
 
-def create(request):
+def create_user(request):
     user = User(teams=get_teams(request))
     init_user_score(user)
     return user
@@ -46,6 +46,7 @@ def get_teams(request):
     platform = request.user_agent.platform
     if platform in _TEAM_BY_PLATFORM:
         teams.append(_TEAM_BY_PLATFORM[platform])
+
     if request.referrer is not None:
         host = urlparse(request.referrer).host
         if host in _TEAM_BY_REFERRER:
@@ -56,8 +57,8 @@ def get_teams(request):
 def get_team_scores(teams):
     team_scores = []
     for team in teams:
-        team_attrs = redis_store.hgetall(get_team_key(team))
-        team_scores.append(TeamScore(team=team, **team_attrs))
+        attrs = redis_store.hgetall(get_team_key(team))
+        team_scores.append(TeamScore(team=team, **attrs))
     return sorted(team_scores, key=lambda ts: ts.avg_score, reverse=True)
 
 
