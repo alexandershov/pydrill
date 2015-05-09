@@ -20,6 +20,10 @@ def create(request):
     return user
 
 
+def user_as_dict(user):
+    return {'id': user.id, 'score': user.score, 'teams': user.teams}
+
+
 _TEAM_BY_PLATFORM = {
     'iphone': 'Apple',
     'ipad': 'Apple',
