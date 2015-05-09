@@ -1,13 +1,29 @@
-from flask import g, render_template, request, session
+from flask import g, redirect, render_template, request, session, url_for
 
 from pydrill.app import app
 from pydrill import utils
+from pydrill.models import Answer, Question
 
 
-@app.route('/q/')
-def question():
-    app.logger.debug('session = {!r}'.format(session))
+# TODO: add seeds to urls, so question texts are randomly generated
+# TODO: change path to /ask/ maybe?
+@app.route('/q/<question_id>/')
+def ask_question(question_id):
+    question = Question.query.get(question_id)
+    app.logger.debug('session = {!r}, question = {!r}'.format(session, question))
     return render_template('question.html')
+
+
+# TODO: change path to /answer/ maybe?
+@app.route('/a/<question_id>/<answer_id>/', methods=['POST'])
+def accept_answer(question_id, answer_id):
+    question = Question.query.get(question_id)
+    answer = Answer.query.get(answer_id)
+    assert answer.question == question
+    if answer.is_correct:
+        utils.add_score(g.user, question.difficulty)
+    # TODO: redirect to next random new question
+    return redirect(url_for('ask_question', question_id='average'))
 
 
 @app.before_request

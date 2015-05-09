@@ -1,0 +1,9 @@
+text: What's the value of 1 / 2
+explanation: 0 in python2, 0.5 in python3
+difficulty: 1
+answers:
+  - is_correct: true
+    text: 0
+  - is_correct: false
+    text: 0.5
+
