@@ -71,7 +71,8 @@ def test_correct_answer(question_id, are_correct, scores):
             url = '/answer/average/{:d}/'.format(answer.id)
             check_post(c, url, STEVE)
             assert get_user().score == score
-            # TODO: check team scores
+            # TODO: do something better for checking team scores
+            assert redis_store.hgetall('team:Apple') == {'num_users': '1', 'score_sum': str(score)}
 
 
 # TODO: check that redirect is to the new question
