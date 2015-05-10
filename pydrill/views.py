@@ -6,16 +6,14 @@ from pydrill.models import Answer, Question
 
 
 # TODO: add seeds to urls, so question texts are randomly generated
-# TODO: change path to /ask/ maybe?
-@app.route('/q/<question_id>/')
+@app.route('/ask/<question_id>/')
 def ask_question(question_id):
     question = Question.query.get(question_id)
     app.logger.debug('session = {!r}, question = {!r}'.format(session, question))
     return render_template('question.html')
 
 
-# TODO: change path to /answer/ maybe?
-@app.route('/a/<question_id>/<answer_id>/', methods=['POST'])
+@app.route('/answer/<question_id>/<answer_id>/', methods=['POST'])
 def accept_answer(question_id, answer_id):
     question = Question.query.get(question_id)
     answer = Answer.query.get(answer_id)

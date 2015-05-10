@@ -39,7 +39,7 @@ def get_user():
 
 def test_new_user():
     with app.test_client() as c:
-        check_get(c, '/q/average/', PAUL)
+        check_get(c, '/ask/average/', PAUL)
         user = get_user()
         user_id = user.id
         assert len(user.id) == 36  # length of str(uuid4) is 36
@@ -49,7 +49,7 @@ def test_new_user():
         assert redis_store.hgetall('team:Hacker News') == {'num_users': '1', 'score_sum': '0'}
 
         # id doesn't change after the first visit
-        check_get(c, '/q/average/', PAUL)
+        check_get(c, '/ask/average/', PAUL)
         assert get_user().id == user_id
 
 
@@ -68,7 +68,7 @@ def test_correct_answer(question_id, are_correct, scores):
         question = models.Question.query.get(question_id)
         for is_correct, score in zip(are_correct, scores):
             answer = get_answer(question, is_correct)
-            url = '/a/average/{:d}/'.format(answer.id)
+            url = '/answer/average/{:d}/'.format(answer.id)
             check_post(c, url, STEVE)
             assert get_user().score == score
             # TODO: check team scores
