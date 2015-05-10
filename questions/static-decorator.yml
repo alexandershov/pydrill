@@ -1,0 +1,15 @@
+text: |
+  class Point(object):
+      @my_decorator
+      @staticmethod
+      def get_n():
+          return 3
+explanation: |
+  @staticmethod should be the outermost decorator
+difficulty: 2
+answers:
+  - is_correct: true
+    text: TypeError
+  - is_correct: false
+    text: 3
+

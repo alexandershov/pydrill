@@ -48,7 +48,7 @@ def get_teams(request):
         teams.append(_TEAM_BY_PLATFORM[platform])
 
     if request.referrer is not None:
-        host = urlparse(request.referrer).host
+        host = urlparse(request.referrer).hostname
         if host in _TEAM_BY_REFERRER:
             teams.append(_TEAM_BY_REFERRER[host])
     return teams

@@ -38,3 +38,10 @@ def set_user():
 def save_user(response):
     session['user'] = utils.user_as_dict(g.user)
     return response
+
+
+# FIXME: find out how to see error messages during testing and remove this handler
+@app.errorhandler(500)
+def internal_error(error):
+    print(error)
+    return 'Internal Error', 500
