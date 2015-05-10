@@ -62,6 +62,7 @@ def test_questions():
     ('average', [True, True], [1, 1]),
     ('average', [False, True], [0, 0]),
 ])
+# TODO: more specific name
 def test_correct_answer(question_id, are_correct, scores):
     assert len(are_correct) == len(scores)
     with app.test_client() as c:
@@ -75,8 +76,15 @@ def test_correct_answer(question_id, are_correct, scores):
             assert redis_store.hgetall('team:Apple') == {'num_users': '1', 'score_sum': str(score)}
 
 
-# TODO: check that redirect is to the new question
 # TODO: check that when there's no new question redirect is to the random question
+def test_redirects():
+    with app.test_client() as c:
+        # TODO: remove duplication when POSTing questions with test_correct_answer
+        question = models.Question.query.get('average')
+        url = '/answer/average/{:d}/'.format(get_correct_answer(question).id)
+        rv = check_post(c, url, STEVE)
+        # TODO: check full redirect path
+        assert rv.location.endswith('/ask/static-decorator/')
 
 
 STEVE = dict(environ_base={'HTTP_USER_AGENT': MAC_USER_AGENT,

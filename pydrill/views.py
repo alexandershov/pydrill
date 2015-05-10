@@ -1,4 +1,5 @@
 from flask import g, redirect, render_template, request, session, url_for
+from sqlalchemy import func
 
 from pydrill.app import app
 from pydrill import utils
@@ -21,8 +22,7 @@ def accept_answer(question_id, answer_id):
     if answer.is_correct and question.id not in g.user.answered:
         utils.add_score(g.user, question.difficulty)
     g.user.answered.add(question.id)
-    # TODO: redirect to next random new question
-    return redirect(url_for('ask_question', question_id='average'))
+    return redirect(url_for('ask_question', question_id=get_next_question().id))
 
 
 @app.before_request
@@ -44,3 +44,11 @@ def save_user(response):
 def internal_error(error):
     print(error)
     return 'Internal Error', 500
+
+
+# TODO: use user score to find the suitable (by difficulty) question
+def get_next_question():
+    return (Question.query
+            .filter(~Question.id.in_(g.user.answered))
+            .order_by(func.random())
+            .first())
