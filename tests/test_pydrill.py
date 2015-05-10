@@ -66,12 +66,8 @@ def test_questions():
 def test_correct_answer(question_id, are_correct, scores):
     assert len(are_correct) == len(scores)
     with app.test_client() as c:
-        question = models.Question.query.get(question_id)
         for is_correct, score in zip(are_correct, scores):
-            answer = get_answer(question, is_correct)
-            url = '/answer/average/{:d}/'.format(answer.id)
-            check_post(c, url, STEVE)
-            assert get_user().score == score
+            answer_question(c, question_id, is_correct=is_correct, user=STEVE)
             # TODO: do something better for checking team scores
             assert redis_store.hgetall('team:Apple') == {'num_users': '1', 'score_sum': str(score)}
 
@@ -79,11 +75,7 @@ def test_correct_answer(question_id, are_correct, scores):
 # TODO: check that when there's no new question redirect is to the random question
 def test_redirects():
     with app.test_client() as c:
-        # TODO: remove duplication when POSTing questions with test_correct_answer
-        question = models.Question.query.get('average')
-        url = '/answer/average/{:d}/'.format(get_correct_answer(question).id)
-        rv = check_post(c, url, STEVE)
-        # TODO: check full redirect path
+        rv = answer_question(c, 'average', is_correct=True, user=STEVE)
         assert rv.location.endswith('/ask/static-decorator/')
 
 
@@ -119,3 +111,11 @@ def get_correct_answer(question):
 
 def get_any_wrong_answer(question):
     return get_answer(question, is_correct=False)
+
+
+# TODO: avoid passing client to all functions
+def answer_question(client, question_id, is_correct, user):
+    question = models.Question.query.get(question_id)
+    url = '/answer/{}/{:d}/'.format(question_id, get_answer(question, is_correct).id)
+    rv = check_post(client, url, user)
+    return rv
