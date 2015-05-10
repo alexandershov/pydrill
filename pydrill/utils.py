@@ -12,7 +12,7 @@ class User(object):
         self.id = id or str(uuid.uuid4())
         self.score = score
         self.teams = teams or []
-        self.answered = answered or []  # TODO: better name?
+        self.answered = set(answered or [])  # TODO: better name?
 
 
 def create_user(request):
@@ -22,7 +22,8 @@ def create_user(request):
 
 
 def user_as_dict(user):
-    return {'id': user.id, 'score': user.score, 'teams': user.teams, 'answered': user.answered}
+    return {'id': user.id, 'score': user.score, 'teams': user.teams,
+            'answered': list(user.answered)}  # set is not JSON serializable
 
 
 _TEAM_BY_PLATFORM = {
