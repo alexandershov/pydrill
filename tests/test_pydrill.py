@@ -57,23 +57,23 @@ def test_questions():
     assert models.Question.query.count() == 2
 
 
-def test_correct_answer():
+@pytest.mark.parametrize('question_id, are_correct, scores', [
+    # only the first correct answer can increase the score
+    ('average', [True, True], [1, 1]),
+    ('average', [False, True], [0, 0]),
+])
+def test_correct_answer(question_id, are_correct, scores):
+    assert len(are_correct) == len(scores)
     with app.test_client() as c:
-        check_get(c, '/q/average/', STEVE)
-        question = models.Question.query.get('average')
-        correct = get_correct_answer(question)
-        url = '/a/average/{:d}/'.format(correct.id)
-        check_post(c, url, STEVE)
-        assert get_user().score == 1
-
-        # only the first answer can increase the score
-        # TODO: test that first wrong, second correct doesn't increase score as well
-        check_post(c, url, STEVE)
-        assert get_user().score == 1
-        # TODO: check team scores
+        question = models.Question.query.get(question_id)
+        for is_correct, score in zip(are_correct, scores):
+            answer = get_answer(question, is_correct)
+            url = '/a/average/{:d}/'.format(answer.id)
+            check_post(c, url, STEVE)
+            assert get_user().score == score
+            # TODO: check team scores
 
 
-# TODO: test that answering the same question twice correctly increases score only once
 # TODO: check that redirect is to the new question
 # TODO: check that when there's no new question redirect is to the random question
 
@@ -100,5 +100,13 @@ def assert_same_items(xs, ys):
     assert sorted(xs) == sorted(ys)
 
 
+def get_answer(question, is_correct):
+    return question.answers.filter_by(is_correct=is_correct).first()
+
+
 def get_correct_answer(question):
-    return question.answers.filter_by(is_correct=True).first()
+    return get_answer(question, is_correct=True)
+
+
+def get_any_wrong_answer(question):
+    return get_answer(question, is_correct=False)
