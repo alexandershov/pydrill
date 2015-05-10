@@ -62,9 +62,14 @@ def test_correct_answer():
         check_get(c, '/q/average/', STEVE)
         question = models.Question.query.get('average')
         correct = get_correct_answer(question)
-        check_post(c, '/a/average/{:d}/'.format(correct.id), STEVE)
-        user = get_user()
-        assert user.score == 1
+        url = '/a/average/{:d}/'.format(correct.id)
+        check_post(c, url, STEVE)
+        assert get_user().score == 1
+
+        # only the first answer can increase the score
+        # TODO: test that first wrong, second correct doesn't increase score as well
+        check_post(c, url, STEVE)
+        assert get_user().score == 1
         # TODO: check team scores
 
 
@@ -81,7 +86,6 @@ PAUL = dict(environ_base={'HTTP_USER_AGENT': LINUX_USER_AGENT,
 
 def check_get(client, url, user):
     rv = client.get(url, **user)
-    print(rv.data)
     assert rv.status_code == 200
     return rv
 

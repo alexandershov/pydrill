@@ -8,10 +8,11 @@ from pydrill.app import redis_store
 
 
 class User(object):
-    def __init__(self, id=None, score=0, teams=None):
+    def __init__(self, id=None, score=0, teams=None, answered=None):
         self.id = id or str(uuid.uuid4())
         self.score = score
         self.teams = teams or []
+        self.answered = answered or []  # TODO: better name?
 
 
 def create_user(request):
@@ -21,7 +22,7 @@ def create_user(request):
 
 
 def user_as_dict(user):
-    return {'id': user.id, 'score': user.score, 'teams': user.teams}
+    return {'id': user.id, 'score': user.score, 'teams': user.teams, 'answered': user.answered}
 
 
 _TEAM_BY_PLATFORM = {

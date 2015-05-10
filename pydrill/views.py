@@ -20,8 +20,9 @@ def accept_answer(question_id, answer_id):
     question = Question.query.get(question_id)
     answer = Answer.query.get(answer_id)
     assert answer.question == question
-    if answer.is_correct:
+    if answer.is_correct and question.id not in g.user.answered:
         utils.add_score(g.user, question.difficulty)
+    g.user.answered.append(question.id)
     # TODO: redirect to next random new question
     return redirect(url_for('ask_question', question_id='average'))
 
