@@ -48,7 +48,10 @@ def internal_error(error):
 
 # TODO: use user score to find the suitable (by difficulty) question
 def get_next_question():
-    return (Question.query
-            .filter(~Question.id.in_(g.user.answered))
-            .order_by(func.random())
-            .first())
+    question = (Question.query
+                .filter(~Question.id.in_(g.user.answered))
+                .order_by(func.random())
+                .first())
+    if question is None:  # user answered every question, just give them a random one
+        question = Question.query.order_by(func.random()).first()
+    return question

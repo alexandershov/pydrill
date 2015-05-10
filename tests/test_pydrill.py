@@ -72,11 +72,18 @@ def test_correct_answer(question_id, are_correct, scores):
             assert redis_store.hgetall('team:Apple') == {'num_users': '1', 'score_sum': str(score)}
 
 
-# TODO: check that when there's no new question redirect is to the random question
-def test_redirects():
+@pytest.mark.parametrize('question_ids, redirect_path', [
+    (['average'], '/ask/static-decorator/'),
+    (['static-decorator'], '/ask/average/'),
+    (['average', 'static-decorator'], None),  # no unanswered question, any path will do
+])
+def test_redirects(question_ids, redirect_path):
     with app.test_client() as c:
-        rv = answer_question(c, 'average', is_correct=True, user=STEVE)
-        assert rv.location.endswith('/ask/static-decorator/')
+        for i, question_id in enumerate(question_ids):
+            rv = answer_question(c, question_id, is_correct=True, user=STEVE)
+            if i == len(question_ids) - 1:
+                if redirect_path is not None:
+                    assert rv.location.endswith(redirect_path)
 
 
 STEVE = dict(environ_base={'HTTP_USER_AGENT': MAC_USER_AGENT,
