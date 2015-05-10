@@ -33,19 +33,24 @@ def flush_sql_db():
     models.load_questions(questions_dir)
 
 
+def get_user():
+    return User(**session['user'])
+
+
 def test_new_user():
     with app.test_client() as c:
-        check_get(c, '/q/average/', STEVE)
-        user = User(**session['user'])
+        check_get(c, '/q/average/', PAUL)
+        user = get_user()
         user_id = user.id
         assert len(user.id) == 36  # length of str(uuid4) is 36
         assert user.score == 0
-        assert user.teams == ['Apple']
-        assert redis_store.hgetall('team:Apple') == {'num_users': '1', 'score_sum': '0'}
+        assert_same_items(user.teams, ['Linux', 'Hacker News'])
+        assert redis_store.hgetall('team:Linux') == {'num_users': '1', 'score_sum': '0'}
+        assert redis_store.hgetall('team:Hacker News') == {'num_users': '1', 'score_sum': '0'}
 
-        # id is given once
-        check_get(c, '/q/average/', STEVE)
-        assert User(**session['user']).id == user_id
+        # id doesn't change after the first visit
+        check_get(c, '/q/average/', PAUL)
+        assert get_user().id == user_id
 
 
 def test_questions():
@@ -54,13 +59,11 @@ def test_questions():
 
 def test_correct_answer():
     with app.test_client() as c:
-        # TODO: DRY it up with test_new_user
         check_get(c, '/q/average/', STEVE)
         question = models.Question.query.get('average')
-        correct = question.answers.filter_by(is_correct=True).first()
+        correct = get_correct_answer(question)
         check_post(c, '/a/average/{:d}/'.format(correct.id), STEVE)
-        # TODO: use g.user maybe?
-        user = User(**session['user'])
+        user = get_user()
         assert user.score == 1
         # TODO: check team scores
 
@@ -87,3 +90,11 @@ def check_post(client, url, user):
     rv = client.post(url, **user)
     assert rv.status_code == 302
     return rv
+
+
+def assert_same_items(xs, ys):
+    assert sorted(xs) == sorted(ys)
+
+
+def get_correct_answer(question):
+    return question.answers.filter_by(is_correct=True).first()
