@@ -75,7 +75,7 @@ def test_correct_answer(question_id, are_correct, scores):
     (['static-decorator'], r'/ask/average/(\d+)/$'),
     (['average', 'static-decorator'], r'.*'),  # no unanswered question, any path will do
 ])
-def test_redirects(question_ids, redirect_path_re):
+def test_answer_redirects(question_ids, redirect_path_re):
     with app.test_client() as c:
         for i, question_id in enumerate(question_ids):
             rv = answer_question(c, question_id, is_correct=True, user=STEVE)
@@ -132,3 +132,5 @@ def test_ask_without_seed():
     with app.test_client() as c:
         rv = c.get('/ask/average/', **PAUL)
         assert rv.status_code == 302
+        # TODO: DRY it up with test_answer_redirects
+        assert re.search(r'/ask/average/(\d+)/', rv.location)
