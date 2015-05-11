@@ -1,7 +1,7 @@
 from glob import glob
 import os
 import yaml
-from pydrill.app import db
+from pydrill import db
 
 
 class Question(db.Model):

@@ -3,7 +3,7 @@ from sqlalchemy import func
 
 from werkzeug.routing import BaseConverter
 
-from pydrill.app import app, db
+from pydrill import app, db
 from pydrill import utils
 from pydrill.models import Answer, Question
 

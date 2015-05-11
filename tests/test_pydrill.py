@@ -5,9 +5,7 @@ os.environ['PYDRILL_CONFIG'] = os.path.join(os.path.dirname(__file__), 'pydrill.
 import pytest
 from flask import session
 
-from pydrill.app import app, db, redis_store
-# TODO: how can we import models/views automatically?
-from pydrill import views  # noqa
+from pydrill import app, db, redis_store
 from pydrill import models
 from pydrill.utils import User
 

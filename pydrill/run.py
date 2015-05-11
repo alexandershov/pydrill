@@ -1,5 +1,4 @@
-from pydrill.app import app
-from pydrill import views  # noqa
+from pydrill import app
 
 
 if __name__ == '__main__':

@@ -4,7 +4,7 @@ from collections import namedtuple
 from urlparse import urlparse
 import uuid
 
-from pydrill.app import redis_store
+from pydrill import redis_store
 
 
 class User(object):
