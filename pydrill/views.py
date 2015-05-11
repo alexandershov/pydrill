@@ -76,16 +76,6 @@ def execute_redis_pipeline(response):
     return response
 
 
-# FIXME: find out how to see error messages during testing and remove this handler
-@app.errorhandler(500)
-def internal_error(error):
-    import traceback
-    import sys
-
-    traceback.print_exception(*sys.exc_info())
-    return 'Internal Error', 500
-
-
 # TODO: use user score to find the suitable (by difficulty) question
 def get_next_question():
     question = (Question.query

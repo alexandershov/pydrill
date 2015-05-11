@@ -45,11 +45,16 @@ def flush_redis_db():
 
 
 @pytest.fixture(autouse=True, scope='session')
-def flush_sql_db():
+def create_sql_db():
     db.drop_all()
     db.create_all()
     questions_dir = os.path.join(os.path.dirname(__file__), 'questions')
     models.load_questions(questions_dir)
+
+
+@pytest.fixture(autouse=True)
+def run_app_in_testing_mode():
+    app.config['TESTING'] = True
 
 
 @pytest.fixture()
