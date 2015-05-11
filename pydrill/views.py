@@ -1,28 +1,54 @@
 from flask import g, redirect, render_template, request, session, url_for
 from sqlalchemy import func
 
-from pydrill.app import app
+from werkzeug.routing import BaseConverter
+
+from pydrill.app import app, db
 from pydrill import utils
 from pydrill.models import Answer, Question
 
 
+class ModelConverter(BaseConverter):
+    model = None  # redefine it in subclasses
+
+    def to_python(self, value):
+        return self.model.query.get(value)
+
+    def to_url(self, value):
+        return value.id
+
+
+class QuestionConverter(ModelConverter):
+    model = Question
+
+
+class AnswerConverter(ModelConverter):
+    model = Answer
+
+
+app.url_map.converters['Question'] = QuestionConverter
+app.url_map.converters['Answer'] = AnswerConverter
+
+
 # TODO: add seeds to urls, so question texts are randomly generated
-@app.route('/ask/<question_id>/')
-def ask_question(question_id):
-    question = Question.query.get(question_id)
+@app.route('/ask/<Question:question>/')
+def ask_question(question):
+    # TODO: figure out how to avoid db.session and make ModelConverter to work with lazy='dynamic'
+    db.session.add(question)
     app.logger.debug('session = {!r}, question = {!r}'.format(session, question))
     return render_template('question.html')
 
 
-@app.route('/answer/<question_id>/<answer_id>/', methods=['POST'])
-def accept_answer(question_id, answer_id):
-    question = Question.query.get(question_id)
-    answer = Answer.query.get(answer_id)
+@app.route('/answer/<Question:question>/<Answer:answer>/', methods=['POST'])
+def accept_answer(question, answer):
+    # TODO: figure out how to avoid db.session and make ModelConverter to work with lazy='dynamic'
+    db.session.add(question)
+    db.session.add(answer)
     assert answer.question == question
     if answer.is_correct and question.id not in g.user.answered:
         utils.add_score(g.user, question.difficulty)
     g.user.answered.add(question.id)
-    return redirect(url_for('ask_question', question_id=get_next_question().id))
+    return redirect(url_for('ask_question', question=get_next_question()))
 
 
 @app.before_request
@@ -42,7 +68,10 @@ def save_user(response):
 # FIXME: find out how to see error messages during testing and remove this handler
 @app.errorhandler(500)
 def internal_error(error):
-    print(error)
+    import traceback
+    import sys
+
+    traceback.print_exception(*sys.exc_info())
     return 'Internal Error', 500
 
 
