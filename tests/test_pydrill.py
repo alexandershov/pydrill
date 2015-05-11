@@ -26,8 +26,7 @@ def flush_redis_db():
 def flush_sql_db():
     db.drop_all()
     db.create_all()
-    tests_dir = os.path.dirname(__file__)
-    questions_dir = os.path.join(os.path.dirname(tests_dir), 'questions')
+    questions_dir = os.path.join(os.path.dirname(__file__), 'questions')
     models.load_questions(questions_dir)
 
 
