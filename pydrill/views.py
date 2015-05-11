@@ -62,7 +62,7 @@ def accept_answer(question, answer, seed):
 @app.before_request
 def set_globals():
     # set g.redis_pipeline first because it's used by utils.create_user
-    g.redis_pipeline = redis_store.pipeline()
+    g.redis_pipeline = redis_store.pipeline(transaction=False)
     if 'user' not in session:
         g.user = utils.create_user(request)
     else:
