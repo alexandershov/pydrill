@@ -3,7 +3,7 @@ from sqlalchemy import func
 
 from werkzeug.routing import BaseConverter
 
-from pydrill import app, db
+from pydrill import app, db, redis_store
 from pydrill import utils
 from pydrill.models import Answer, Question
 
@@ -52,7 +52,9 @@ def accept_answer(question, answer):
 
 
 @app.before_request
-def set_user():
+def set_globals():
+    # set g.redis_pipeline first because it's used by utils.create_user
+    g.redis_pipeline = redis_store.pipeline()
     if 'user' not in session:
         g.user = utils.create_user(request)
     else:
@@ -60,8 +62,9 @@ def set_user():
 
 
 @app.after_request
-def save_user(response):
+def execute_redis_pipeline(response):
     session['user'] = utils.user_as_dict(g.user)
+    g.redis_pipeline.execute()
     return response
 
 

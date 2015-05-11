@@ -4,6 +4,7 @@ from collections import namedtuple
 from urlparse import urlparse
 import uuid
 
+from flask import g
 from pydrill import redis_store
 
 
@@ -59,7 +60,7 @@ def get_teams(request):
 def get_team_scores(teams):
     team_scores = []
     for team in teams:
-        attrs = redis_store.hgetall(get_team_key(team))
+        attrs = g.redis_pipeline.hgetall(get_team_key(team))
         team_scores.append(TeamScore(team=team, **attrs))
     return sorted(team_scores, key=lambda ts: ts.avg_score, reverse=True)
 
@@ -70,17 +71,15 @@ def get_team_key(name):
 
 def init_user_score(user):
     add_score(user, 0)
-    # TODO: use redis pipelining
     for team in user.teams:
-        redis_store.hincrby(get_team_key(team), 'num_users', 1)
+        g.redis_pipeline.hincrby(get_team_key(team), 'num_users', 1)
 
 
 def add_score(user, delta):
     user.score += delta
-    redis_store.zincrby('user_scores', user.id, delta)
-    # TODO: use redis pipelining
+    g.redis_pipeline.zincrby('user_scores', user.id, delta)
     for team in user.teams:
-        redis_store.hincrby(get_team_key(team), 'score_sum', delta)
+        g.redis_pipeline.hincrby(get_team_key(team), 'score_sum', delta)
 
 
 def get_rank(user):
