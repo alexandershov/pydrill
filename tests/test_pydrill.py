@@ -1,4 +1,5 @@
 import os
+import re
 
 os.environ['PYDRILL_CONFIG'] = os.path.join(os.path.dirname(__file__), 'pydrill.cfg')
 
@@ -36,7 +37,7 @@ def get_user():
 
 def test_new_user():
     with app.test_client() as c:
-        check_get(c, '/ask/average/', PAUL)
+        check_get(c, '/ask/average/100/', PAUL)
         user = get_user()
         user_id = user.id
         assert len(user.id) == 36  # length of str(uuid4) is 36
@@ -46,7 +47,7 @@ def test_new_user():
         assert redis_store.hgetall('team:Hacker News') == {'num_users': '1', 'score_sum': '0'}
 
         # id doesn't change after the first visit
-        check_get(c, '/ask/average/', PAUL)
+        check_get(c, '/ask/average/100/', PAUL)
         assert get_user().id == user_id
 
 
@@ -69,18 +70,18 @@ def test_correct_answer(question_id, are_correct, scores):
             assert redis_store.hgetall('team:Apple') == {'num_users': '1', 'score_sum': str(score)}
 
 
-@pytest.mark.parametrize('question_ids, redirect_path', [
-    (['average'], '/ask/static-decorator/'),
-    (['static-decorator'], '/ask/average/'),
-    (['average', 'static-decorator'], None),  # no unanswered question, any path will do
+@pytest.mark.parametrize('question_ids, redirect_path_re', [
+    (['average'], r'/ask/static-decorator/(\d+)/$'),
+    (['static-decorator'], r'/ask/average/(\d+)/$'),
+    (['average', 'static-decorator'], r'.*'),  # no unanswered question, any path will do
 ])
-def test_redirects(question_ids, redirect_path):
+def test_redirects(question_ids, redirect_path_re):
     with app.test_client() as c:
         for i, question_id in enumerate(question_ids):
             rv = answer_question(c, question_id, is_correct=True, user=STEVE)
             if i == len(question_ids) - 1:
-                if redirect_path is not None:
-                    assert rv.location.endswith(redirect_path)
+                # TODO: check that absolute url is correct
+                assert re.search(redirect_path_re, rv.location)
 
 
 STEVE = dict(environ_base={'HTTP_USER_AGENT': MAC_USER_AGENT,
@@ -120,6 +121,14 @@ def get_any_wrong_answer(question):
 # TODO: avoid passing client to all functions
 def answer_question(client, question_id, is_correct, user):
     question = models.Question.query.get(question_id)
-    url = '/answer/{}/{:d}/'.format(question_id, get_answer(question, is_correct).id)
+    url = '/answer/{}/{:d}/100/'.format(question_id, get_answer(question, is_correct).id)
     rv = check_post(client, url, user)
     return rv
+
+
+def test_ask_without_seed():
+    # TODO: factor out with app.test_client, subclass it,
+    # TODO: pass user (e.g PAUL) to its __init__ method and handle seeds etc
+    with app.test_client() as c:
+        rv = c.get('/ask/average/', **PAUL)
+        assert rv.status_code == 302

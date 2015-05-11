@@ -1,3 +1,4 @@
+from random import SystemRandom
 from flask import g, redirect, render_template, request, session, url_for
 from sqlalchemy import func
 
@@ -6,6 +7,9 @@ from werkzeug.routing import BaseConverter
 from pydrill import app, db, redis_store
 from pydrill import utils
 from pydrill.models import Answer, Question
+
+
+urandom = SystemRandom()
 
 
 class ModelConverter(BaseConverter):
@@ -30,17 +34,21 @@ app.url_map.converters['Question'] = QuestionConverter
 app.url_map.converters['Answer'] = AnswerConverter
 
 
-# TODO: add seeds to urls, so question texts are randomly generated
 @app.route('/ask/<Question:question>/')
-def ask_question(question):
+def ask_question_with_random_seed(question):
+    return redirect(url_for('ask_question', question=question, seed=make_seed()))
+
+
+@app.route('/ask/<Question:question>/<seed>/')
+def ask_question(question, seed):
     # TODO: figure out how to avoid db.session and make ModelConverter to work with lazy='dynamic'
     db.session.add(question)
     app.logger.debug('session = {!r}, question = {!r}'.format(session, question))
     return render_template('question.html')
 
 
-@app.route('/answer/<Question:question>/<Answer:answer>/', methods=['POST'])
-def accept_answer(question, answer):
+@app.route('/answer/<Question:question>/<Answer:answer>/<seed>/', methods=['POST'])
+def accept_answer(question, answer, seed):
     # TODO: figure out how to avoid db.session and make ModelConverter to work with lazy='dynamic'
     db.session.add(question)
     db.session.add(answer)
@@ -48,7 +56,7 @@ def accept_answer(question, answer):
     if answer.is_correct and question.id not in g.user.answered:
         utils.add_score(g.user, question.difficulty)
     g.user.answered.add(question.id)
-    return redirect(url_for('ask_question', question=get_next_question()))
+    return redirect(url_for('ask_question', question=get_next_question(), seed=make_seed()))
 
 
 @app.before_request
@@ -87,3 +95,7 @@ def get_next_question():
     if question is None:  # user answered every question, just give them a random one
         question = Question.query.order_by(func.random()).first()
     return question
+
+
+def make_seed():
+    return urandom.randint(1, 999)
