@@ -52,16 +52,14 @@ def flush_sql_db():
     models.load_questions(questions_dir)
 
 
-@pytest.yield_fixture()
+@pytest.fixture()
 def steve():
-    with new_test_client(STEVE) as client:
-        yield client
+    return new_test_client(STEVE)
 
 
-@pytest.yield_fixture()
+@pytest.fixture()
 def paul():
-    with new_test_client(PAUL) as client:
-        yield client
+    return new_test_client(PAUL)
 
 
 def get_user():
@@ -69,18 +67,19 @@ def get_user():
 
 
 def test_new_user(paul):
-    check_get(paul, '/ask/average/100/')
-    user = get_user()
-    user_id = user.id
-    assert len(user.id) == 36  # length of str(uuid4) is 36
-    assert user.score == 0
-    assert_same_items(user.teams, ['Linux', 'Hacker News'])
-    assert redis_store.hgetall('team:Linux') == {'num_users': '1', 'score_sum': '0'}
-    assert redis_store.hgetall('team:Hacker News') == {'num_users': '1', 'score_sum': '0'}
+    with paul:
+        check_get(paul, '/ask/average/100/')
+        user = get_user()
+        user_id = user.id
+        assert len(user.id) == 36  # length of str(uuid4) is 36
+        assert user.score == 0
+        assert_same_items(user.teams, ['Linux', 'Hacker News'])
+        assert redis_store.hgetall('team:Linux') == {'num_users': '1', 'score_sum': '0'}
+        assert redis_store.hgetall('team:Hacker News') == {'num_users': '1', 'score_sum': '0'}
 
-    # id doesn't change after the first visit
-    check_get(paul, '/ask/average/100/')
-    assert get_user().id == user_id
+        check_get(paul, '/ask/average/100/')
+        # id doesn't change after the first visit
+        assert get_user().id == user_id
 
 
 def test_questions():
