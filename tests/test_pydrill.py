@@ -44,7 +44,7 @@ def flush_redis_db():
     redis_store.flushdb()
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True, scope='session')
 def flush_sql_db():
     db.drop_all()
     db.create_all()
