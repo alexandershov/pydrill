@@ -67,6 +67,11 @@ def paul():
     return new_test_client(PAUL)
 
 
+@pytest.fixture()
+def tim():
+    return new_test_client(TIM)
+
+
 def get_user():
     return User(**session['user'])
 
@@ -79,8 +84,9 @@ def test_new_user(paul):
         assert len(user.id) == 36  # length of str(uuid4) is 36
         assert user.score == 0
         assert_same_items(user.teams, ['Linux', 'Hacker News'])
-        assert redis_store.hgetall('team:Linux') == {'num_users': '1', 'score_sum': '0'}
-        assert redis_store.hgetall('team:Hacker News') == {'num_users': '1', 'score_sum': '0'}
+
+        assert_team_score('Linux', num_users=1, score_sum=0)
+        assert_team_score('Hacker News', num_users=1, score_sum=0)
 
         check_get(paul, '/ask/average/100/')
         # id doesn't change after the first visit
@@ -101,8 +107,7 @@ def test_correct_answer(steve, question_id, are_correct, scores):
     assert len(are_correct) == len(scores)
     for is_correct, score in zip(are_correct, scores):
         answer_question(steve, question_id, is_correct=is_correct)
-        # TODO: do something better for checking team scores
-        assert redis_store.hgetall('team:Apple') == {'num_users': '1', 'score_sum': str(score)}
+        assert_team_score('Apple', num_users=1, score_sum=score)
 
 
 @pytest.mark.parametrize('question_ids, redirect_path_re', [
@@ -120,8 +125,11 @@ def test_answer_redirects(steve, question_ids, redirect_path_re):
 
 STEVE = {'HTTP_USER_AGENT': MAC_USER_AGENT,
          'HTTP_REFERER': 'parse this'}
+
 PAUL = {'HTTP_USER_AGENT': LINUX_USER_AGENT,
         'HTTP_REFERER': 'https://news.ycombinator.com/item?id=test'}
+
+TIM = {'HTTP_USER_AGENT': MAC_USER_AGENT}
 
 
 def check_get(client, url):
@@ -167,3 +175,24 @@ def test_ask_without_seed(paul):
     assert rv.status_code == 302
     # TODO: DRY it up with test_answer_redirects
     assert re.search(r'/ask/average/(\d+)/', rv.location)
+
+
+def test_team_scores(steve, paul, tim):
+    answer_question(steve, 'average', is_correct=True)
+    assert_team_score('Apple', num_users=1, score_sum=1)
+
+    answer_question(tim, 'average', is_correct=False)
+    assert_team_score('Apple', num_users=2, score_sum=1)
+
+    answer_question(paul, 'average', is_correct=True)
+    assert_team_score('Apple', num_users=2, score_sum=1)  # paul is not in Apple team
+    assert_team_score('Linux', num_users=1, score_sum=1)
+    assert_team_score('Hacker News', num_users=1, score_sum=1)
+
+    answer_question(steve, 'static-decorator', is_correct=True)
+    assert_team_score('Apple', num_users=2, score_sum=3)
+
+
+def assert_team_score(team, num_users, score_sum):
+    assert (redis_store.hgetall('team:{}'.format(team))
+            == {'num_users': str(num_users), 'score_sum': str(score_sum)})
