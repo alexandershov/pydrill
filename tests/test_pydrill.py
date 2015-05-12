@@ -94,7 +94,7 @@ def test_new_user(paul):
 
 
 def test_questions():
-    assert models.Question.query.count() == 2
+    assert models.Question.query.count() == 3
 
 
 @pytest.mark.parametrize('question_id, are_correct, scores', [
@@ -110,10 +110,17 @@ def test_correct_answer(steve, question_id, are_correct, scores):
         assert_team_score('Apple', num_users=1, score_sum=score)
 
 
+def url_re_for_either(*question_ids):
+    parts = [r'/ask/{}/(\d+)/$'.format(q) for q in question_ids]
+    return '|'.join(parts)
+
+
 @pytest.mark.parametrize('question_ids, redirect_path_re', [
-    (['average'], r'/ask/static-decorator/(\d+)/$'),
-    (['static-decorator'], r'/ask/average/(\d+)/$'),
-    (['average', 'static-decorator'], r'.*'),  # no unanswered question, any path will do
+    (['average'], url_re_for_either('static-decorator', 'assign-to-empty-list')),
+    (['static-decorator'], url_re_for_either('average', 'assign-to-empty-list')),
+    (['assign-to-empty-list'], url_re_for_either('static-decorator')),
+    (['average', 'static-decorator'], url_re_for_either('assign-to-empty-list')),
+    (['average', 'static-decorator', 'assign-to-empty-list'], url_re_for_either('.*'))
 ])
 def test_answer_redirects(steve, question_ids, redirect_path_re):
     for i, question_id in enumerate(question_ids):

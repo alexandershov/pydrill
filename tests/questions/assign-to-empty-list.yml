@@ -1,0 +1,11 @@
+text: given [] = ''. What is the value of [] is ''?
+explanation: it's false
+difficulty: 3
+answers:
+  - is_correct: true
+    text: False
+  - is_correct: false
+    text: True
+  - is_correct: false
+    text: SyntaxError is raised
+

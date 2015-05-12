@@ -11,9 +11,13 @@ from pydrill import redis_store
 class User(object):
     def __init__(self, id=None, score=0, teams=None, answered=None):
         self.id = id or str(uuid.uuid4())
-        self.score = score
+        self.score = score  # TODO: rename to score_sum? or rename Team.score_sum to Team.score?
         self.teams = teams or []
         self.answered = set(answered or [])  # TODO: better name?
+
+    @property
+    def avg_score(self):
+        return safe_div(self.score, len(self.answered))
 
 
 def create_user(request):
@@ -91,6 +95,10 @@ class TeamScore(namedtuple('TeamScore', ['team', 'num_users', 'score_sum'])):
 
     @property
     def avg_score(self):
-        if not self.num_users:
-            return 0.0
-        return self.score_sum / self.num_users
+        return safe_div(self.score_sum, self.num_users)
+
+
+def safe_div(x, y):
+    if y == 0:
+        return 0
+    return x / y

@@ -76,11 +76,10 @@ def execute_redis_pipeline(response):
     return response
 
 
-# TODO: use user score to find the suitable (by difficulty) question
 def get_next_question():
     question = (Question.query
                 .filter(~Question.id.in_(g.user.answered))
-                .order_by(func.random())
+                .order_by(func.abs(Question.difficulty - g.user.avg_score))
                 .first())
     if question is None:  # user answered every question, just give them a random one
         question = Question.query.order_by(func.random()).first()
