@@ -1,10 +1,11 @@
 from random import SystemRandom
-from flask import g, redirect, render_template, request, session, url_for
+from flask import g, redirect, request, session, url_for
 from sqlalchemy import func
 
 from pydrill import app, redis_store
 from pydrill import utils
 from pydrill.models import Answer, Question
+from pydrill.utils import render_question
 
 
 urandom = SystemRandom()
@@ -17,10 +18,10 @@ def ask_question_with_random_seed(question_id):
 
 @app.route('/ask/<question_id>/<seed>/')
 def ask_question(question_id, seed):
-    # TODO: figure out how to avoid db.session and make ModelConverter to work with lazy='dynamic'
+    g.seed = seed
     question = Question.query.get(question_id)
     app.logger.debug('session = {!r}, question = {!r}'.format(session, question))
-    return render_template('question.html', question=question)
+    return render_question(question)
 
 
 @app.route('/answer/<question_id>/<answer_id>/<seed>/', methods=['POST'])

@@ -1,12 +1,15 @@
 text: |
-  {% set numerator = gen.small_integer() %}
-  {% set denomia
-  {{ gen.var_name() }} = {{ gen.integer
-explanation: 0 in python2, 0.5 in python3
+  {% set x = gen.integer(1, 5) %}
+  {% set y = x + 2 * gen.integer(0, 2) + 1 %}
+  {% set var = gen.var_name() %}
+  {{ var }} = ({{ x }} + {{ y }}) / 2
+
+  What is the value of {{ var }}?
+explanation: '{{ (x + y) // 2 }} in python2, {{ (x + y)|float / 2 }} in python3'
 difficulty: 1
 answers:
   - is_correct: true
-    text: 0
+    text: '{{ (x + y) // 2 }}'
   - is_correct: false
-    text: 0.5
+    text: '{{ (x + y)|float / 2 }}'
 

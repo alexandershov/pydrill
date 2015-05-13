@@ -10,6 +10,6 @@ app.config.from_pyfile(os.environ.get('PYDRILL_CONFIG', '/etc/pydrill/pydrill.cf
 db = SQLAlchemy(app)
 redis_store = FlaskRedis(app)
 
-
 from pydrill import models  # noqa
-from pydrill import views   # noqa
+from pydrill import views  # noqa
+from pydrill import jinja_env  # noqa

@@ -6,10 +6,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div>{{ question.text }}</div>
+    <div>{{ render(question.text) }}</div>
     <ul>
         {% for answer in question.answers %}
-            <li>{{ answer.text }}</li>
+            <li>{{ render(answer.text, vars) }}</li>
         {%  endfor %}
     </ul>
 </body>

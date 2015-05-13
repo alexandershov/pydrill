@@ -1,11 +1,23 @@
 from __future__ import division
 
 from collections import namedtuple
+import random
 from urlparse import urlparse
 import uuid
 
-from flask import g
+from flask import g, render_template
+from pydrill import app
 from pydrill import redis_store
+
+
+def render_question(question):
+    return render_template('question.html', question=question, vars=get_template_vars(question))
+
+
+def get_template_vars(question):
+    template = app.jinja_env.from_string(question.text)
+    random.seed(g.seed)
+    return vars(template.module)
 
 
 class User(object):
