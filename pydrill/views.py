@@ -2,9 +2,7 @@ from random import SystemRandom
 from flask import g, redirect, render_template, request, session, url_for
 from sqlalchemy import func
 
-from werkzeug.routing import BaseConverter
-
-from pydrill import app, db, redis_store
+from pydrill import app, redis_store
 from pydrill import utils
 from pydrill.models import Answer, Question
 
@@ -12,51 +10,28 @@ from pydrill.models import Answer, Question
 urandom = SystemRandom()
 
 
-class ModelConverter(BaseConverter):
-    model = None  # redefine it in subclasses
-
-    def to_python(self, value):
-        return self.model.query.get(value)
-
-    def to_url(self, value):
-        return value.id
+@app.route('/ask/<question_id>/')
+def ask_question_with_random_seed(question_id):
+    return redirect(url_for('ask_question', question_id=question_id, seed=make_seed()))
 
 
-class QuestionConverter(ModelConverter):
-    model = Question
-
-
-class AnswerConverter(ModelConverter):
-    model = Answer
-
-
-app.url_map.converters['Question'] = QuestionConverter
-app.url_map.converters['Answer'] = AnswerConverter
-
-
-@app.route('/ask/<Question:question>/')
-def ask_question_with_random_seed(question):
-    return redirect(url_for('ask_question', question=question, seed=make_seed()))
-
-
-@app.route('/ask/<Question:question>/<seed>/')
-def ask_question(question, seed):
+@app.route('/ask/<question_id>/<seed>/')
+def ask_question(question_id, seed):
     # TODO: figure out how to avoid db.session and make ModelConverter to work with lazy='dynamic'
-    db.session.add(question)
+    question = Question.query.get(question_id)
     app.logger.debug('session = {!r}, question = {!r}'.format(session, question))
-    return render_template('question.html')
+    return render_template('question.html', question=question)
 
 
-@app.route('/answer/<Question:question>/<Answer:answer>/<seed>/', methods=['POST'])
-def accept_answer(question, answer, seed):
-    # TODO: figure out how to avoid db.session and make ModelConverter to work with lazy='dynamic'
-    db.session.add(question)
-    db.session.add(answer)
+@app.route('/answer/<question_id>/<answer_id>/<seed>/', methods=['POST'])
+def accept_answer(question_id, answer_id, seed):
+    question = Question.query.get(question_id)
+    answer = Answer.query.get(answer_id)
     assert answer.question == question
     if answer.is_correct and question.id not in g.user.answered:
         utils.add_score(g.user, question.difficulty)
     g.user.answered.add(question.id)
-    return redirect(url_for('ask_question', question=get_next_question(), seed=make_seed()))
+    return redirect(url_for('ask_question', question_id=get_next_question().id, seed=make_seed()))
 
 
 @app.before_request

@@ -1,0 +1,12 @@
+text: |
+  {% set numerator = gen.small_integer() %}
+  {% set denomia
+  {{ gen.var_name() }} = {{ gen.integer
+explanation: 0 in python2, 0.5 in python3
+difficulty: 1
+answers:
+  - is_correct: true
+    text: 0
+  - is_correct: false
+    text: 0.5
+

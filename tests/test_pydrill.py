@@ -115,6 +115,7 @@ def url_re_for_either(*question_ids):
     return '|'.join(parts)
 
 
+# TODO: test it separate tests with good naming maybe?
 @pytest.mark.parametrize('question_ids, redirect_path_re', [
     (['average'], url_re_for_either('static-decorator', 'assign-to-empty-list')),
     (['static-decorator'], url_re_for_either('average', 'assign-to-empty-list')),

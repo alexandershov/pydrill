@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    testing
+    <div>{{ question.text }}</div>
+    <ul>
+        {% for answer in question.answers %}
+            <li>{{ answer.text }}</li>
+        {%  endfor %}
+    </ul>
 </body>
 </html>
