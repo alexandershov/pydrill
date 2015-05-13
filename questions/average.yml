@@ -2,9 +2,12 @@ text: |
   {% set x = gen.integer(1, 5) %}
   {% set y = x + 2 * gen.integer(0, 2) + 1 %}
   {% set var = gen.var_name() %}
-  {{ var }} = ({{ x }} + {{ y }}) / 2
 
-  What is the value of {{ var }}?
+  {% filter highlight %}
+    {{ var }} = ({{ x }} + {{ y }}) / 2
+  {% endfilter %}
+
+  What is the value of {{ var|highlight }}?
 explanation: '{{ (x + y) // 2 }} in python2, {{ (x + y)|float / 2 }} in python3'
 difficulty: 1
 answers:
