@@ -7,7 +7,7 @@ text: |
     {{ var }} = ({{ x }} + {{ y }}) / 2
   {% endfilter %}
 
-  What is the value of {{ var|highlight }}?
+  What is the value of {{ var|highlight_inline }}?
 explanation: '{{ (x + y) // 2 }} in python2, {{ (x + y)|float / 2 }} in python3'
 difficulty: 1
 answers:

@@ -9,17 +9,27 @@ from pydrill import app
 from pydrill import gen
 
 
+@app.template_filter('render')
 def render(template, vars={}):
     random.seed(g.seed)
     return Markup(render_template_string(template, **vars))
 
 
-@app.template_filter('highlight')
-def highlight(s, language='python'):
-    formatter = HtmlFormatter(cssclass='highlight')
+def highlight_with_css_class(s, language, css_class):
+    formatter = HtmlFormatter(cssclass=css_class)
     # TODO: can we do without strip?
     return pygments.highlight(dedent(unicode(s)), get_lexer_by_name(language),
                               formatter).strip()
 
 
-app.jinja_env.globals.update(gen=gen, render=render)
+@app.template_filter('highlight')
+def highlight(s, language='python'):
+    return highlight_with_css_class(s, language, 'highlight')
+
+
+@app.template_filter('highlight_inline')
+def highlight_inline(s, language='python'):
+    return highlight_with_css_class(s, language, 'highlight-inline')
+
+
+app.jinja_env.globals.update(gen=gen)
