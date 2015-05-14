@@ -8,6 +8,15 @@
     .border-left-radius(@radius);
 }
 
+.wrapper {
+  .make-row();
+}
+
+.content {
+  .make-sm-column(8);
+  .make-sm-column-offset(2);
+}
+
 
 .highlighted {
   background: #e1e8f0;
@@ -23,16 +32,17 @@
 
 .highlight {
   .highlighted;
-  .border-radius(5px);
 
   pre {
     .unbootstraped-pre;
+    .border-radius(2px);
+    padding: 4px;
   }
 }
 
 .highlight-inline {
   display: inline-block;
-  padding: 0 3px;
+  padding: 0 4px;
   .border-radius(5px);
   .highlighted;
 

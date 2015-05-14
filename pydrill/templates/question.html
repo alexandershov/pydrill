@@ -2,15 +2,27 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>pydrill</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div>{{ question.text|render }}</div>
-    <ul>
-        {% for answer in question.answers %}
-            <li>{{ answer.text|render(vars) }}</li>
-        {%  endfor %}
-    </ul>
+<div class="wrapper">
+    <div class="content">
+        <div>{{ question.text|render }}</div>
+        <ul>
+            {% for answer in question.answers %}
+                <li>
+                    <form method="POST" action="{{ url_for('accept_answer', question_id=question.id,
+                        answer_id=answer.id, seed=g.seed) }}">
+                        <button type="submit" class="btn-link">
+                            {{ answer.text|render(vars) }}
+                        </button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
 </body>
 </html>
