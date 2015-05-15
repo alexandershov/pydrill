@@ -7302,6 +7302,10 @@ button.close {
   background: #e1e8f0;
   padding: 4px;
   margin: 0 0 4px 0;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  border-top-left-radius: 2px;
 }
 .highlight pre {
   display: inline;
@@ -7309,10 +7313,6 @@ button.close {
   margin: 0;
   border: 0;
   background-color: transparent;
-  border-top-right-radius: 2px;
-  border-bottom-right-radius: 2px;
-  border-bottom-left-radius: 2px;
-  border-top-left-radius: 2px;
 }
 .highlight-inline {
   display: inline-block;
