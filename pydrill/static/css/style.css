@@ -7284,6 +7284,10 @@ button.close {
     margin-left: 16.66666667%;
   }
 }
+.question {
+  display: inline-block;
+  margin: 10px 0 0 0;
+}
 .highlighted {
   background: #e1e8f0;
 }
@@ -7296,6 +7300,8 @@ button.close {
 }
 .highlight {
   background: #e1e8f0;
+  padding: 4px;
+  margin: 0 0 4px 0;
 }
 .highlight pre {
   display: inline;
@@ -7307,7 +7313,6 @@ button.close {
   border-bottom-right-radius: 2px;
   border-bottom-left-radius: 2px;
   border-top-left-radius: 2px;
-  padding: 4px;
 }
 .highlight-inline {
   display: inline-block;

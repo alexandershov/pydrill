@@ -16,7 +16,7 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        <div>{{ question.text|render }}</div>
+        <div class="question">{{ question.text|render }}</div>
         <ul>
             {% for answer in question.answers %}
                 <li>
