@@ -15,6 +15,13 @@ def render(template, vars={}):
     return Markup(render_template_string(template, **vars))
 
 
+@app.template_filter('in_random_order')
+def in_random_order(iterable):
+    items = list(iterable)
+    random.shuffle(items)
+    return items
+
+
 def highlight_with_css_class(s, language, css_class):
     formatter = HtmlFormatter(cssclass=css_class)
     # TODO: can we do without strip?

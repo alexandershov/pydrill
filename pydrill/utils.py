@@ -14,12 +14,6 @@ def render_question(question):
     return render_template('question.html', question=question, vars=get_template_vars(question))
 
 
-def in_random_order(iterable):
-    items = list(iterable)
-    random.shuffle(items)
-    return items
-
-
 def get_template_vars(question):
     template = app.jinja_env.from_string(question.text)
     random.seed(g.seed)

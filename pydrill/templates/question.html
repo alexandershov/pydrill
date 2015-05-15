@@ -19,7 +19,7 @@
         <div class="qna">
             <div class="question">{{ question.text|render }}</div>
             <div class="answers">
-                {% for answer in question.answers %}
+                {% for answer in question.answers|in_random_order %}
                     <div class="answer">
                         <form method="POST" action="{{ url_for('accept_answer',
                         question_id=question.id,
