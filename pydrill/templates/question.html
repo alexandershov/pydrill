@@ -16,19 +16,23 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        <div class="question">{{ question.text|render }}</div>
-        <ul>
-            {% for answer in question.answers %}
-                <li>
-                    <form method="POST" action="{{ url_for('accept_answer', question_id=question.id,
+        <div class="qna">
+            <div class="question">{{ question.text|render }}</div>
+            <div class="answers">
+                {% for answer in question.answers %}
+                    <div class="answer">
+                        <form method="POST" action="{{ url_for('accept_answer',
+                        question_id=question.id,
                         answer_id=answer.id, seed=g.seed) }}">
-                        <button type="submit" class="btn-link">
-                            {{ answer.text|render(vars) }}
-                        </button>
-                    </form>
-                </li>
-            {% endfor %}
-        </ul>
+                            <button type="submit" class="btn-link btn-block answer-button">
+                                {{ answer.text|render(vars) }}
+                            </button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
     </div>
 </div>
 </body>

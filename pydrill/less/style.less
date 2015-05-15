@@ -1,11 +1,11 @@
 @import "pygments.less";
 @import "bootstrap/less/bootstrap.less";
 
-.border-radius(@radius){
-    .border-top-radius(@radius);
-    .border-right-radius(@radius);
-    .border-bottom-radius(@radius);
-    .border-left-radius(@radius);
+.border-radius(@radius) {
+  .border-top-radius(@radius);
+  .border-right-radius(@radius);
+  .border-bottom-radius(@radius);
+  .border-left-radius(@radius);
 }
 
 .wrapper {
@@ -17,22 +17,24 @@
   .make-sm-column-offset(2);
 }
 
-.question {
+.qna {
   display: inline-block;
-  margin: 10px 0 0 0;
 }
 
+.question {
+  margin: 10px 0 0 0;
+}
 
 .highlighted {
   background: #e1e8f0;
 }
 
 .unbootstraped-pre {
-    display: inline;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    background-color: transparent;
+  display: inline;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background-color: transparent;
 }
 
 .highlight {
@@ -55,4 +57,12 @@
   pre {
     .unbootstraped-pre;
   }
+}
+
+.answer:hover {
+  background-color: #ffffa0;
+}
+
+.answer button {
+  text-align: left;
 }
