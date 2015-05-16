@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}score{% endblock %}
+
+{% block body %}
+    <ul>
+        {% for team_score in team_scores %}
+            <li {% if team_score.team in g.user.teams %}class="user-team"{% endif %}>
+                {{ team_score.team }}: {{ team_score.avg_score }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,5 +1,5 @@
 from random import SystemRandom
-from flask import g, redirect, request, session, url_for, flash
+from flask import g, redirect, request, session, url_for, flash, render_template
 from sqlalchemy import func
 
 from pydrill import app, redis_store
@@ -21,7 +21,7 @@ def ask_question(question_id, seed):
     g.seed = seed
     question = Question.query.get(question_id)
     app.logger.debug('session = {!r}, question = {!r}'.format(session, question))
-    return render_question(question)
+    return render_question(question, score=utils.get_user_score().score)
 
 
 @app.route('/answer/<question_id>/<answer_id>/<seed>/', methods=['POST'])
@@ -37,6 +37,12 @@ def accept_answer(question_id, answer_id, seed):
         utils.add_score(g.user, question.difficulty)
     g.user.answered.add(question.id)
     return redirect(url_for('ask_question', question_id=get_next_question().id, seed=make_seed()))
+
+
+@app.route('/score/')
+def show_score():
+    return render_template('score.html', team_scores=utils.get_team_scores(),
+                           user_score=utils.get_user_score())
 
 
 @app.before_request

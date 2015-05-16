@@ -7366,3 +7366,9 @@ button.close {
 .status {
   margin: 8px 0 0 0;
 }
+.score {
+  float: right;
+}
+.user-team {
+  font-weight: bold;
+}

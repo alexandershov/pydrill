@@ -10,8 +10,9 @@ from pydrill import app
 from pydrill import redis_store
 
 
-def render_question(question):
-    return render_template('question.html', question=question, vars=get_template_vars(question))
+def render_question(question, **context):
+    return render_template('question.html', question=question, vars=get_template_vars(question),
+                           **context)
 
 
 def get_template_vars(question):
@@ -30,6 +31,16 @@ class User(object):
     @property
     def avg_score(self):
         return safe_div(self.score, len(self.answered))
+
+
+def get_user_score():
+    # `... + 1` is to convert from zero-indexing to one-indexing
+    rank = (redis_store.zrevrank('user_scores', g.user.id) or 0) + 1
+    return UserScore(score=g.user.score,
+                     rank=rank)
+
+
+UserScore = namedtuple('UserScore', ['score', 'rank'])
 
 
 def create_user(request):
@@ -73,11 +84,14 @@ def get_teams(request):
     return teams
 
 
-def get_team_scores(teams):
+def get_team_scores(teams=TEAMS):
     team_scores = []
     for team in teams:
-        attrs = g.redis_pipeline.hgetall(get_team_key(team))
-        team_scores.append(TeamScore(team=team, **attrs))
+        # TODO: use redis pipelining
+        attrs = {'num_users': '0', 'score_sum': '0'}
+        attrs.update(redis_store.hgetall(get_team_key(team)))
+        typed_attrs = {name: int(value) for name, value in attrs.viewitems()}
+        team_scores.append(TeamScore(team=team, **typed_attrs))
     return sorted(team_scores, key=lambda ts: ts.avg_score, reverse=True)
 
 

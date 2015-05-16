@@ -1,41 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>pydrill</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
-<div class="wrapper">
-    <div class="content">
-        {% with messages = get_flashed_messages(with_categories=True) %}
-            {% if messages %}
+{% extends "base.html" %}
+
+{% block title %}pydrill{% endblock %}
+
+{% block body %}
+    <div class="wrapper">
+        <div class="content">
+            {% with messages = get_flashed_messages(with_categories=True) %}
                 <div class="status">
-                    {% for category, message in messages %}
-                        <span class="{{ category }}">{{ message }}</span>
-                    {% endfor %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <span class="{{ category }}">{{ message }}</span>
+                        {% endfor %}
+                    {% endif %}
+                    <a class="score" href="{{ url_for('show_score') }}">Score: {{ score }}</a>
                 </div>
-            {% endif %}
-        {% endwith %}
-        <div class="qna">
-            <div class="question">{{ question.text|render }}</div>
-            <div class="answers">
-                {% for answer in question.answers|in_random_order %}
-                    <div class="answer">
-                        <form method="POST" action="{{ url_for('accept_answer',
+            {% endwith %}
+            <div class="qna">
+                <div class="question">{{ question.text|render }}</div>
+                <div class="answers">
+                    {% for answer in question.answers|in_random_order %}
+                        <div class="answer">
+                            <form method="POST" action="{{ url_for('accept_answer',
                         question_id=question.id,
                         answer_id=answer.id, seed=g.seed) }}">
-                            <button type="submit" class="btn-link btn-block answer-button">
-                                {{ answer.text|render(vars) }}
-                            </button>
-                        </form>
-                    </div>
-                {% endfor %}
+                                <button type="submit" class="btn-link btn-block answer-button">
+                                    {{ answer.text|render(vars) }}
+                                </button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
-</body>
-</html>
+{% endblock %}
