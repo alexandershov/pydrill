@@ -3,11 +3,17 @@
 {% block title %}score{% endblock %}
 
 {% block body %}
-    <ul>
-        {% for team_score in team_scores %}
-            <li {% if team_score.team in g.user.teams %}class="user-team"{% endif %}>
-                {{ team_score.team }}: {{ team_score.avg_score }}
-            </li>
-        {% endfor %}
-    </ul>
+    {#    TODO: remove duplication with question.html #}
+    <div class="wrapper">
+        <div class="content">
+            {% include "status.html" %}
+            <ul>
+                {% for team_score in team_scores %}
+                    <li {% if team_score.team in g.user.teams %}class="user-team"{% endif %}>
+                        {{ team_score.team }}: {{ team_score.avg_score }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 {% endblock %}

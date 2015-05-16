@@ -5,16 +5,7 @@
 {% block body %}
     <div class="wrapper">
         <div class="content">
-            {% with messages = get_flashed_messages(with_categories=True) %}
-                <div class="status">
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <span class="{{ category }}">{{ message }}</span>
-                        {% endfor %}
-                    {% endif %}
-                    <a class="score" href="{{ url_for('show_score') }}">Score: {{ score }}</a>
-                </div>
-            {% endwith %}
+            {% include "status.html" %}
             <div class="qna">
                 <div class="question">{{ question.text|render }}</div>
                 <div class="answers">

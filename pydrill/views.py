@@ -42,7 +42,7 @@ def accept_answer(question_id, answer_id, seed):
 @app.route('/score/')
 def show_score():
     return render_template('score.html', team_scores=utils.get_team_scores(),
-                           user_score=utils.get_user_score())
+                           score=utils.get_user_score().score)
 
 
 @app.before_request
