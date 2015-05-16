@@ -66,3 +66,24 @@
 .answer button {
   text-align: left;
 }
+
+.message {
+  padding: 0.2em 0.5em;
+  .border-radius(4px);
+}
+
+.correct {
+  .message();
+  background-color: @state-success-bg;
+  color: @state-success-text;
+}
+
+.wrong {
+  .message();
+  background-color: @state-danger-bg;
+  color: @state-danger-text;
+}
+
+.status {
+  margin: 8px 0 0 0;
+}

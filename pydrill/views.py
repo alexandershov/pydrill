@@ -29,7 +29,10 @@ def accept_answer(question_id, answer_id, seed):
     question = Question.query.get(question_id)
     answer = Answer.query.get(answer_id)
     assert answer.question == question
-    flash('right!' if answer.is_correct else 'wrong!')
+    if answer.is_correct:
+        flash('right!', 'correct')
+    else:
+        flash('wrong!', 'wrong')
     if answer.is_correct and question.id not in g.user.answered:
         utils.add_score(g.user, question.difficulty)
     g.user.answered.add(question.id)
