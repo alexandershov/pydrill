@@ -22,7 +22,9 @@
                     {% endfor %}
                 </div>
             </div>
-
+            {% if explain %}
+                <div class="explain">{{ question.explanation|render(vars) }}</div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

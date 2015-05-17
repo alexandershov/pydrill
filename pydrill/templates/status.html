@@ -1,8 +1,14 @@
 <div class="status">
-    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% with messages = get_flashed_messages(category_filter=['answer']) %}
         {% if messages %}
-            {% for category, message in messages %}
-                <span class="{{ category }}">{{ message }}</span>
+            {% for message in messages %}
+                <span class="{% if message['is_correct'] %}correct{% else %}wrong{% endif %}">
+                    {{ message['text'] }}</span>
+                <a href="{{ url_for('explain', question_id=message['question_id'],
+                                               answer_id=message['answer_id'],
+                                               seed=message['seed']) }}">
+                    Why?
+                </a>
             {% endfor %}
         {% endif %}
         <a class="score" href="{{ url_for('show_score') }}">Score: {{ score }}</a>
