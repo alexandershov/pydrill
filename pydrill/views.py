@@ -19,7 +19,7 @@ def ask_question_with_random_seed(question_id):
 def ask_question(question_id, seed):
     g.seed = seed
     question = Question.query.get(question_id)
-    return render_question(question, score=utils.get_user_score().score, explain=False)
+    return render_question(question, score=utils.get_user_score(), explain=False)
 
 
 @app.route('/answer/<question_id>/<answer_id>/<seed>/', methods=['POST'])
@@ -41,7 +41,7 @@ def accept_answer(question_id, answer_id, seed):
 @app.route('/score/')
 def show_score():
     return render_template('score.html', team_scores=utils.get_team_scores(),
-                           score=utils.get_user_score().score)
+                           score=utils.get_user_score())
 
 
 @app.route('/explain/<question_id>/<answer_id>/<seed>/')

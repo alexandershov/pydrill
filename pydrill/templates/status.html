@@ -11,6 +11,7 @@
                 </a>
             {% endfor %}
         {% endif %}
-        <a class="score" href="{{ url_for('show_score') }}">Score: {{ score }}</a>
+        <a class="score" title="Place #{{ score.rank }}"
+           href="{{ url_for('show_score') }}">Score: {{ score.score }}</a>
     {% endwith %}
 </div>
