@@ -22,6 +22,10 @@ class Answer(db.Model):
     is_correct = db.Column(db.Boolean, nullable=False)
     question_id = db.Column(db.Integer, db.ForeignKey(Question.id), nullable=False)
 
+    @property
+    def is_wrong(self):
+        return not self.is_correct
+
 
 def load_questions(directory):
     question_paths = glob(os.path.join(directory, '*.yml'))

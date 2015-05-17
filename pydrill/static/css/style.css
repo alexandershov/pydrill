@@ -7332,7 +7332,7 @@ button.close {
   border: 0;
   background-color: transparent;
 }
-.answer:hover {
+.answer:hover:not(.static-answer) {
   background-color: #ffffa0;
 }
 .answer button {
@@ -7371,4 +7371,12 @@ button.close {
 }
 .user-team {
   font-weight: bold;
+}
+.correct-answer {
+  background-color: #dff0d8;
+  color: #3c763d;
+}
+.wrong-answer {
+  background-color: #f2dede;
+  color: #a94442;
 }

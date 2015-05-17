@@ -10,14 +10,26 @@
                 <div class="question">{{ question.text|render }}</div>
                 <div class="answers">
                     {% for answer in question.answers|in_random_order %}
-                        <div class="answer">
-                            <form method="POST" action="{{ url_for('accept_answer',
+                        <div class="answer {% if explain %}static-answer{% endif %}
+                        {% if explain and answer.is_correct %}
+                          correct-answer
+                        {% else %}
+                         {% if explain and given_answer.is_wrong and answer == given_answer %}
+                          wrong-answer
+                         {% endif %}
+                        {% endif %}">
+                            {% if explain %}
+                                <span>{{ answer.text|render(vars) }}</span>
+                            {% else %}
+
+                                <form method="POST" action="{{ url_for('accept_answer',
                         question_id=question.id,
                         answer_id=answer.id, seed=g.seed) }}">
-                                <button type="submit" class="btn-link btn-block answer-button">
-                                    {{ answer.text|render(vars) }}
-                                </button>
-                            </form>
+                                    <button type="submit" class="btn-link btn-block answer-button">
+                                        {{ answer.text|render(vars) }}
+                                    </button>
+                                </form>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>

@@ -49,7 +49,9 @@ def explain(question_id, answer_id, seed):
     # TODO: DRY it up with ask_question
     g.seed = seed
     question = Question.query.get(question_id)
-    return render_question(question, score=utils.get_user_score().score, explain=True)
+    given_answer = Answer.query.get(answer_id)
+    return render_question(question, score=utils.get_user_score().score,
+                           explain=True, given_answer=given_answer)
 
 
 @app.before_request

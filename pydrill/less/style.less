@@ -59,9 +59,10 @@
   }
 }
 
-.answer:hover {
+.answer:hover:not(.static-answer) {
   background-color: #ffffa0;
 }
+
 
 .answer button {
   text-align: left;
@@ -94,4 +95,15 @@
 
 .user-team {
   font-weight: bold;
+}
+
+
+.correct-answer {
+  background-color: @state-success-bg;
+  color: @state-success-text;
+}
+
+.wrong-answer {
+  background-color: @state-danger-bg;
+  color: @state-danger-text;
 }
