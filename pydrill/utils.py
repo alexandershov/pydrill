@@ -86,10 +86,13 @@ def get_teams(request):
 
 def get_team_scores(teams=TEAMS):
     team_scores = []
+    p = redis_store.pipeline(transaction=False)
     for team in teams:
-        # TODO: use redis pipelining
-        attrs = {'num_users': '0', 'score_sum': '0'}
-        attrs.update(redis_store.hgetall(get_team_key(team)))
+        p.hgetall(get_team_key(team))
+    team_dicts = p.execute()
+    for team, attrs in zip(teams, team_dicts):
+        attrs.setdefault('num_users', '0')
+        attrs.setdefault('score_sum', '0')
         typed_attrs = {name: int(value) for name, value in attrs.viewitems()}
         team_scores.append(TeamScore(team=team, **typed_attrs))
     return sorted(team_scores, key=lambda ts: ts.avg_score, reverse=True)
