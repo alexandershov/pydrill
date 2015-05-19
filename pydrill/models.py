@@ -32,7 +32,7 @@ class Answer(db.Model):
 def load_questions(directory):
     question_paths = glob(os.path.join(directory, '*.yml'))
     if not question_paths:
-        raise ValueError('directory {} doesn\'t have any .yml files'.format(directory))
+        raise ValueError("directory {} doesn't have any .yml files".format(directory))
     for path in question_paths:
         with open(path) as stream:
             question_dict = yaml.load(stream)

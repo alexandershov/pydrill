@@ -4,7 +4,7 @@ from collections import namedtuple
 from urlparse import urlparse
 import uuid
 
-from flask import g
+from flask import g, request
 
 from pydrill import redis_store
 
@@ -26,8 +26,8 @@ class User(object):
         return (redis_store.zrevrank('user_scores', self.id) or 0) + 1
 
 
-def create_user(request):
-    user = User(teams=get_teams(request))
+def create_user():
+    user = User(teams=get_cur_teams())
     init_user_score(user)
     return user
 
@@ -54,16 +54,16 @@ _TEAM_BY_REFERRER = {
 TEAMS = ['Apple', 'Windows', 'Linux', 'Hacker News', 'Reddit']
 
 
-def get_teams(request):
+def get_cur_teams():
     teams = []
     platform = request.user_agent.platform
     if platform in _TEAM_BY_PLATFORM:
         teams.append(_TEAM_BY_PLATFORM[platform])
 
     if request.referrer is not None:
-        host = urlparse(request.referrer).hostname
-        if host in _TEAM_BY_REFERRER:
-            teams.append(_TEAM_BY_REFERRER[host])
+        hostname = urlparse(request.referrer).hostname
+        if hostname in _TEAM_BY_REFERRER:
+            teams.append(_TEAM_BY_REFERRER[hostname])
     return teams
 
 

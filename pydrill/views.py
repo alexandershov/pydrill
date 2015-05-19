@@ -55,7 +55,7 @@ def set_globals():
     g.redis_pipeline = redis_store.pipeline(transaction=False)
     g.seed = request.view_args.get('seed')
     if 'user' not in session:
-        g.user = utils.create_user(request)
+        g.user = utils.create_user()
     else:
         g.user = utils.User(**session['user'])
 
