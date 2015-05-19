@@ -1,11 +1,11 @@
 from random import SystemRandom
-from flask import g, redirect, request, session, url_for, flash, render_template
+
+from flask import flash, g, redirect, render_template, request, session, url_for
 from sqlalchemy import func
 
 from pydrill import app, redis_store
 from pydrill import utils
 from pydrill.models import Answer, Question
-from pydrill.utils import render_question
 
 urandom = SystemRandom()
 
@@ -19,7 +19,7 @@ def ask_question_with_random_seed(question_id):
 def ask_question(question_id, seed):
     g.seed = seed
     question = Question.query.get(question_id)
-    return render_question(question, score=utils.get_user_score(), explain=False)
+    return utils.render_question(question, score=utils.get_user_score(), explain=False)
 
 
 @app.route('/answer/<question_id>/<answer_id>/<seed>/', methods=['POST'])
@@ -50,8 +50,8 @@ def explain(question_id, answer_id, seed):
     g.seed = seed
     question = Question.query.get(question_id)
     given_answer = Answer.query.get(answer_id)
-    return render_question(question, score=utils.get_user_score().score,
-                           explain=True, given_answer=given_answer)
+    return utils.render_question(question, score=utils.get_user_score().score,
+                                 explain=True, given_answer=given_answer)
 
 
 @app.before_request

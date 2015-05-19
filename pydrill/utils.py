@@ -1,13 +1,13 @@
 from __future__ import division
 
 from collections import namedtuple
-import random
 from urlparse import urlparse
+import random
 import uuid
 
 from flask import g, render_template
-from pydrill import app
-from pydrill import redis_store
+
+from pydrill import app, redis_store
 
 
 def render_question(question, **context):

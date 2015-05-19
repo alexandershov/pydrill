@@ -1,10 +1,12 @@
-import random
 from textwrap import dedent
+import random
+
 from flask import render_template_string, g
+from jinja2 import Markup
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
 import pygments
-from jinja2 import Markup
+
 from pydrill import app
 from pydrill import gen
 
