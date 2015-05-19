@@ -1,17 +1,17 @@
 <div class="status">
-    {% with messages = get_flashed_messages(category_filter=['answer']) %}
-        {% if messages %}
-            {% for message in messages %}
-                <span class="{% if message['is_correct'] %}correct{% else %}wrong{% endif %}">
-                    {{ message['text'] }}</span>
-                <a href="{{ url_for('explain', question_id=message['question_id'],
-                                               answer_id=message['answer_id'],
-                                               seed=message['seed']) }}">
+    {% with answers = get_flashed_messages(category_filter=['answer']) %}
+        {% if answers %}
+            {% with prev_answer = answers[-1] %}
+                <span class="{% if prev_answer['is_correct'] %}correct{% else %}wrong{% endif %}">
+                    {{ prev_answer['text'] }}
+                </span>
+                <a href="{{ prev_answer['explain_url'] }}">
                     Why?
                 </a>
-            {% endfor %}
+            {% endwith %}
         {% endif %}
-        <a class="score" title="Place #{{ score.rank }}"
-           href="{{ url_for('show_score') }}">Score: {{ score.score }}</a>
+        <a href="{{ url_for('show_score') }}" class="score" title="Place #{{ g.user.rank }}">
+            Score: {{ g.user.score }}
+        </a>
     {% endwith %}
 </div>

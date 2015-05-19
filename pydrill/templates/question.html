@@ -1,43 +1,19 @@
-{% extends "base.html" %}
-
-{% block title %}pydrill{% endblock %}
-
-{# TODO: remove `if explain` insanity #}
-{% block body %}
-    <div class="wrapper">
-        <div class="content">
-            {% include "status.html" %}
-            <div class="qna">
-                <div class="question">{{ question.text|render }}</div>
-                <div class="answers">
-                    {% for answer in question.answers|in_random_order %}
-                        <div class="answer {% if explain %}static-answer{% endif %}
-                        {% if explain and answer.is_correct %}
-                          correct-answer
-                        {% else %}
-                         {% if explain and given_answer.is_wrong and answer == given_answer %}
-                          wrong-answer
-                         {% endif %}
-                        {% endif %}">
-                            {% if explain %}
-                                <span>{{ answer.text|render(vars) }}</span>
-                            {% else %}
-
-                                <form method="POST" action="{{ url_for('accept_answer',
-                        question_id=question.id,
-                        answer_id=answer.id, seed=g.seed) }}">
-                                    <button type="submit" class="btn-link btn-block answer-button">
-                                        {{ answer.text|render(vars) }}
-                                    </button>
-                                </form>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
+<div class="question">
+    <div class="text">{{ question.text|render }}</div>
+    <div class="answers">
+        {% for answer in question.answers|in_random_order %}
+            {% block answer scoped %}
+                <div class="answer">
+                    <form method="POST"
+                          action="{{ url_for('accept_answer', question_id=question.id,
+                                                          answer_id=answer.id, seed=g.seed) }}">
+                        <button type="submit" class="btn-link btn-block answer-button">
+                            {{ answer.text|render(vars) }}
+                        </button>
+                    </form>
                 </div>
-            </div>
-            {% if explain %}
-                <div class="explain">{{ question.explanation|render(vars) }}</div>
-            {% endif %}
-        </div>
+            {% endblock %}
+        {% endfor %}
+        {% block after_answers %}{% endblock %}
     </div>
-{% endblock %}
+</div>

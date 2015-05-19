@@ -7284,10 +7284,10 @@ button.close {
     margin-left: 16.66666667%;
   }
 }
-.qna {
+.question {
   display: inline-block;
 }
-.question {
+.question .text {
   margin: 10px 0 0 0;
 }
 .highlighted {

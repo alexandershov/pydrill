@@ -1,0 +1,14 @@
+{% extends 'question.html' %}
+
+{% block answer %}
+    <div class="answer static-answer
+              {% if answer.is_correct %}correct{% elif answer == given_answer %}wrong{% endif %}">
+        {{ answer.text|render(vars) }}
+    </div>
+{% endblock %}
+
+{% block after_answers %}
+    <div class="explanation">
+        {{ question.explanation|render(vars) }}
+    </div>
+{% endblock %}

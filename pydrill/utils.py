@@ -2,23 +2,11 @@ from __future__ import division
 
 from collections import namedtuple
 from urlparse import urlparse
-import random
 import uuid
 
-from flask import g, render_template
+from flask import g
 
-from pydrill import app, redis_store
-
-
-def render_question(question, **context):
-    return render_template('question.html', question=question, vars=get_template_vars(question),
-                           **context)
-
-
-def get_template_vars(question):
-    template = app.jinja_env.from_string(question.text)
-    random.seed(g.seed)
-    return vars(template.module)
+from pydrill import redis_store
 
 
 class User(object):
@@ -32,15 +20,10 @@ class User(object):
     def avg_score(self):
         return safe_div(self.score, len(self.answered))
 
-
-def get_user_score():
-    # `... + 1` is to convert from zero-indexing to one-indexing
-    rank = (redis_store.zrevrank('user_scores', g.user.id) or 0) + 1
-    return UserScore(score=g.user.score,
-                     rank=rank)
-
-
-UserScore = namedtuple('UserScore', ['score', 'rank'])
+    @property
+    def rank(self):
+        # `... + 1` is to convert from zero-indexing to one-indexing
+        return (redis_store.zrevrank('user_scores', self.id) or 0) + 1
 
 
 def create_user(request):

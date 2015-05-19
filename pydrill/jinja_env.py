@@ -1,7 +1,7 @@
 from textwrap import dedent
 import random
 
-from flask import render_template_string, g
+from flask import render_template_string, g, render_template
 from jinja2 import Markup
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
@@ -9,6 +9,26 @@ import pygments
 
 from pydrill import app
 from pydrill import gen
+
+
+@app.template_filter('render_question')
+def render_question(question):
+    return Markup(render_template(
+        'question.html', question=question, vars=get_template_vars(question)))
+
+
+@app.template_filter('render_explained_question')
+def render_explained_question(question, given_answer):
+    return Markup(render_template(
+        'explained_question.html', question=question, given_answer=given_answer,
+        vars=get_template_vars(question)
+    ))
+
+
+def get_template_vars(question):
+    template = app.jinja_env.from_string(question.text)
+    random.seed(g.seed)
+    return vars(template.module)
 
 
 @app.template_filter('render')

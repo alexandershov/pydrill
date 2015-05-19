@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% include 'status.html' %}
+    {{ question|render_explained_question(given_answer) }}
+{% endblock %}
