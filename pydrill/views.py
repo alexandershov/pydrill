@@ -61,7 +61,7 @@ def set_globals():
 
 
 @app.after_request
-def execute_redis_pipeline(response):
+def save_user_and_execute_redis_pipeline(response):
     session['user'] = utils.user_as_dict(g.user)
     g.redis_pipeline.execute()
     return response
