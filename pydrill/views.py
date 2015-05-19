@@ -23,14 +23,19 @@ def ask(question_id, seed):
 @app.route('/answer/<question_id>/<answer_id>/<seed>/', methods=['POST'])
 def accept_answer(question_id, answer_id, seed):
     question, answer = get_cur_question_and_answer()
-    flash({'text': 'right!' if answer.is_correct else 'wrong!',
-           'explain_url': url_for('explain', question_id=question_id, answer_id=answer_id,
-                                  seed=seed),
-           'is_correct': answer.is_correct}, 'answer')
     if answer.is_correct and question.id not in g.user.answered:
         utils.add_score(g.user, question.difficulty)
     g.user.answered.add(question.id)
+    remember_answer(answer)
     return redirect(url_for('ask', question_id=get_next_question().id, seed=make_seed()))
+
+
+def remember_answer(answer):
+    explain_url = url_for('explain', question_id=answer.question.id, answer_id=answer.id,
+                          seed=g.seed)
+    flash({'text': 'right!' if answer.is_correct else 'wrong!',
+           'explain_url': explain_url,
+           'is_correct': answer.is_correct}, 'answer')
 
 
 @app.route('/score/')
