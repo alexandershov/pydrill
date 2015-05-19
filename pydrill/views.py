@@ -17,15 +17,12 @@ def ask_with_random_seed(question_id):
 
 @app.route('/ask/<question_id>/<seed>/')
 def ask(question_id, seed):
-    question = Question.query.get(question_id)
-    return render_template('ask.html', question=question)
+    return render_template('ask.html', question=get_cur_question())
 
 
 @app.route('/answer/<question_id>/<answer_id>/<seed>/', methods=['POST'])
 def accept_answer(question_id, answer_id, seed):
-    question = Question.query.get(question_id)
-    answer = Answer.query.get(answer_id)
-    assert answer.question == question
+    question, answer = get_cur_question_and_answer()
     flash({'text': 'right!' if answer.is_correct else 'wrong!',
            'explain_url': url_for('explain', question_id=question_id, answer_id=answer_id,
                                   seed=seed),
@@ -44,10 +41,7 @@ def show_score():
 
 @app.route('/explain/<question_id>/<answer_id>/<seed>/')
 def explain(question_id, answer_id, seed):
-    # TODO: DRY it up with ask and accept_answer
-    question = Question.query.get(question_id)
-    given_answer = Answer.query.get(answer_id)
-    assert given_answer.question == question
+    question, given_answer = get_cur_question_and_answer()
     return render_template('explain.html', question=question, given_answer=given_answer)
 
 
@@ -77,6 +71,21 @@ def get_next_question():
     if question is None:  # user answered every question, just give them a random one
         question = Question.query.order_by(func.random()).first()
     return question
+
+
+def get_cur_question():
+    return Question.query.get(request.view_args['question_id'])
+
+
+def get_cur_answer():
+    return Answer.query.get(request.view_args['answer_id'])
+
+
+def get_cur_question_and_answer():
+    question = get_cur_question()
+    answer = get_cur_answer()
+    assert answer.question == question
+    return question, answer
 
 
 def make_seed():
