@@ -40,8 +40,7 @@ def remember_answer(answer):
 
 @app.route('/score/')
 def show_score():
-    return render_template('score.html', team_scores=utils.get_team_scores(),
-                           score=utils.get_user_score())
+    return render_template('score.html', team_scores=utils.get_team_scores())
 
 
 @app.route('/explain/<question_id>/<answer_id>/<seed>/')
