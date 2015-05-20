@@ -83,11 +83,11 @@ def get_team_scores(teams=TEAMS):
         attrs.setdefault('score_sum', '0')
         typed_attrs = {name: int(value) for name, value in attrs.viewitems()}
         team_scores.append(TeamScore(team=team, **typed_attrs))
-    return sorted(team_scores, key=lambda ts: ts.avg_score, reverse=True)
+    return sorted(team_scores, key=lambda ts: ts.score, reverse=True)
 
 
-def get_team_key(name):
-    return 'team:{}'.format(name)
+def get_team_key(team):
+    return 'team:{}'.format(team)
 
 
 def init_user_score(user):
@@ -103,15 +103,11 @@ def add_score(user, delta):
         g.redis_pipeline.hincrby(get_team_key(team), 'score_sum', delta)
 
 
-def get_rank(user):
-    return redis_store.zrevrank('user_scores', user.id)
-
-
 class TeamScore(namedtuple('TeamScore', ['team', 'num_users', 'score_sum'])):
     __slots__ = ()
 
     @property
-    def avg_score(self):
+    def score(self):
         return safe_div(self.score_sum, self.num_users)
 
 
