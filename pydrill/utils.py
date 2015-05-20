@@ -10,15 +10,15 @@ from pydrill import redis_store
 
 
 class User(object):
-    def __init__(self, id=None, score=0, teams=None, answered=None):
+    def __init__(self, id=None, score=0, teams=None, answered_questions=None):
         self.id = id or str(uuid.uuid4())
         self.score = score
         self.teams = teams or []
-        self.answered = set(answered or [])  # TODO: better name?
+        self.answered_questions = set(answered_questions or [])
 
     @property
     def avg_score(self):
-        return safe_div(self.score, len(self.answered))
+        return safe_div(self.score, len(self.answered_questions))
 
     @property
     def rank(self):
@@ -26,9 +26,9 @@ class User(object):
         return (redis_store.zrevrank('user_scores', self.id) or 0) + 1
 
     def answer(self, question, answer):
-        if answer.is_correct and question.id not in g.user.answered:
+        if answer.is_correct and question.id not in self.answered_questions:
             add_score(self, question.difficulty)
-        self.answered.add(question.id)
+        self.answered_questions.add(question.id)
 
 
 def create_user():
@@ -39,7 +39,7 @@ def create_user():
 
 def user_as_dict(user):
     return {'id': user.id, 'score': user.score, 'teams': user.teams,
-            'answered': list(user.answered)}  # set is not JSON serializable
+            'answered_questions': list(user.answered_questions)}  # set is not JSON serializable
 
 
 _TEAM_BY_PLATFORM = {

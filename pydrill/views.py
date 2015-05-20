@@ -68,7 +68,7 @@ def save_user_and_execute_redis_pipeline(response):
 def get_next_question():
     distance_to_user_avg_score = func.abs(Question.difficulty - g.user.avg_score)
     question = (Question.query
-                .filter(~Question.id.in_(g.user.answered))
+                .filter(~Question.id.in_(g.user.answered_questions))
                 .order_by(distance_to_user_avg_score)
                 .first())
     if question is None:
