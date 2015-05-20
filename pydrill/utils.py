@@ -72,18 +72,21 @@ def get_cur_teams():
     return teams
 
 
-def get_team_scores(teams=TEAMS):
-    team_scores = []
+def get_teams_scores(teams=TEAMS):
+    teams_scores = []
+    teams_attrs = hgetall_many(map(get_team_key, teams))
+    for team, attrs in zip(teams, teams_attrs):
+        teams_scores.append(TeamScore(team=team,
+                                      num_users=int(attrs.get('num_users', 0)),
+                                      score_sum=int(attrs.get('score_sum', 0))))
+    return sorted(teams_scores, key=lambda ts: ts.score, reverse=True)
+
+
+def hgetall_many(keys):
     p = redis_store.pipeline(transaction=False)
-    for team in teams:
-        p.hgetall(get_team_key(team))
-    team_dicts = p.execute()
-    for team, attrs in zip(teams, team_dicts):
-        attrs.setdefault('num_users', '0')
-        attrs.setdefault('score_sum', '0')
-        typed_attrs = {name: int(value) for name, value in attrs.viewitems()}
-        team_scores.append(TeamScore(team=team, **typed_attrs))
-    return sorted(team_scores, key=lambda ts: ts.score, reverse=True)
+    for key in keys:
+        p.hgetall(key)
+    return p.execute()
 
 
 def get_team_key(team):
@@ -103,6 +106,7 @@ def add_score(user, delta):
         g.redis_pipeline.hincrby(get_team_key(team), 'score_sum', delta)
 
 
+# TODO: create and use Team class instead
 class TeamScore(namedtuple('TeamScore', ['team', 'num_users', 'score_sum'])):
     __slots__ = ()
 

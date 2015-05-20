@@ -5,7 +5,7 @@
 {% block content %}
     {% include 'status.html' %}
     <ul>
-        {% for team_score in team_scores %}
+        {% for team_score in teams_scores %}
             <li {% if team_score.team in g.user.teams %}class="user-team"{% endif %}>
                 {{ team_score.team }}: {{ team_score.score }}
             </li>

@@ -38,7 +38,7 @@ def remember_answer(answer):
 
 @app.route('/score/')
 def show_score():
-    return render_template('score.html', team_scores=utils.get_team_scores())
+    return render_template('score.html', teams_scores=utils.get_teams_scores())
 
 
 @app.route('/explain/<question_id>/<answer_id>/<seed>/')
