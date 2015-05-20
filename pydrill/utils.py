@@ -12,7 +12,7 @@ from pydrill import redis_store
 class User(object):
     def __init__(self, id=None, score=0, teams=None, answered=None):
         self.id = id or str(uuid.uuid4())
-        self.score = score  # TODO: rename to score_sum? or rename Team.score_sum to Team.score?
+        self.score = score
         self.teams = teams or []
         self.answered = set(answered or [])  # TODO: better name?
 
@@ -24,6 +24,11 @@ class User(object):
     def rank(self):
         # `... + 1` is to convert from zero-indexing to one-indexing
         return (redis_store.zrevrank('user_scores', self.id) or 0) + 1
+
+    def answer(self, question, answer):
+        if answer.is_correct and question.id not in g.user.answered:
+            add_score(self, question.difficulty)
+        self.answered.add(question.id)
 
 
 def create_user():

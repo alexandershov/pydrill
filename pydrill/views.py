@@ -23,9 +23,7 @@ def ask(question_id, seed):
 @app.route('/answer/<question_id>/<answer_id>/<seed>/', methods=['POST'])
 def accept_answer(question_id, answer_id, seed):
     question, answer = get_cur_question_and_answer()
-    if answer.is_correct and question.id not in g.user.answered:
-        utils.add_score(g.user, question.difficulty)
-    g.user.answered.add(question.id)
+    g.user.answer(question, answer)
     remember_answer(answer)
     return redirect(url_for('ask', question_id=get_next_question().id, seed=make_seed()))
 
@@ -68,11 +66,13 @@ def save_user_and_execute_redis_pipeline(response):
 
 
 def get_next_question():
+    distance_to_user_avg_score = func.abs(Question.difficulty - g.user.avg_score)
     question = (Question.query
                 .filter(~Question.id.in_(g.user.answered))
-                .order_by(func.abs(Question.difficulty - g.user.avg_score))
+                .order_by(distance_to_user_avg_score)
                 .first())
-    if question is None:  # user answered every question, just give them a random one
+    if question is None:
+        # user answered every question, just give them a random one
         question = Question.query.order_by(func.random()).first()
     return question
 
