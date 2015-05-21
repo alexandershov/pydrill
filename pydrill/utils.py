@@ -11,8 +11,8 @@ from pydrill import redis_store
 
 class User(object):
     @classmethod
-    def create(cls, teams):
-        user = cls(teams=teams)
+    def create(cls, *args, **kwargs):
+        user = cls(*args, **kwargs)
         init_user_score(user)
         return user
 
