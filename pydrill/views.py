@@ -1,6 +1,6 @@
 from random import SystemRandom
 
-from flask import flash, g, redirect, render_template, request, session, url_for
+from flask import g, redirect, render_template, request, session, url_for
 from sqlalchemy import func
 
 from pydrill import app, redis_store
@@ -31,9 +31,8 @@ def accept_answer(question_id, answer_id, seed):
 def remember_answer(answer):
     explain_url = url_for('explain', question_id=answer.question.id, answer_id=answer.id,
                           seed=g.seed)
-    flash({'text': 'right!' if answer.is_correct else 'wrong!',
-           'explain_url': explain_url,
-           'is_correct': answer.is_correct}, 'answer')
+    session['prev_answer'] = {'is_correct': answer.is_correct,
+                              'explain_url': explain_url}
 
 
 @app.route('/score/')

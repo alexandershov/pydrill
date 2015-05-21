@@ -1,7 +1,7 @@
 from textwrap import dedent
 import random
 
-from flask import render_template_string, g, render_template
+from flask import render_template_string, g, render_template, session
 from jinja2 import Markup
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
@@ -61,4 +61,15 @@ def highlight_inline(s, language='python'):
     return highlight_with_css_class(s, language, 'highlight-inline')
 
 
-app.jinja_env.globals.update(gen=gen)
+@app.template_filter()
+def get_answer_message(answer_is_correct):
+    if answer_is_correct:
+        return 'right!'
+    return 'wrong!'
+
+
+def get_prev_answer():
+    return session.pop('prev_answer', None)
+
+
+app.jinja_env.globals.update(gen=gen, get_prev_answer=get_prev_answer)

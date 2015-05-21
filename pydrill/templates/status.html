@@ -1,17 +1,15 @@
 <div class="status">
-    {% with answers = get_flashed_messages(category_filter=['answer']) %}
-        {% if answers %}
-            {% with prev_answer = answers[-1] %}
-                <span class="{% if prev_answer['is_correct'] %}correct{% else %}wrong{% endif %}">
-                    {{ prev_answer['text'] }}
+    {% with prev_answer = get_prev_answer() %}
+        {% if prev_answer is not none %}
+            <span class="{% if prev_answer['is_correct'] %}correct{% else %}wrong{% endif %}">
+                    {{ prev_answer['is_correct']|get_answer_message }}
                 </span>
-                <a href="{{ prev_answer['explain_url'] }}">
-                    Why?
-                </a>
-            {% endwith %}
+            <a href="{{ prev_answer['explain_url'] }}">
+                Why?
+            </a>
         {% endif %}
-        <a href="{{ url_for('show_score') }}" class="score" title="Place #{{ g.user.rank }}">
-            Score: {{ g.user.score }}
-        </a>
     {% endwith %}
+    <a href="{{ url_for('show_score') }}" class="score" title="Place #{{ g.user.rank }}">
+        Score: {{ g.user.score }}
+    </a>
 </div>
