@@ -5,9 +5,9 @@
 {% block content %}
     {% include 'status.html' %}
     <ul>
-        {% for team_score in teams_scores %}
-            <li {% if team_score.team in g.user.teams %}class="user-team"{% endif %}>
-                {{ team_score.team }}: {{ team_score.score }}
+        {% for ts in teams_scores %}
+            <li {% if ts.team in g.user.teams %}class="user-team"{% endif %}>
+                {{ ts.team }}: {{ ts.score }}
             </li>
         {% endfor %}
     </ul>

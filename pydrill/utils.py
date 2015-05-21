@@ -10,6 +10,12 @@ from pydrill import redis_store
 
 
 class User(object):
+    @classmethod
+    def create(cls, teams):
+        user = cls(teams=teams)
+        init_user_score(user)
+        return user
+
     def __init__(self, id=None, score=0, teams=None, answered_questions=None):
         self.id = id or str(uuid.uuid4())
         self.score = score
@@ -29,12 +35,6 @@ class User(object):
         if answer.is_correct and question.id not in self.answered_questions:
             add_score(self, question.difficulty)
         self.answered_questions.add(question.id)
-
-
-def create_user():
-    user = User(teams=get_cur_teams())
-    init_user_score(user)
-    return user
 
 
 def user_as_dict(user):
