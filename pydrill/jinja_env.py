@@ -11,13 +11,13 @@ from pydrill import app
 from pydrill import gen
 
 
-@app.template_filter('render_question')
+@app.template_filter()
 def render_question(question):
     return Markup(render_template(
         'question.html', question=question, vars=get_template_vars(question)))
 
 
-@app.template_filter('render_explained_question')
+@app.template_filter()
 def render_explained_question(question, given_answer):
     return Markup(render_template(
         'explained_question.html', question=question, given_answer=given_answer,
@@ -31,13 +31,13 @@ def get_template_vars(question):
     return vars(template.module)
 
 
-@app.template_filter('render')
+@app.template_filter()
 def render(template, vars={}):
     random.seed(g.seed)
     return Markup(render_template_string(template, **vars))
 
 
-@app.template_filter('in_random_order')
+@app.template_filter()
 def in_random_order(iterable):
     items = list(iterable)
     random.shuffle(items)
@@ -51,12 +51,12 @@ def highlight_with_css_class(s, language, css_class):
                               formatter).strip()
 
 
-@app.template_filter('highlight')
+@app.template_filter()
 def highlight(s, language='python'):
     return highlight_with_css_class(s, language, 'highlight')
 
 
-@app.template_filter('highlight_inline')
+@app.template_filter()
 def highlight_inline(s, language='python'):
     return highlight_with_css_class(s, language, 'highlight-inline')
 
