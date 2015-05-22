@@ -7276,7 +7276,9 @@ button.close {
   display: inline-block;
 }
 .question .text {
-  margin: 10px 0 0 0;
+  margin: 10px 0 10px 0;
+  padding-bottom: 5px;
+  border-bottom: 3px solid #e5e5e5;
 }
 .highlighted {
   background: #e1e8f0;
@@ -7319,6 +7321,9 @@ button.close {
   margin: 0;
   border: 0;
   background-color: transparent;
+}
+.bullet {
+  color: #337ab7;
 }
 .answer:hover:not(.static-answer) {
   background-color: #ffffa0;
@@ -7368,13 +7373,14 @@ button.close {
   border-bottom: 1px solid #e5e5e5;
 }
 .score {
-  margin-left: 50%;
+  margin-left: 58.33333333%;
   position: relative;
   float: left;
-  width: 16.66666667%;
+  width: 8.33333333%;
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
+  padding-right: 10px;
 }
 .user-team {
   font-weight: bold;

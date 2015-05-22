@@ -15,8 +15,11 @@
 
 .question {
   display: inline-block;
+
   .text {
-    margin: 10px 0 0 0;
+    margin: 10px 0 10px 0;
+    padding-bottom: 5px;
+    border-bottom: 3px solid #e5e5e5;
   }
 }
 
@@ -51,6 +54,10 @@
   pre {
     .unbootstraped-pre;
   }
+}
+
+.bullet {
+  color: @link-color;
 }
 
 .answer:hover:not(.static-answer) {
@@ -91,8 +98,9 @@
 }
 
 .score {
-  .make-xs-column-offset(6);
-  .make-xs-column(2);
+  .make-xs-column-offset(7);
+  .make-xs-column(1);
+  padding-right: 10px;
 }
 
 .user-team {
