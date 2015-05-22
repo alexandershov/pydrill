@@ -8,18 +8,13 @@
   .border-left-radius(@radius);
 }
 
-.wrapper {
-  .make-row();
-}
-
-.content {
-  .make-sm-column(8);
-  .make-sm-column-offset(2);
+.question-wrapper {
+  .make-xs-column(8);
+  .make-xs-column-offset(2);
 }
 
 .question {
   display: inline-block;
-
   .text {
     margin: 10px 0 0 0;
   }
@@ -42,7 +37,6 @@
   padding: 4px;
   margin: 0 0 4px 0;
   .border-radius(2px);
-
   pre {
     .unbootstraped-pre;
   }
@@ -67,6 +61,11 @@
   text-align: left;
 }
 
+.prev-answer {
+  .make-xs-column(2);
+  .make-xs-column-offset(2);
+}
+
 .message {
   padding: 0.2em 0.4em;
   .border-radius(4px);
@@ -85,11 +84,15 @@
 }
 
 .status {
-  margin: 8px 0 0 0;
+  .make-row();
+  padding: 10px 0 5px 0;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #e5e5e5;
 }
 
 .score {
-  float: right;
+  .make-xs-column-offset(6);
+  .make-xs-column(2);
 }
 
 .user-team {

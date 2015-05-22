@@ -4,5 +4,9 @@
 
 {% block content %}
     {% include 'status.html' %}
-    {{ question|render_question }}
+    <div class="row">
+        <div class="question-wrapper">
+            {{ question|render_question }}
+        </div>
+    </div>
 {% endblock %}
