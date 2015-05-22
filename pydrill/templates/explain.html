@@ -1,9 +1,13 @@
 {% extends 'base.html' %}
 
+{# TODO: remove duplication with ask.html #}
 {% block content %}
     {% include 'status.html' %}
     <div class="row">
-        <div class="question-wrapper">
+        <div class="content">Alrighty, the question was:</div>
+    </div>
+    <div class="row">
+        <div class="question-wrapper explanation">
             {{ question|render_explained_question(given_answer) }}
         </div>
     </div>

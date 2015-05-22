@@ -4,11 +4,13 @@
 
 {% block content %}
     {% include 'status.html' %}
-    <ul>
-        {% for ts in teams_scores %}
-            <li {% if ts.team in g.user.teams %}class="user-team"{% endif %}>
-                {{ ts.team }}: {{ ts.score }}
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="content">
+        <ul>
+            {% for ts in teams_scores %}
+                <li {% if ts.team in g.user.teams %}class="user-team"{% endif %}>
+                    {{ ts.team }}: {{ ts.score }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}

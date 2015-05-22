@@ -8,9 +8,24 @@
   .border-left-radius(@radius);
 }
 
+// TODO: use this class for question-wrapper etc
+.content {
+  .make-xs-column(8);
+  .make-xs-column-offset(2);
+}
+
 .question-wrapper {
   .make-xs-column(8);
   .make-xs-column-offset(2);
+}
+
+.explanation {
+  margin-top: 10px;
+
+  .question {
+    border-left: @blockquote-border-color 5px solid;
+    padding-left: 10px;
+  }
 }
 
 .question {
