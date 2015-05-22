@@ -2,8 +2,7 @@
     {% with prev_answer = get_prev_answer() %}
         {% if prev_answer is not none %}
             <span class="{% if prev_answer['is_correct'] %}correct{% else %}wrong{% endif %}">
-                    {{ prev_answer['is_correct']|get_answer_message }}
-                </span>
+                {{ prev_answer['is_correct']|get_answer_message }}</span>
             <a href="{{ prev_answer['explain_url'] }}">
                 Why?
             </a>
