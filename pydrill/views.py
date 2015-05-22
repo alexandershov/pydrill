@@ -48,6 +48,9 @@ def explain(question_id, answer_id, seed):
 
 @app.before_request
 def set_globals():
+    if request.view_args is None:
+        # no matching rule
+        return
     # setting g.redis_pipeline first because it's used by utils.create_user
     g.redis_pipeline = redis_store.pipeline(transaction=False)
     g.seed = request.view_args.get('seed')
@@ -59,6 +62,9 @@ def set_globals():
 
 @app.after_request
 def save_user_and_execute_redis_pipeline(response):
+    if request.view_args is None:
+        # no matching rule
+        return response
     session['user'] = utils.user_as_dict(g.user)
     g.redis_pipeline.execute()
     return response
