@@ -7288,6 +7288,9 @@ button.close {
   border-left: #eeeeee 5px solid;
   padding-left: 10px;
 }
+.explanation .paragraph {
+  margin-bottom: 1em;
+}
 .question {
   display: inline-block;
 }

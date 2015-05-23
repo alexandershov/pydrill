@@ -8,11 +8,53 @@ text: |
   {% endfilter %}
 
   What is the value of {{ var|highlight_inline }}?
-explanation: '{{ (x + y) // 2 }} in python2, {{ (x + y)|float / 2 }} in python3'
+explanation: |
+  <div class="paragraph">
+    We probably wanted to get {% filter highlight_inline %}{{ (x + y) / 2 }}{% endfilter %},
+    but the answer (in Python 2.7) is {% filter highlight_inline %}{{ (x + y) // 2 }}{% endfilter %}.
+    That sucks. What can we do about it?
+  </div>
+  <div class="paragraph">
+    <strong>1.</strong> The most radical way is to use Python 3:
+    {% filter highlight('pycon') %}
+      Python 3.4.0 (default, Apr 11 2014, 13:05:11)
+      [GCC 4.8.2] on linux
+      Type "help", "copyright", "credits" or "license" for more information.
+      >>> ({{ x }} + {{ y }}) / 2
+      {{ (x + y) / 2 }}
+    {% endfilter %}
+    That's good, but everybody knows that Python 2.7 is the future of Python.
+    So let's stick to Python 2.
+  </div>
+  <div class="paragraph">
+    <strong>2.</strong> We can convert numerator
+    (that's {% filter highlight_inline %}{{ x }} + {{ y }}{% endfilter %})
+    or denumerator (that's {{ 2|highlight_inline }}) to a float number:
+    {% filter highlight('pycon') %}
+      >>> float({{ x }} + {{ y }}) / 2
+      {{ (x + y) / 2 }} # yes!
+      # or
+      >>> ({{ x }} + {{ y }}) / float(2)
+      {{ (x + y) / 2 }} # yes!
+      # or
+      >>> ({{ x }} + {{ y }}) / 2.0
+      {{ (x + y) / 2 }} # yes!
+    {% endfilter %}
+  </div>
+  <div class="paragraph">
+    <strong>3.</strong> Start your python files with the line
+    {% filter highlight_inline %}from __future__ import division{% endfilter %}
+    {% filter highlight('pycon') %}
+      # make python2 to use python3-style division
+      >>> from __future__ import division
+      >>> ({{ x }} + {{ y }}) / 2
+      {{ (x + y) / 2 }} # yes!
+    {% endfilter %}
+  </div>
 difficulty: 1
 answers:
   - is_correct: true
     text: '{{ (x + y) // 2 }}'
   - is_correct: false
-    text: '{{ (x + y)|float / 2 }}'
+    text: '{{ (x + y) / 2.0 }}'
 
