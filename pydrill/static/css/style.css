@@ -7283,6 +7283,7 @@ button.close {
 }
 .explanation {
   margin-top: 10px;
+  display: inline-block;
 }
 .explanation .question {
   border-left: #eeeeee 5px solid;
@@ -7346,6 +7347,15 @@ button.close {
 }
 .answer:hover:not(.static-answer) {
   background-color: #ffffa0;
+}
+.answer {
+  padding-left: 3px;
+  border-bottom: 1px solid silver;
+  border-left: 1px solid silver;
+  border-right: 1px solid silver;
+}
+.answer:first-child {
+  border-top: 1px solid silver;
 }
 .answer button {
   text-align: left;

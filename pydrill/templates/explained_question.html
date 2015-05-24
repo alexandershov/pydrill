@@ -2,7 +2,7 @@
 
 {% block answer %}
     <div class="answer static-answer
-              {% if answer.is_correct %}correct{% elif answer == given_answer %}wrong{% endif %}">
+              {% if answer.is_correct %}correct-answer{% elif answer == given_answer %}wrong-answer{% endif %}">
         {{ answer.text|render(vars) }}
     </div>
 {% endblock %}

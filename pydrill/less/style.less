@@ -21,6 +21,7 @@
 
 .explanation {
   margin-top: 10px;
+  display: inline-block;
 
   .question {
     border-left: @blockquote-border-color 5px solid;
@@ -83,8 +84,19 @@
   background-color: #ffffa0;
 }
 
-.answer button {
-  text-align: left;
+.answer {
+  padding-left: 3px;
+  border-bottom: 1px solid silver;
+  border-left: 1px solid silver;
+  border-right: 1px solid silver;
+
+  &:first-child {
+    border-top: 1px solid silver;
+  }
+
+  button {
+    text-align: left;
+  }
 }
 
 .prev-answer {
