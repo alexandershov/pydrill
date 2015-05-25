@@ -7402,13 +7402,14 @@ button.close {
   border-bottom: 1px solid #e5e5e5;
 }
 .score {
-  margin-left: 58.33333333%;
+  margin-left: 33.33333333%;
   position: relative;
   float: left;
-  width: 8.33333333%;
+  width: 33.33333333%;
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
+  text-align: right;
   padding-right: 10px;
 }
 .user-team {
