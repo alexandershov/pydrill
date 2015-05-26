@@ -7292,6 +7292,11 @@ button.close {
   padding-left: 15px;
   padding-right: 15px;
 }
+@media (max-width: 767px) {
+  .question-wrapper {
+    padding: 0;
+  }
+}
 @media (min-width: 992px) {
   .question-wrapper {
     float: left;
@@ -7325,8 +7330,12 @@ button.close {
 }
 .question .text {
   margin: 10px 0 10px 0;
-  padding-bottom: 5px;
   border-bottom: 3px solid #e5e5e5;
+}
+@media (max-width: 767px) {
+  .question .text {
+    padding: 0 10px 5px 10px;
+  }
 }
 .highlighted {
   background: #e1e8f0;
@@ -7377,10 +7386,13 @@ button.close {
   background-color: #ffffa0;
 }
 .answer {
-  padding-left: 3px;
   border-bottom: 1px solid silver;
-  border-left: 1px solid silver;
-  border-right: 1px solid silver;
+}
+@media (min-width: 991px) {
+  .answer {
+    border-left: 1px solid silver;
+    border-right: 1px solid silver;
+  }
 }
 .answer:first-child {
   border-top: 1px solid silver;

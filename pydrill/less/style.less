@@ -19,13 +19,16 @@
 .question-wrapper {
   .make-xs-column(12);
   .make-xs-column-offset(0);
+  @media (max-width: @screen-xs-max) {
+    padding: 0;
+  }
   .make-md-column(8);
   .make-md-column-offset(2);
 }
 
 .explanation {
   margin-top: 10px;
-  @media(min-width: @screen-sm-max) {
+  @media (min-width: @screen-sm-max) {
     display: inline-block;
   }
 
@@ -41,13 +44,15 @@
 
 .question {
   // TODO: DRY it up with .explanation display
-  @media(min-width: @screen-sm-max) {
+  @media (min-width: @screen-sm-max) {
     display: inline-block;
   }
 
   .text {
     margin: 10px 0 10px 0;
-    padding-bottom: 5px;
+    @media (max-width: @screen-xs-max) {
+      padding: 0 10px 5px 10px;
+    }
     border-bottom: 3px solid #e5e5e5;
   }
 }
@@ -94,10 +99,12 @@
 }
 
 .answer {
-  padding-left: 3px;
   border-bottom: 1px solid silver;
-  border-left: 1px solid silver;
-  border-right: 1px solid silver;
+
+  @media (min-width: @screen-sm-max) {
+    border-left: 1px solid silver;
+    border-right: 1px solid silver;
+  }
 
   &:first-child {
     border-top: 1px solid silver;
