@@ -7264,26 +7264,52 @@ button.close {
   }
 }
 .content {
-  position: relative;
   float: left;
-  width: 66.66666667%;
+  width: 100%;
+  margin-left: 0%;
+  position: relative;
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
-  margin-left: 16.66666667%;
+}
+@media (min-width: 992px) {
+  .content {
+    float: left;
+    width: 66.66666667%;
+  }
+}
+@media (min-width: 992px) {
+  .content {
+    margin-left: 16.66666667%;
+  }
 }
 .question-wrapper {
-  position: relative;
   float: left;
-  width: 66.66666667%;
+  width: 100%;
+  margin-left: 0%;
+  position: relative;
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
-  margin-left: 16.66666667%;
+}
+@media (min-width: 992px) {
+  .question-wrapper {
+    float: left;
+    width: 66.66666667%;
+  }
+}
+@media (min-width: 992px) {
+  .question-wrapper {
+    margin-left: 16.66666667%;
+  }
 }
 .explanation {
   margin-top: 10px;
-  display: inline-block;
+}
+@media (min-width: 991px) {
+  .explanation {
+    display: inline-block;
+  }
 }
 .explanation .question {
   border-left: #eeeeee 5px solid;
@@ -7292,8 +7318,10 @@ button.close {
 .explanation .paragraph {
   margin-bottom: 1em;
 }
-.question {
-  display: inline-block;
+@media (min-width: 991px) {
+  .question {
+    display: inline-block;
+  }
 }
 .question .text {
   margin: 10px 0 10px 0;
@@ -7361,13 +7389,24 @@ button.close {
   text-align: left;
 }
 .prev-answer {
+  margin-left: 0%;
   position: relative;
   float: left;
-  width: 16.66666667%;
+  width: 50%;
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
-  margin-left: 16.66666667%;
+}
+@media (min-width: 992px) {
+  .prev-answer {
+    float: left;
+    width: 16.66666667%;
+  }
+}
+@media (min-width: 992px) {
+  .prev-answer {
+    margin-left: 16.66666667%;
+  }
 }
 .message {
   padding: 0.2em 0.4em;
@@ -7402,15 +7441,26 @@ button.close {
   border-bottom: 1px solid #e5e5e5;
 }
 .score {
-  margin-left: 33.33333333%;
+  margin-left: 50%;
   position: relative;
   float: left;
-  width: 33.33333333%;
+  width: 50%;
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
   text-align: right;
   padding-right: 10px;
+}
+@media (min-width: 992px) {
+  .score {
+    margin-left: 33.33333333%;
+  }
+}
+@media (min-width: 992px) {
+  .score {
+    float: left;
+    width: 33.33333333%;
+  }
 }
 .user-team {
   font-weight: bold;

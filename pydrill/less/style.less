@@ -10,18 +10,24 @@
 
 // TODO: use this class for question-wrapper etc
 .content {
-  .make-xs-column(8);
-  .make-xs-column-offset(2);
+  .make-xs-column(12);
+  .make-xs-column-offset(0);
+  .make-md-column(8);
+  .make-md-column-offset(2);
 }
 
 .question-wrapper {
-  .make-xs-column(8);
-  .make-xs-column-offset(2);
+  .make-xs-column(12);
+  .make-xs-column-offset(0);
+  .make-md-column(8);
+  .make-md-column-offset(2);
 }
 
 .explanation {
   margin-top: 10px;
-  display: inline-block;
+  @media(min-width: @screen-sm-max) {
+    display: inline-block;
+  }
 
   .question {
     border-left: @blockquote-border-color 5px solid;
@@ -34,7 +40,10 @@
 }
 
 .question {
-  display: inline-block;
+  // TODO: DRY it up with .explanation display
+  @media(min-width: @screen-sm-max) {
+    display: inline-block;
+  }
 
   .text {
     margin: 10px 0 10px 0;
@@ -100,8 +109,10 @@
 }
 
 .prev-answer {
-  .make-xs-column(2);
-  .make-xs-column-offset(2);
+  .make-md-column(2);
+  .make-md-column-offset(2);
+  .make-xs-column-offset(0);
+  .make-xs-column(6)
 }
 
 .message {
@@ -129,8 +140,10 @@
 }
 
 .score {
-  .make-xs-column-offset(4);
-  .make-xs-column(4);
+  .make-md-column-offset(4);
+  .make-md-column(4);
+  .make-xs-column-offset(6);
+  .make-xs-column(6);
   text-align: right;
   padding-right: 10px;
 }
