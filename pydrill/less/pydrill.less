@@ -8,22 +8,16 @@
   .border-left-radius(@radius);
 }
 
-// TODO: use this class for question-wrapper etc
 .content {
   .make-xs-column(12);
   .make-xs-column-offset(0);
   .make-md-column(8);
   .make-md-column-offset(2);
-}
 
-.question-wrapper {
-  .make-xs-column(12);
-  .make-xs-column-offset(0);
+  // full width on mobile
   @media (max-width: @screen-xs-max) {
     padding: 0;
   }
-  .make-md-column(8);
-  .make-md-column-offset(2);
 }
 
 .explanation {
