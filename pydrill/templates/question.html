@@ -7,7 +7,7 @@
                     <form method="POST"
                           action="{{ url_for('accept_answer', question_id=question.id,
                                                               answer_id=answer.id, seed=g.seed) }}">
-                        <button type="submit" class="btn-link btn-block answer-button">
+                        <button type="submit" class="answer-button">
                             {{ answer.text|render(vars) }}
                         </button>
                     </form>
