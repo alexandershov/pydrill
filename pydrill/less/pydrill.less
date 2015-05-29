@@ -24,6 +24,7 @@
     .make-xs-column(6);
     .make-md-column(2);
     .make-md-column-offset(2);
+    // TODO: add variable @xs-left-padding
     .xs-padding(0 0 0 1em);
   }
 
@@ -110,15 +111,24 @@
   }
 }
 
-.answer {
-  .answer-button {
-    .btn();
-    .btn-default();
-    .btn-block();
-    .border-radius(0);
-    text-align: left;
-    .xs-padding-left(1em);
+.answer-button {
+  .btn();
+  .btn-default();
+  .btn-block();
+  .border-radius(0);
+  text-align: left;
+  .xs-padding-left(1em);
+  position: relative;
+
+  // correctly highlighting adjacent borders
+  &:hover {
+    z-index: 2;
   }
+}
+
+// don't double adjacent borders
+.answers form:not(:first-child) .answer-button {
+  margin-top: -1px;
 }
 
 .user-team {

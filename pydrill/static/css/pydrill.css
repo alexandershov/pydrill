@@ -7396,7 +7396,7 @@ button.close {
   border: 0;
   display: inline;
 }
-.answer .answer-button {
+.answer-button {
   display: inline-block;
   margin-bottom: 0;
   font-weight: normal;
@@ -7425,108 +7425,115 @@ button.close {
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
   text-align: left;
+  position: relative;
 }
-.answer .answer-button:focus,
-.answer .answer-button:active:focus,
-.answer .answer-button.active:focus,
-.answer .answer-button.focus,
-.answer .answer-button:active.focus,
-.answer .answer-button.active.focus {
+.answer-button:focus,
+.answer-button:active:focus,
+.answer-button.active:focus,
+.answer-button.focus,
+.answer-button:active.focus,
+.answer-button.active.focus {
   outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
-.answer .answer-button:hover,
-.answer .answer-button:focus,
-.answer .answer-button.focus {
+.answer-button:hover,
+.answer-button:focus,
+.answer-button.focus {
   color: #333333;
   text-decoration: none;
 }
-.answer .answer-button:active,
-.answer .answer-button.active {
+.answer-button:active,
+.answer-button.active {
   outline: 0;
   background-image: none;
   -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
-.answer .answer-button.disabled,
-.answer .answer-button[disabled],
-fieldset[disabled] .answer .answer-button {
+.answer-button.disabled,
+.answer-button[disabled],
+fieldset[disabled] .answer-button {
   cursor: not-allowed;
   opacity: 0.65;
   filter: alpha(opacity=65);
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-a.answer .answer-button.disabled,
-fieldset[disabled] a.answer .answer-button {
+a.answer-button.disabled,
+fieldset[disabled] a.answer-button {
   pointer-events: none;
 }
-.answer .answer-button:focus,
-.answer .answer-button.focus {
+.answer-button:focus,
+.answer-button.focus {
   color: #333333;
   background-color: #e6e6e6;
   border-color: #8c8c8c;
 }
-.answer .answer-button:hover {
+.answer-button:hover {
   color: #333333;
   background-color: #e6e6e6;
   border-color: #adadad;
 }
-.answer .answer-button:active,
-.answer .answer-button.active,
-.open > .dropdown-toggle.answer .answer-button {
+.answer-button:active,
+.answer-button.active,
+.open > .dropdown-toggle.answer-button {
   color: #333333;
   background-color: #e6e6e6;
   border-color: #adadad;
 }
-.answer .answer-button:active:hover,
-.answer .answer-button.active:hover,
-.open > .dropdown-toggle.answer .answer-button:hover,
-.answer .answer-button:active:focus,
-.answer .answer-button.active:focus,
-.open > .dropdown-toggle.answer .answer-button:focus,
-.answer .answer-button:active.focus,
-.answer .answer-button.active.focus,
-.open > .dropdown-toggle.answer .answer-button.focus {
+.answer-button:active:hover,
+.answer-button.active:hover,
+.open > .dropdown-toggle.answer-button:hover,
+.answer-button:active:focus,
+.answer-button.active:focus,
+.open > .dropdown-toggle.answer-button:focus,
+.answer-button:active.focus,
+.answer-button.active.focus,
+.open > .dropdown-toggle.answer-button.focus {
   color: #333333;
   background-color: #d4d4d4;
   border-color: #8c8c8c;
 }
-.answer .answer-button:active,
-.answer .answer-button.active,
-.open > .dropdown-toggle.answer .answer-button {
+.answer-button:active,
+.answer-button.active,
+.open > .dropdown-toggle.answer-button {
   background-image: none;
 }
-.answer .answer-button.disabled,
-.answer .answer-button[disabled],
-fieldset[disabled] .answer .answer-button,
-.answer .answer-button.disabled:hover,
-.answer .answer-button[disabled]:hover,
-fieldset[disabled] .answer .answer-button:hover,
-.answer .answer-button.disabled:focus,
-.answer .answer-button[disabled]:focus,
-fieldset[disabled] .answer .answer-button:focus,
-.answer .answer-button.disabled.focus,
-.answer .answer-button[disabled].focus,
-fieldset[disabled] .answer .answer-button.focus,
-.answer .answer-button.disabled:active,
-.answer .answer-button[disabled]:active,
-fieldset[disabled] .answer .answer-button:active,
-.answer .answer-button.disabled.active,
-.answer .answer-button[disabled].active,
-fieldset[disabled] .answer .answer-button.active {
+.answer-button.disabled,
+.answer-button[disabled],
+fieldset[disabled] .answer-button,
+.answer-button.disabled:hover,
+.answer-button[disabled]:hover,
+fieldset[disabled] .answer-button:hover,
+.answer-button.disabled:focus,
+.answer-button[disabled]:focus,
+fieldset[disabled] .answer-button:focus,
+.answer-button.disabled.focus,
+.answer-button[disabled].focus,
+fieldset[disabled] .answer-button.focus,
+.answer-button.disabled:active,
+.answer-button[disabled]:active,
+fieldset[disabled] .answer-button:active,
+.answer-button.disabled.active,
+.answer-button[disabled].active,
+fieldset[disabled] .answer-button.active {
   background-color: #ffffff;
   border-color: #cccccc;
 }
-.answer .answer-button .badge {
+.answer-button .badge {
   color: #ffffff;
   background-color: #333333;
 }
 @media (max-width: 767px) {
-  .answer .answer-button {
+  .answer-button {
     padding-left: 1em;
   }
+}
+.answer-button:hover {
+  z-index: 2;
+}
+.answers form:not(:first-child) .answer-button {
+  margin-top: -1px;
 }
 .user-team {
   font-weight: bold;

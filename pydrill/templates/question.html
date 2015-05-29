@@ -1,17 +1,15 @@
 <div class="question">
     <div class="text">{{ question.text|render }}</div>
-    <div class="answers" role="group">
+    <div class="answers">
         {% for answer in question.answers|in_random_order %}
             {% block answer scoped %}
-                <div class="answer">
-                    <form method="POST"
-                          action="{{ url_for('accept_answer', question_id=question.id,
+                <form method="POST"
+                      action="{{ url_for('accept_answer', question_id=question.id,
                                                               answer_id=answer.id, seed=g.seed) }}">
-                        <button type="submit" class="answer-button">
-                            {{ answer.text|render(vars) }}
-                        </button>
-                    </form>
-                </div>
+                    <button type="submit" class="answer-button">
+                        {{ answer.text|render(vars) }}
+                    </button>
+                </form>
             {% endblock %}
         {% endfor %}
     </div>
