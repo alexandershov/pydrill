@@ -7271,6 +7271,25 @@ button.close {
   padding: 0.3em 0;
   margin-bottom: 1em;
 }
+.header .prev-answer {
+  float: left;
+  width: 50%;
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 992px) {
+  .header .prev-answer {
+    float: left;
+    width: 16.66666667%;
+  }
+}
+@media (min-width: 992px) {
+  .header .prev-answer {
+    margin-left: 16.66666667%;
+  }
+}
 .header .prev-correct {
   border-top-right-radius: 0.25em;
   border-bottom-right-radius: 0.25em;
@@ -7289,28 +7308,42 @@ button.close {
   background-color: #f2dede;
   color: #a94442;
 }
-.content {
+.header .score {
+  float: left;
+  width: 50%;
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+  text-align: right;
+}
+@media (min-width: 992px) {
+  .header .score {
+    float: left;
+    width: 33.33333333%;
+  }
+}
+.main {
   float: left;
   width: 100%;
-  margin-left: 0%;
   position: relative;
   min-height: 1px;
   padding-left: 15px;
   padding-right: 15px;
 }
 @media (min-width: 992px) {
-  .content {
+  .main {
     float: left;
     width: 66.66666667%;
   }
 }
 @media (min-width: 992px) {
-  .content {
+  .main {
     margin-left: 16.66666667%;
   }
 }
 @media (max-width: 767px) {
-  .content {
+  .main {
     padding: 0;
   }
 }
@@ -7353,20 +7386,7 @@ button.close {
   border: 0;
   display: inline;
 }
-@media (min-width: 768px) {
-  .explanation {
-    display: inline-block;
-  }
-}
-.explanation .question {
-  border-left: #eeeeee 5px solid;
-}
-.bullet {
-  color: #337ab7;
-}
-.answer-button {
-  display: block;
-  width: 100%;
+.answer .answer-button {
   display: inline-block;
   margin-bottom: 0;
   font-weight: normal;
@@ -7388,145 +7408,124 @@ button.close {
   color: #333333;
   background-color: #ffffff;
   border-color: #cccccc;
-  text-align: left;
+  display: block;
+  width: 100%;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
+  text-align: left;
 }
-.answer-button:focus,
-.answer-button:active:focus,
-.answer-button.active:focus,
-.answer-button.focus,
-.answer-button:active.focus,
-.answer-button.active.focus {
+.answer .answer-button:focus,
+.answer .answer-button:active:focus,
+.answer .answer-button.active:focus,
+.answer .answer-button.focus,
+.answer .answer-button:active.focus,
+.answer .answer-button.active.focus {
   outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
-.answer-button:hover,
-.answer-button:focus,
-.answer-button.focus {
+.answer .answer-button:hover,
+.answer .answer-button:focus,
+.answer .answer-button.focus {
   color: #333333;
   text-decoration: none;
 }
-.answer-button:active,
-.answer-button.active {
+.answer .answer-button:active,
+.answer .answer-button.active {
   outline: 0;
   background-image: none;
   -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
   box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }
-.answer-button.disabled,
-.answer-button[disabled],
-fieldset[disabled] .answer-button {
+.answer .answer-button.disabled,
+.answer .answer-button[disabled],
+fieldset[disabled] .answer .answer-button {
   cursor: not-allowed;
   opacity: 0.65;
   filter: alpha(opacity=65);
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-a.answer-button.disabled,
-fieldset[disabled] a.answer-button {
+a.answer .answer-button.disabled,
+fieldset[disabled] a.answer .answer-button {
   pointer-events: none;
 }
-.answer-button:focus,
-.answer-button.focus {
+.answer .answer-button:focus,
+.answer .answer-button.focus {
   color: #333333;
   background-color: #e6e6e6;
   border-color: #8c8c8c;
 }
-.answer-button:hover {
+.answer .answer-button:hover {
   color: #333333;
   background-color: #e6e6e6;
   border-color: #adadad;
 }
-.answer-button:active,
-.answer-button.active,
-.open > .dropdown-toggle.answer-button {
+.answer .answer-button:active,
+.answer .answer-button.active,
+.open > .dropdown-toggle.answer .answer-button {
   color: #333333;
   background-color: #e6e6e6;
   border-color: #adadad;
 }
-.answer-button:active:hover,
-.answer-button.active:hover,
-.open > .dropdown-toggle.answer-button:hover,
-.answer-button:active:focus,
-.answer-button.active:focus,
-.open > .dropdown-toggle.answer-button:focus,
-.answer-button:active.focus,
-.answer-button.active.focus,
-.open > .dropdown-toggle.answer-button.focus {
+.answer .answer-button:active:hover,
+.answer .answer-button.active:hover,
+.open > .dropdown-toggle.answer .answer-button:hover,
+.answer .answer-button:active:focus,
+.answer .answer-button.active:focus,
+.open > .dropdown-toggle.answer .answer-button:focus,
+.answer .answer-button:active.focus,
+.answer .answer-button.active.focus,
+.open > .dropdown-toggle.answer .answer-button.focus {
   color: #333333;
   background-color: #d4d4d4;
   border-color: #8c8c8c;
 }
-.answer-button:active,
-.answer-button.active,
-.open > .dropdown-toggle.answer-button {
+.answer .answer-button:active,
+.answer .answer-button.active,
+.open > .dropdown-toggle.answer .answer-button {
   background-image: none;
 }
-.answer-button.disabled,
-.answer-button[disabled],
-fieldset[disabled] .answer-button,
-.answer-button.disabled:hover,
-.answer-button[disabled]:hover,
-fieldset[disabled] .answer-button:hover,
-.answer-button.disabled:focus,
-.answer-button[disabled]:focus,
-fieldset[disabled] .answer-button:focus,
-.answer-button.disabled.focus,
-.answer-button[disabled].focus,
-fieldset[disabled] .answer-button.focus,
-.answer-button.disabled:active,
-.answer-button[disabled]:active,
-fieldset[disabled] .answer-button:active,
-.answer-button.disabled.active,
-.answer-button[disabled].active,
-fieldset[disabled] .answer-button.active {
+.answer .answer-button.disabled,
+.answer .answer-button[disabled],
+fieldset[disabled] .answer .answer-button,
+.answer .answer-button.disabled:hover,
+.answer .answer-button[disabled]:hover,
+fieldset[disabled] .answer .answer-button:hover,
+.answer .answer-button.disabled:focus,
+.answer .answer-button[disabled]:focus,
+fieldset[disabled] .answer .answer-button:focus,
+.answer .answer-button.disabled.focus,
+.answer .answer-button[disabled].focus,
+fieldset[disabled] .answer .answer-button.focus,
+.answer .answer-button.disabled:active,
+.answer .answer-button[disabled]:active,
+fieldset[disabled] .answer .answer-button:active,
+.answer .answer-button.disabled.active,
+.answer .answer-button[disabled].active,
+fieldset[disabled] .answer .answer-button.active {
   background-color: #ffffff;
   border-color: #cccccc;
 }
-.answer-button .badge {
+.answer .answer-button .badge {
   color: #ffffff;
   background-color: #333333;
 }
-.prev-answer {
-  float: left;
-  width: 50%;
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-@media (min-width: 992px) {
-  .prev-answer {
-    float: left;
-    width: 16.66666667%;
-  }
-}
-@media (min-width: 992px) {
-  .prev-answer {
-    margin-left: 16.66666667%;
-  }
-}
-.score {
-  float: left;
-  width: 50%;
-  position: relative;
-  min-height: 1px;
-  padding-left: 15px;
-  padding-right: 15px;
-  text-align: right;
-}
-@media (min-width: 992px) {
-  .score {
-    float: left;
-    width: 33.33333333%;
-  }
-}
 .user-team {
   font-weight: bold;
+}
+@media (min-width: 768px) {
+  .explanation {
+    display: inline-block;
+  }
+}
+.explanation .question {
+  border-left: #eeeeee 5px solid;
+}
+.bullet {
+  color: #337ab7;
 }
 .correct-answer {
   background-color: #dff0d8;

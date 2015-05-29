@@ -2,8 +2,8 @@
 
 {% block title %}score{% endblock %}
 
-{% block content %}
-    <div class="content">
+{% block main %}
+    <div class="main">
         <ul>
             {% for ts in teams_scores %}
                 <li {% if ts.team in g.user.teams %}class="user-team"{% endif %}>

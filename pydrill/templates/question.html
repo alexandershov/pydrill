@@ -1,6 +1,6 @@
 <div class="question">
     <div class="text">{{ question.text|render }}</div>
-    <div class="answers">
+    <div class="answers" role="group">
         {% for answer in question.answers|in_random_order %}
             {% block answer scoped %}
                 <div class="answer">
