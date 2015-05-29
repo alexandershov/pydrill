@@ -7339,7 +7339,7 @@ button.close {
 @media (min-width: 992px) {
   .main {
     float: left;
-    width: 66.66666667%;
+    width: 50%;
   }
 }
 @media (min-width: 992px) {
@@ -7538,13 +7538,26 @@ fieldset[disabled] .answer-button.active {
 .user-team {
   font-weight: bold;
 }
-@media (min-width: 768px) {
-  .explanation {
-    display: inline-block;
+@media (max-width: 767px) {
+  .explain-preamble {
+    padding-left: 0.4em;
   }
 }
-.explanation .question {
-  border-left: #eeeeee 5px solid;
+.explain .question {
+  font-size: smaller;
+  margin: 0.5em 0 0.5em 0;
+}
+@media (max-width: 767px) {
+  .explain .question {
+    padding-left: 0;
+  }
+}
+.explain pre {
+  font-size: smaller;
+}
+.explain .explanation {
+  border-top: solid 0.2em #e5e5e5;
+  padding: 1em 0.4em 0 0.4em;
 }
 .bullet {
   color: #337ab7;
@@ -7552,8 +7565,32 @@ fieldset[disabled] .answer-button.active {
 .correct-answer {
   background-color: #dff0d8;
   color: #3c763d;
+  text-align: left;
+  padding: 0.2em;
+}
+@media (max-width: 767px) {
+  .correct-answer {
+    padding-left: 1em;
+  }
+}
+@media (max-width: 767px) {
+  .correct-answer {
+    padding-left: 1em;
+  }
 }
 .wrong-answer {
   background-color: #f2dede;
   color: #a94442;
+  text-align: left;
+  padding: 0.2em;
+}
+@media (max-width: 767px) {
+  .wrong-answer {
+    padding-left: 1em;
+  }
+}
+@media (max-width: 767px) {
+  .wrong-answer {
+    padding-left: 1em;
+  }
 }

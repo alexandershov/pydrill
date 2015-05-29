@@ -3,10 +3,10 @@
 {# TODO: remove duplication with ask.html #}
 {% block main %}
     <div class="row">
-        <div class="main">Alrighty, the question was:</div>
+        <div class="main explain-preamble">Alrighty, the question was:</div>
     </div>
     <div class="row">
-        <div class="explanation">
+        <div class="main explain">
             {{ question|render_explained_question(given_answer) }}
         </div>
     </div>

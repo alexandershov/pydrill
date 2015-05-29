@@ -61,17 +61,20 @@
 
 .main {
   .make-xs-column(12);
-  .make-md-column(8);
+  .make-md-column(6);
   .make-md-column-offset(2);
 
   .xs-padding(0);
 }
 
-.question {
-  // TODO: DRY it up with .explanation display
+.inline-block-on-tablets() {
   @media (min-width: @screen-sm-min) {
     display: inline-block;
   }
+}
+
+.question {
+  .inline-block-on-tablets();
 
   .text {
     margin: 0 0 1em 0;
@@ -111,13 +114,17 @@
   }
 }
 
+.answer() {
+  text-align: left;
+  .xs-padding-left(1em);
+}
+
 .answer-button {
   .btn();
   .btn-default();
   .btn-block();
   .border-radius(0);
-  text-align: left;
-  .xs-padding-left(1em);
+  .answer();
   position: relative;
 
   // correctly highlighting adjacent borders
@@ -135,13 +142,24 @@
   font-weight: bold;
 }
 
-.explanation {
-  @media (min-width: @screen-sm-min) {
-    display: inline-block;
+.explain-preamble {
+  .xs-padding-left(0.4em);
+}
+
+.explain {
+  .question {
+    .xs-padding-left(0);
+    font-size: smaller;
+    margin: 0.5em 0 0.5em 0;
   }
 
-  .question {
-    border-left: @blockquote-border-color 5px solid;
+  pre {
+    font-size: smaller;
+  }
+
+  .explanation {
+    border-top: solid 0.2em #e5e5e5;
+    padding: 1em 0.4em 0 0.4em;
   }
 }
 
@@ -149,12 +167,21 @@
   color: @link-color;
 }
 
+.static-answer() {
+  padding: 0.2em;
+  .xs-padding-left(1em);
+}
+
 .correct-answer {
   background-color: @state-success-bg;
   color: @state-success-text;
+  .answer();
+  .static-answer();
 }
 
 .wrong-answer {
   background-color: @state-danger-bg;
   color: @state-danger-text;
+  .answer();
+  .static-answer();
 }
