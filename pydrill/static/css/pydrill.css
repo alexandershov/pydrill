@@ -7290,6 +7290,11 @@ button.close {
     margin-left: 16.66666667%;
   }
 }
+@media (max-width: 767px) {
+  .header .prev-answer {
+    padding: 0 0 0 1em;
+  }
+}
 .header .prev-correct {
   border-top-right-radius: 0.25em;
   border-bottom-right-radius: 0.25em;
@@ -7354,6 +7359,11 @@ button.close {
 }
 .question .text {
   margin: 0 0 1em 0;
+}
+@media (max-width: 767px) {
+  .question .text {
+    padding: 0 0 0 1em;
+  }
 }
 .highlight {
   background-color: #e1e8f0;
@@ -7512,6 +7522,11 @@ fieldset[disabled] .answer .answer-button.active {
 .answer .answer-button .badge {
   color: #ffffff;
   background-color: #333333;
+}
+@media (max-width: 767px) {
+  .answer .answer-button {
+    padding-left: 1em;
+  }
 }
 .user-team {
   font-weight: bold;

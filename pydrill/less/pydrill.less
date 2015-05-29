@@ -1,6 +1,18 @@
 @import "pygments.less";
 @import "bootstrap/less/bootstrap.less";
 
+.xs-padding(@padding) {
+  @media (max-width: @screen-xs-max) {
+    padding: @padding;
+  }
+}
+
+.xs-padding-left(@padding) {
+  @media (max-width: @screen-xs-max) {
+    padding-left: @padding;
+  }
+}
+
 .header {
   .make-row();
   background-color: #f5f5f5;
@@ -12,6 +24,7 @@
     .make-xs-column(6);
     .make-md-column(2);
     .make-md-column-offset(2);
+    .xs-padding(0 0 0 1em);
   }
 
   .prev-message() {
@@ -50,10 +63,7 @@
   .make-md-column(8);
   .make-md-column-offset(2);
 
-  // full width on mobile
-  @media (max-width: @screen-xs-max) {
-    padding: 0;
-  }
+  .xs-padding(0);
 }
 
 .question {
@@ -64,6 +74,7 @@
 
   .text {
     margin: 0 0 1em 0;
+    .xs-padding(0 0 0 1em);
   }
 }
 
@@ -106,6 +117,7 @@
     .btn-block();
     .border-radius(0);
     text-align: left;
+    .xs-padding-left(1em);
   }
 }
 
