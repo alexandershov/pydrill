@@ -7544,6 +7544,7 @@ fieldset[disabled] .answer-button.active {
   }
 }
 .explain .question {
+  padding-left: 1em;
   font-size: smaller;
   margin: 0.5em 0 0.5em 0;
 }
@@ -7557,7 +7558,12 @@ fieldset[disabled] .answer-button.active {
 }
 .explain .explanation {
   border-top: solid 0.2em #e5e5e5;
-  padding: 1em 0.4em 0 0.4em;
+  padding-top: 1em;
+}
+@media (max-width: 767px) {
+  .explain .explanation {
+    padding: 1em 0.4em 0 0.4em;
+  }
 }
 .bullet {
   color: #337ab7;
