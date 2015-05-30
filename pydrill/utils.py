@@ -28,8 +28,8 @@ class User(object):
 
     @property
     def rank(self):
-        # `... + 1` is to convert from zero-indexing to one-indexing
-        return (redis_store.zrevrank('user_scores', self.id) or 0) + 1
+        # converting to one-based indexing
+        return redis_store.zrevrank('user_scores', self.id) + 1
 
     @property
     def percentile(self):
@@ -108,6 +108,7 @@ def add_score(user, delta):
     g.redis_pipeline.zincrby('user_scores', user.id, delta)
     for team in user.teams:
         g.redis_pipeline.hincrby(get_team_key(team), 'score_sum', delta)
+    g.redis_pipeline.execute()
 
 
 # TODO: create and use Team class instead
