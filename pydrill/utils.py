@@ -31,6 +31,10 @@ class User(object):
         # `... + 1` is to convert from zero-indexing to one-indexing
         return (redis_store.zrevrank('user_scores', self.id) or 0) + 1
 
+    @property
+    def percentile(self):
+        return 1 - safe_div(self.rank, redis_store.zcard('user_scores'))
+
     def answer(self, question, answer):
         if answer.is_correct and question.id not in self.answered_questions:
             add_score(self, question.difficulty)

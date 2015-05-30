@@ -68,6 +68,13 @@ def get_answer_message(answer_is_correct):
     return 'wrong!'
 
 
+@app.template_filter()
+def percentile_text(percentile):
+    if percentile >= 0.5:
+        return "You're in the top {:.0%}".format(max(1 - percentile, 0.01))
+    return "You're in the bottom {:.0%}".format(max(percentile, 0.01))
+
+
 def get_prev_answer():
     return session.pop('prev_answer', None)
 

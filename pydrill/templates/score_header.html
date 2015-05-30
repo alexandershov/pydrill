@@ -1,0 +1,7 @@
+{% extends 'header.html' %}
+
+{% block message %}
+    <div class="message">
+        {{ g.user.percentile|percentile_text }}
+    </div>
+{% endblock %}

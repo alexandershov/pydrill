@@ -1,17 +1,17 @@
 <div class="header">
-    <div class="prev-answer">
-        {% with prev_answer = get_prev_answer() %}
-            {% if prev_answer is not none %}
-
-                <span class="{% if prev_answer['is_correct'] %}prev-correct{% else %}prev-wrong{% endif %}">
+    {% block message %}
+        <div class="message">
+            {% with prev_answer = get_prev_answer() %}
+                {% if prev_answer is not none %}
+                    <span class="{% if prev_answer['is_correct'] %}prev-correct{% else %}prev-wrong{% endif %}">
                     {{ prev_answer['is_correct']|get_answer_message }}</span>
-                <a href="{{ prev_answer['explain_url'] }}">
-                    Why?
-                </a>
-
-            {% endif %}
-        {% endwith %}
-    </div>
+                    <a href="{{ prev_answer['explain_url'] }}">
+                        Why?
+                    </a>
+                {% endif %}
+            {% endwith %}
+        </div>
+    {% endblock %}
     <div class="score">
         <a href="{{ url_for('show_score') }}" title="Place #{{ g.user.rank }}">
             Score: {{ g.user.score }}

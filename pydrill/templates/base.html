@@ -8,7 +8,7 @@
 </head>
 <body>
 <div class="container-fluid">
-    {% include 'header.html' %}
+    {% block header %}{% include 'header.html' %}{% endblock %}
     {% block main %}{% endblock %}
 </div>
 </body>
