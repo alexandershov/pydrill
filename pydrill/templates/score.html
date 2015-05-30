@@ -3,13 +3,20 @@
 {% block title %}score{% endblock %}
 
 {% block main %}
-    <div class="main">
-        <ul>
-            {% for ts in teams_scores %}
-                <li {% if ts.team in g.user.teams %}class="user-team"{% endif %}>
-                    {{ ts.team }}: {{ ts.score }}
-                </li>
-            {% endfor %}
-        </ul>
+    <div class="row">
+        <div class="main">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Team</th>
+                    <th>Score</th>
+                </tr>
+                {% for ts in teams_scores %}
+                    <tr>
+                        <td>{{ ts.team }}</td>
+                        <td>{{ ts.score }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
 {% endblock %}
