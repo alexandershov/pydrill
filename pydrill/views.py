@@ -10,6 +10,11 @@ from pydrill.models import Answer, Question
 urandom = SystemRandom()
 
 
+@app.route('/')
+def ask_any_question():
+    return redirect(url_for('ask', question_id=get_next_question().id, seed=make_seed()))
+
+
 @app.route('/ask/<question_id>/')
 def ask_with_random_seed(question_id):
     return redirect(url_for('ask', question_id=question_id, seed=make_seed()))

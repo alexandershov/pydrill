@@ -1,4 +1,7 @@
 <div class="header">
+    <div class="logo">
+        <a href="{{ url_for('ask_any_question') }}">Pydrill</a>
+    </div>
     {% block message %}
         <div class="message">
             {% with prev_answer = get_prev_answer() %}
