@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 
 {# TODO: remove duplication with ask.html #}
+{% block header %}
+    {% include 'explain_header.html' %}
+{% endblock %}
+
 {% block main %}
     <div class="row">
         <div class="main explain-preamble">Alrighty, the question was:</div>
