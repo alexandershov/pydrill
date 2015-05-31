@@ -7580,6 +7580,11 @@ fieldset[disabled] .answer-button.active {
     padding: 1em 0.4em 0 0.4em;
   }
 }
+@media (max-width: 767px) {
+  .explain .next-question {
+    padding-left: 0.4em;
+  }
+}
 .bullet {
   color: #337ab7;
 }

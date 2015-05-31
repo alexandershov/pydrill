@@ -11,7 +11,7 @@ urandom = SystemRandom()
 
 
 @app.route('/')
-def ask_any_question():
+def ask_next_question():
     return redirect(url_for('ask', question_id=get_next_question().id, seed=make_seed()))
 
 
