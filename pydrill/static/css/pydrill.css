@@ -7588,16 +7588,18 @@ fieldset[disabled] .answer-button.active {
 .bullet {
   color: #337ab7;
 }
+.static-answer {
+  padding: 0.2em;
+}
+@media (max-width: 767px) {
+  .static-answer {
+    padding-left: 1em;
+  }
+}
 .correct-answer {
   background-color: #dff0d8;
   color: #3c763d;
   text-align: left;
-  padding: 0.2em;
-}
-@media (max-width: 767px) {
-  .correct-answer {
-    padding-left: 1em;
-  }
 }
 @media (max-width: 767px) {
   .correct-answer {
@@ -7608,12 +7610,6 @@ fieldset[disabled] .answer-button.active {
   background-color: #f2dede;
   color: #a94442;
   text-align: left;
-  padding: 0.2em;
-}
-@media (max-width: 767px) {
-  .wrong-answer {
-    padding-left: 1em;
-  }
 }
 @media (max-width: 767px) {
   .wrong-answer {
