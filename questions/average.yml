@@ -11,7 +11,8 @@ text: |
 explanation: |
   <div class="paragraph">
     We probably wanted to get {% filter highlight_inline %}{{ (x + y) / 2 }}{% endfilter %},
-    but the answer (in Python 2.7) is {% filter highlight_inline %}{{ (x + y) // 2 }}{% endfilter %}.
+    but in Python 2.7 integer division truncates its result and the answer is
+    {% filter highlight_inline %}{{ (x + y) // 2}}{% endfilter %}.
     That sucks. What can we do about it?
   </div>
   <div class="paragraph">
@@ -21,35 +22,52 @@ explanation: |
       [GCC 4.8.2] on linux
       Type "help", "copyright", "credits" or "license" for more information.
       >>> ({{ x }} + {{ y }}) / 2
-      {{ (x + y) / 2 }}
+      {{ (x + y) / 2 }} # yay!
     {% endfilter %}
-    That's good, but everybody knows that Python 2.7 is the future of Python.
-    So let's stick to Python 2.
+    That's all well and good, but everybody knows that
+    <abbr title="Joke alert!">Python 2.7 is the future of Python</abbr>.
+    So let's stick to Python 2.7.
   </div>
   <div class="paragraph">
     <strong>2.</strong> We can convert numerator
     (that's {% filter highlight_inline %}{{ x }} + {{ y }}{% endfilter %})
-    or denumerator (that's {{ 2|highlight_inline }}) to a float number:
+    or denumerator (that's {{ 2|highlight_inline }}) to a floating point number:
     {% filter highlight('pycon') %}
       >>> float({{ x }} + {{ y }}) / 2
-      {{ (x + y) / 2 }} # yes!
-      # or
+      {{ (x + y) / 2 }} # yay!
       >>> ({{ x }} + {{ y }}) / float(2)
-      {{ (x + y) / 2 }} # yes!
-      # or
+      {{ (x + y) / 2 }} # yay!
       >>> ({{ x }} + {{ y }}) / 2.0
-      {{ (x + y) / 2 }} # yes!
+      {{ (x + y) / 2 }} # yay!
     {% endfilter %}
   </div>
   <div class="paragraph">
-    <strong>3.</strong> Start your python files with the line
+    <strong>3.</strong> We can start our python modules with the line
     {% filter highlight_inline %}from __future__ import division{% endfilter %}
     {% filter highlight('pycon') %}
-      # make python2 to use python3-style division
+      # make python2 to use python3-style division IN THE CURRENT MODULE ONLY!
       >>> from __future__ import division
       >>> ({{ x }} + {{ y }}) / 2
-      {{ (x + y) / 2 }} # yes!
+      {{ (x + y) / 2 }} # yay!
     {% endfilter %}
+    This way you can have the best of both worlds: {{ '/'|highlight_inline }} works as expected
+    and returns a float. And if you want your good ol' truncating division back,
+    {{ '//'|highlight_inline }} is always available:
+    {% filter highlight('pycon') %}
+      >>> from __future__ import division
+      >>> ({{ x }} + {{ y }}) / 2
+      {{ (x + y) / 2 }} # yay!
+      >>> ({{ x }} + {{ y }}) // 2
+      {{ (x + y) // 2}} # okay
+    {% endfilter %}
+  </div>
+  <div class="paragraph">
+    Extra reading:
+    <ul>
+      <li>
+        <a href="https://www.python.org/dev/peps/pep-0238/">Changing the Division Operator (PEP-238)</a>
+      </li>
+    </ul>
   </div>
 difficulty: 1
 answers:

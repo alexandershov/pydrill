@@ -7387,7 +7387,7 @@ button.close {
   border-bottom-left-radius: 0.25em;
   border-top-left-radius: 0.25em;
   padding: 0.3em;
-  margin: 0 0 0.4em 0;
+  margin: 0.1em 0 0.4em 0;
 }
 .highlight pre {
   background-color: transparent;
@@ -7584,6 +7584,9 @@ fieldset[disabled] .answer-button.active {
   .explain .next-question {
     padding-left: 0.4em;
   }
+}
+.explain .paragraph {
+  margin-top: 1em;
 }
 .bullet {
   color: #337ab7;
