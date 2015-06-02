@@ -1,0 +1,27 @@
+text: |
+  {% filter highlight %}
+    def log(fn):
+        # @functools.wraps(fn) is left out for educational reasons
+        def logging_fn(*args, **kwargs):
+            print('calling', fn.__name__)
+            return fn(*args, **kwargs)
+        return logging_fn
+
+    class ByteCode(object):
+        @log
+        @staticmethod
+        def get_header():
+          return 0xCAFEBABE
+  {% endfilter %}
+
+  What is the value of {% filter highlight_inline %}ByteCode.get_header(){% endfilter %}?
+difficulty: 2
+answers:
+  - is_correct: true
+    text: TypeError is raised
+  - is_correct: false
+    text: 3405691582
+explanation: |
+  TODO
+
+
