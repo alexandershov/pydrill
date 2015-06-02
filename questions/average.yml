@@ -8,6 +8,12 @@ text: |
   {% endfilter %}
 
   What is the value of {{ var|highlight_inline }}?
+answers:
+  - is_correct: true
+    text: '{{ (x + y) // 2 }}'
+  - is_correct: false
+    text: '{{ (x + y) / 2.0 }}'
+difficulty: 1
 explanation: |
   <div class="paragraph">
     We probably wanted to get {% filter highlight_inline %}{{ (x + y) / 2 }}{% endfilter %},
@@ -69,10 +75,5 @@ explanation: |
       </li>
     </ul>
   </div>
-difficulty: 1
-answers:
-  - is_correct: true
-    text: '{{ (x + y) // 2 }}'
-  - is_correct: false
-    text: '{{ (x + y) / 2.0 }}'
+
 
