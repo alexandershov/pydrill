@@ -7,3 +7,7 @@ def integer(min_value, max_value):
 
 def var_name():
     return random.choice(['x', 'y', 'z'])
+
+
+def choice(seq):
+    return random.choice(seq)

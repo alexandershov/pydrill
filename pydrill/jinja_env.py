@@ -75,6 +75,11 @@ def percentile_text(percentile):
     return "You're in the bottom {:.0%}".format(max(percentile, 0.01))
 
 
+@app.template_filter('repr')
+def repr_filter(obj):
+    return repr(obj)
+
+
 def get_prev_answer():
     return session.pop('prev_answer', None)
 

@@ -1,4 +1,11 @@
+# TODO: add more cls, method, results
 text: |
+  {% set cls, method, result = gen.choice([
+    ('ByteCode', 'get_header', 3405691582),
+    ('Blink182', 'get_best_song', 'Anthem (Part 2)'),
+    ('Year2015', 'get_best_movie', 'What We Do In The Shadows'),
+  ]) %}
+
   {% filter highlight %}
     def log(fn):
         # @functools.wraps(fn) is left out for educational reasons
@@ -7,20 +14,21 @@ text: |
             return fn(*args, **kwargs)
         return logging_fn
 
-    class ByteCode(object):
+    class {{ cls }}(object):
         @log
         @staticmethod
-        def get_header():
-          return 0xCAFEBABE
+        def {{ method }}():
+          return {{ result|repr }}
   {% endfilter %}
 
-  What is the value of {% filter highlight_inline %}ByteCode.get_header(){% endfilter %}?
+  What is the value of {% filter highlight_inline %}{{ cls }}.{{ method }}(){% endfilter %}?
 difficulty: 2
 answers:
   - is_correct: true
     text: TypeError is raised
   - is_correct: false
-    text: 3405691582
+    text: '{{ result|repr }}'
+# TODO: add explanation
 explanation: |
   TODO
 
