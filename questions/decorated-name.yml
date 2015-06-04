@@ -1,0 +1,31 @@
+text: |
+  {% set name, args, expr = gen.choice([
+    ('add', 'x, y', 'x + y'),
+    ('sub', 'x, y', 'x - y'),
+    ('div', 'x, y', 'x / '),
+  ]) %}
+  {% filter highlight %}
+    def log(fn):
+        def logging_fn(*args, **kwargs):
+            print('calling', fn)
+            return fn(*args, **kwargs)
+        return logging_fn
+
+    @log
+    def {{ name }}({{ args }}):
+        return {{ expr }}
+  {% endfilter %}
+
+  What is the value of {% filter highlight_inline %}{{ name }}.__name__{% endfilter %}?
+difficulty: 1
+answers:
+  - is_correct: true
+    text: "{{ 'logging_fn'|repr }}"
+  - is_correct: false
+    text: '{{ name|repr }}'
+explanation: |
+  <div class="paragraph">
+    TODO
+  </div>
+
+
