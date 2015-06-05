@@ -1,8 +1,9 @@
+# TODO: add extra links to explanation
 text: |
   {% set name, args, expr = gen.choice([
     ('add', 'x, y', 'x + y'),
     ('sub', 'x, y', 'x - y'),
-    ('div', 'x, y', 'x / '),
+    ('div', 'x, y', 'x / y'),
   ]) %}
   {% filter highlight %}
     def log(fn):
@@ -25,7 +26,50 @@ answers:
     text: '{{ name|repr }}'
 explanation: |
   <div class="paragraph">
-    TODO
+    First, let's desugar the decorator syntax:
+    {% filter highlight %}
+      @log
+      def {{ name }}({{ args }}):
+          return {{ expr }}
+    {% endfilter %}
+
+    It's basically the same as:
+    {% filter highlight %}
+      def {{ name }}({{ args }}):
+          return {{ expr }}
+      {{ name }} = log({{ name }})
+    {% endfilter %}
+
+    {{ 'log'|highlight_inline }} returns a function named {{ 'logging_fn'|highlight_inline }}
+    so {% filter highlight_inline %}{{ name }}.__name__{% endfilter %} is basically the same as
+    {% filter highlight_inline %}logging_fn.__name__{% endfilter %} and the correct answer is
+    {{ 'logging_fn'|highlight_inline }}.
+  </div>
+  <div class="paragraph">
+    Which is probably is not we want. We need to use {{ 'functool.wraps'|highlight_inline }}:
+    {% filter highlight %}
+      from functools import wraps
+
+      def log(fn):
+          @wraps(fn)
+          def logging_fn(*args, **kwargs):
+              print('calling', fn)
+              return fn(*args, **kwargs)
+          return logging_fn
+
+      @log
+      def {{ name }}({{ args }}):
+          return {{ expr }}
+    {% endfilter %}
+
+    {% filter highlight('pycon') %}
+      >>> {{ name }}.__name__
+      {{ name|repr }}  # yay!
+    {% endfilter %}
+
+    {% filter highlight_inline %}@functools.wraps(fn){% endfilter %} does the right thing.
+    The right thing being: assign {{ '__name__'|highlight_inline }} attribute
+    (and some other attributes) of {{ name|highlight_inline }} to {{ 'logging_fn'|highlight_inline }}.
   </div>
 
 
