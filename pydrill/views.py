@@ -92,7 +92,8 @@ def get_cur_question():
 
 
 def get_cur_answer():
-    return Answer.query.get(request.view_args['answer_id'])
+    return Answer.query.get((request.view_args['answer_id'],
+                             request.view_args['question_id']))
 
 
 def get_cur_question_and_answer():
