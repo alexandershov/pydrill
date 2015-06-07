@@ -7580,6 +7580,9 @@ fieldset[disabled] .answer-button.active {
     padding: 1em 0.4em 0 0.4em;
   }
 }
+.explain .next-question {
+  margin-top: 1em;
+}
 @media (max-width: 767px) {
   .explain .next-question {
     padding-left: 0.4em;
@@ -7616,6 +7619,15 @@ fieldset[disabled] .answer-button.active {
 }
 @media (max-width: 767px) {
   .wrong-answer {
+    padding-left: 1em;
+  }
+}
+.just-answer {
+  background-color: #f4f4f4;
+  text-align: left;
+}
+@media (max-width: 767px) {
+  .just-answer {
     padding-left: 1em;
   }
 }
