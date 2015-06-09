@@ -17,14 +17,15 @@ difficulty: 1
 explanation: |
   <div class="paragraph">
     We probably wanted to get {% filter highlight_inline %}{{ (x + y) / 2 }}{% endfilter %},
-    but in Python 2.7 integer division truncates its result and the answer is
+    but when we divide an integer by another integer in Python 2, we get an integer in result.
     {% filter highlight_inline %}{{ (x + y) // 2}}{% endfilter %}.
     That sucks. What can we do about it?
   </div>
   <div class="paragraph">
-    <strong>1.</strong> The most radical way is to use Python 3:
+    <strong>1.</strong> The most radical way is to use Python 3. Integer division returns a
+    floating point number in Python 3:
     {% filter highlight('pycon') %}
-      ATTENTTION: PYTHON 3
+      >>> # ATTENTION: THIS IS PYTHON 3
       Python 3.4.0 (default, Apr 11 2014, 13:05:11)
       [GCC 4.8.2] on linux
       Type "help", "copyright", "credits" or "license" for more information.
@@ -39,13 +40,12 @@ explanation: |
   <div class="paragraph">
     <strong>2.</strong> We can convert numerator
     (that's {% filter highlight_inline %}{{ x }} + {{ y }}{% endfilter %})
-    or denumerator (that's {{ 2|highlight_inline }}) to a floating point number:
+    or denumerator (that's {{ 2|highlight_inline }}) to a floating point number.
+    Floating point division returns a floating point number:
     {% filter highlight('pycon') %}
       >>> float({{ x }} + {{ y }}) / 2
       {{ (x + y) / 2 }} # yay!
       >>> ({{ x }} + {{ y }}) / float(2)
-      {{ (x + y) / 2 }} # yay!
-      >>> ({{ x }} + {{ y }}) / 2.0
       {{ (x + y) / 2 }} # yay!
     {% endfilter %}
   </div>
@@ -53,29 +53,28 @@ explanation: |
     <strong>3.</strong> We can start our python modules with the line
     {% filter highlight_inline %}from __future__ import division{% endfilter %}
     {% filter highlight('pycon') %}
-      # make python2 to use python3-style division IN THE CURRENT MODULE ONLY!
+      >>> # use python3-style division IN THE CURRENT MODULE ONLY!
       >>> from __future__ import division
       >>> ({{ x }} + {{ y }}) / 2
       {{ (x + y) / 2 }} # yay!
     {% endfilter %}
-    This way you can have the best of both worlds: {{ '/'|highlight_inline }} works as expected
-    and returns a float. And if you want your good ol' truncating division back,
+    This way we can have the best of both worlds: {{ '/'|highlight_inline }} works as expected
+    and returns a float. And if we want our good ol' truncating division back,
     {{ '//'|highlight_inline }} is always available:
     {% filter highlight('pycon') %}
       >>> from __future__ import division
       >>> ({{ x }} + {{ y }}) / 2
       {{ (x + y) / 2 }} # yay!
       >>> ({{ x }} + {{ y }}) // 2
-      {{ (x + y) // 2}} # okay
+      {{ (x + y) // 2}} # okay, we asked for it
     {% endfilter %}
 
     Just be careful: {% filter highlight_inline %}from __future__ import division{% endfilter %}
-    affects only the <em>current</em> module. If you have two modules {{ 'divide.py'|highlight_inline }}
-    and {{ 'conquer.py'|highlight_inline }} with {% filter highlight_inline %}from __future__ import division{% endfilter %} in
-    {{ 'divide.py'|highlight_inline }}, then {{ 'conquer.py'|highlight_inline }} is not affected by
-    this line even if {{ 'divide.py'|highlight_inline }} imports {{ 'conquer.py'|highlight_inline }}:
+    affects only the <em>current</em> module:
     {% filter highlight %}
       # module conquer.py
+
+      # always truncating integer division
       def division(x, y):
           return x / y
     {% endfilter %}
@@ -84,14 +83,18 @@ explanation: |
       # module divide.py
       from __future__ import division
 
+      # conquer.py is not affected by
+      # this module's `from __future__ import division`
       import conquer
 
+      # python3-style division
       def division(x, y):
           return x / y
 
       division({{ x + y }}, 2)  # returns {{ (x + y) / 2 }}
 
-      # conquer.py is not affected by `from __future__ import division`
+      # conquer.py is not affected by
+      # this module's `from __future__ import division`
       conquer.division({{ x + y }}, 2)  # returns {{ (x + y) // 2 }}
     {% endfilter %}
 
