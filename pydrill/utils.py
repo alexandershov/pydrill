@@ -16,10 +16,11 @@ class User(object):
         init_user_score(user)
         return user
 
-    def __init__(self, id=None, score=0, teams=None, answered_questions=None):
+    def __init__(self, id=None, score=0, teams=None, last_question=None, answered_questions=None):
         self.id = id or str(uuid.uuid4())
         self.score = score
         self.teams = teams or []
+        self.last_question = last_question
         self.answered_questions = set(answered_questions or [])
 
     @property
@@ -36,6 +37,7 @@ class User(object):
         return 1 - safe_div(self.rank, redis_store.zcard('user_scores'))
 
     def answer(self, question, answer):
+        self.last_question = question.id
         if answer.is_correct and question.id not in self.answered_questions:
             add_score(self, question.difficulty)
         self.answered_questions.add(question.id)
@@ -43,6 +45,7 @@ class User(object):
 
 def user_as_dict(user):
     return {'id': user.id, 'score': user.score, 'teams': user.teams,
+            'last_question': user.last_question,
             'answered_questions': list(user.answered_questions)}  # set is not JSON serializable
 
 

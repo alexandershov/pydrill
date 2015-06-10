@@ -82,8 +82,10 @@ def get_next_question():
                 .order_by(distance_to_user_avg_score)
                 .first())
     if question is None:
-        # user answered every question, just give them a random one
-        question = Question.query.order_by(func.random()).first()
+        # user answered every question, just give them a random one that preferably is
+        # not the last asked question
+        question = Question.query.order_by(Question.id == g.user.last_question,
+                                           func.random()).first()
     return question
 
 
