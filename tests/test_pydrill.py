@@ -11,7 +11,6 @@ from pydrill import app, db, redis_store
 from pydrill import models
 from pydrill.utils import User
 
-
 MAC_USER_AGENT = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 '
                   '(KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36')
 
@@ -204,3 +203,19 @@ def test_team_scores(steve, paul, tim):
 def assert_team_score(team, num_users, score_sum):
     assert (redis_store.hgetall('team:{}'.format(team))
             == {'num_users': str(num_users), 'score_sum': str(score_sum)})
+
+
+# execute this test 10 times to thoroughly check random behaviour
+@pytest.mark.parametrize('i', range(10))
+def test_never_ask_the_same_question_twice_in_a_row(steve, i):
+    # we need to answer every question, because otherwise
+    # answer_question(steve, 'average', ...) will always redirect to
+    # the unanswered question.
+    # We want to test that when every question
+    # is answered, then no question is asked twice in row anyway
+    for question in models.Question.query.all():
+        answer_question(steve, question.id, is_correct=True)
+
+    rv = answer_question(steve, 'average', is_correct=True)
+    # TODO: check that absolute url is correct
+    assert re.search(url_re_for_either('average'), rv.location) is None
