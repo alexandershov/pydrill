@@ -1,0 +1,27 @@
+text: |
+  {% filter highlight %}
+    class Field(object):
+        def check(self):
+            pass
+
+    class IntegerCheckMixin(object):
+        def check(self):
+            int(self.x)
+            super(IntegerCheckMixin, self).check()
+
+    class IntegerField(IntegerCheckMixin, Field):
+        def __init__(self, x):
+            self.x = x
+  {% endfilter %}
+
+  What is the value of {% filter highlight_inline %}IntegerField('x').check(){% endfilter %}?
+answers:
+  - is_correct: true
+    text: ValueError is raised
+  - is_correct: false
+    text: None
+difficulty: 2
+explanation: |
+  <div class="paragraph">
+    TODO
+  </div>
