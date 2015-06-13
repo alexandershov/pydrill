@@ -1,4 +1,8 @@
 text: |
+  {% set bases, correct, wrong = gen.choice([
+    ('IntegerCheckMixin, Field', 'ValueError is raised', 'None'),
+    ('Field, IntegerCheckMixin', 'None', 'ValueError is raised')
+    ]) %}
   {% filter highlight %}
     class Field(object):
         def check(self):
@@ -9,7 +13,7 @@ text: |
             int(self.x)
             super(IntegerCheckMixin, self).check()
 
-    class IntegerField(IntegerCheckMixin, Field):
+    class IntegerField({{ bases }}):
         def __init__(self, x):
             self.x = x
   {% endfilter %}
@@ -17,9 +21,9 @@ text: |
   What is the value of {% filter highlight_inline %}IntegerField('x').check(){% endfilter %}?
 answers:
   - is_correct: true
-    text: ValueError is raised
+    text: '{{ correct }}'
   - is_correct: false
-    text: None
+    text: '{{ wrong }}'
 difficulty: 2
 explanation: |
   <div class="paragraph">
