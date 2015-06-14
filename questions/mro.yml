@@ -18,7 +18,7 @@ text: |
             self.x = x
   {% endfilter %}
 
-  What is the value of {% filter highlight_inline %}IntegerField('x').check(){% endfilter %}?
+  What is the value of {% filter highlight_inline %}IntegerField('bad int').check(){% endfilter %}?
 answers:
   - is_correct: true
     text: '{{ correct }}'
@@ -27,5 +27,26 @@ answers:
 difficulty: 2
 explanation: |
   <div class="paragraph">
-    TODO
+    Here's what happens. {% filter highlight_inline %}IntegerField('x').check(){% endfilter %}
+    needs to find the {{ 'check'|highlight_inline }} attribute
+    in the {{ 'IntegerField'|highlight_inline }} instance.
+    First it looks for it (unsuccessfully) in the {{ 'IntegerField'|highlight_inline }} class.
+    Then it looks for it in the {{ 'IntegerCheckMixin'|highlight_inline }} class. Bingo! The first
+    thing {{ 'IntegerCheckMixin.check()'|highlight_inline }} does is call
+    {% filter highlight_inline %}int(self.x){% endfilter %} and that'll throw a
+    {{ 'ValueError'|highlight_inline }} (string {% filter highlight_inline %}'bad int'{% endfilter %}
+    is, ahem, a bad int)
+  </div>
+  <div class="paragraph">
+    A side note: you
+    can always determine the order of method lookups by using {{ 'mro'|highlight_inline }} method.
+    {% filter highlight('pycon') %}
+      >>> IntegerField.mro()
+      [IntegerField, IntegerCheckMixin, Field, object]
+    {% endfilter %}
+    Or you can use a simple mnenonic: children before parents, left parents before right parents
+    (TODO: fix it).
+  </div>
+  <div class="paragraph">
+    TODO: write explanation for the both gen.choice results
   </div>
