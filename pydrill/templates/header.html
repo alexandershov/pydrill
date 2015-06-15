@@ -16,7 +16,7 @@
         </div>
     {% endblock %}
     <div class="score">
-        <a href="{{ url_for('show_score') }}" title="Place #{{ g.user.rank }}">
+        <a href="{{ url_for('show_score') }}" title="Place #{{ g.user.rank }} out of {{ g.num_users }}">
             Score: {{ g.user.score }}
         </a>
     </div>

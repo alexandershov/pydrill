@@ -35,7 +35,7 @@ explanation: |
     thing {{ 'IntegerCheckMixin.check()'|highlight_inline }} does is call
     {% filter highlight_inline %}int(self.x){% endfilter %} and that'll throw a
     {{ 'ValueError'|highlight_inline }} (string {% filter highlight_inline %}'bad int'{% endfilter %}
-    is, ahem, a bad int)
+    is, ahem, a bad integer value)
   </div>
   <div class="paragraph">
     A side note: you

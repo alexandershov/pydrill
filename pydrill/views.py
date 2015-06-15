@@ -63,6 +63,7 @@ def set_globals():
         g.user = utils.User.create(teams=utils.get_cur_teams())
     else:
         g.user = utils.User(**session['user'])
+    g.num_users = redis_store.zcard('user_scores')
 
 
 @app.after_request
