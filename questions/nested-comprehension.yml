@@ -1,0 +1,22 @@
+text: |
+  {% set nested_list, flat_list = gen.nested_list(with_flat=True) %}
+  {% set var = gen.var_name() %}
+  {% set list_var = 'score_groups' %}
+  {% set flat_var = 'flat_scores' %}
+  {% set sublist_var = 'scores' %}
+  {% filter highlight %}
+    {{ list_var }} = {{ nested_list|repr }}
+    {{ flat_var }} = [{{ var }} for {{ sublist_var}} in {{list_var }} for {{ var }} in {{ sublist_var }}]
+  {% endfilter %}
+
+  What is the value of {% filter highlight_inline %}{{ flat_var }}{% endfilter %}?
+answers:
+  - is_correct: true
+    text: '{{ flat_list|repr }}'
+  - is_correct: false
+    text: NameError is raised
+difficulty: 1
+explanation: |
+  <div class="paragraph">
+    TODO
+  </div>
