@@ -80,8 +80,9 @@ def repr_filter(obj):
     return repr(obj)
 
 
+@app.template_global()
 def get_prev_answer():
     return session.pop('prev_answer', None)
 
 
-app.jinja_env.globals.update(gen=gen, get_prev_answer=get_prev_answer)
+app.jinja_env.globals.update(gen=gen)
