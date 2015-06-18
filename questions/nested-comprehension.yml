@@ -1,22 +1,67 @@
 text: |
   {% set nested_list, flat_list = gen.nested_list(with_flat=True) %}
   {% set var = gen.var_name() %}
-  {% set list_var = 'score_groups' %}
-  {% set flat_var = 'flat_scores' %}
-  {% set sublist_var = 'scores' %}
+  {% set list_var = 'nested' %}
+  {% set flat_var = 'flat' %}
+  {% set sublist_var = 'sublist' %}
+  {% set real_outer_loop = 'for {} in {}'.format(sublist_var, list_var) %}
+  {% set real_inner_loop = 'for {} in {}'.format(var, sublist_var) %}
+  {% set name_error = 'NameError is raised' %}
+  {% set flat_list_string = flat_list|repr %}
+
+  {% macro flat_explanation() %}
+    That'll work as expected and flatten {{ list_var|highlight_inline }} list.
+  {% endmacro %}
+
+  {% macro name_error_explanation() %}
+    That'll throw a {{ 'NameError'|highlight_inline }}, because {{ sublist_var|highlight_inline }}
+    is not yet defined in the first (inner) loop.
+  {% endmacro %}
+
+  {% set outer_loop, inner_loop, correct_answer, wrong_answer, extra_explanation = gen.choice([
+    (real_outer_loop, real_inner_loop, flat_list_string, name_error, flat_explanation() ),
+    (real_inner_loop, real_outer_loop, name_error, flat_list_string, name_error_explanation() ),
+    ]
+  ) %}
   {% filter highlight %}
     {{ list_var }} = {{ nested_list|repr }}
-    {{ flat_var }} = [{{ var }} for {{ sublist_var}} in {{list_var }} for {{ var }} in {{ sublist_var }}]
+    {{ flat_var }} = [{{ var }} {{ outer_loop }} {{ inner_loop }}]
   {% endfilter %}
 
   What is the value of {% filter highlight_inline %}{{ flat_var }}{% endfilter %}?
 answers:
   - is_correct: true
-    text: '{{ flat_list|repr }}'
+    text: '{{ correct_answer }}'
   - is_correct: false
-    text: NameError is raised
+    text: '{{ wrong_answer }}'
 difficulty: 1
 explanation: |
   <div class="paragraph">
-    TODO
+    Here's a simple rule to reading nested list comprehensions: read nested list comprehensions
+    the same way you read nested {{ 'for'|highlight_inline }} loops.
+  </div>
+  <div class="paragraph">
+    So:
+    {% filter highlight %}
+      {{ flat_var }} = [{{ var }} {{ outer_loop }} {{ inner_loop }}]
+    {% endfilter %}
+    becomes:
+    {% filter highlight %}
+      {{ flat_var }} = []
+      {{ outer_loop }}:  # first loop in comprehension
+          {{ inner_loop }}:  # second loop in comprehension
+              {{ flat_var }}.append({{ var }})
+    {% endfilter %}
+    {{ extra_explanation }}
+  </div>
+
+  <div class="paragraph">
+    Extra reading:
+    <ul>
+      <li>
+        <a href="http://rhodesmill.org/brandon/2009/nested-comprehensions/">
+          I finally understand nested comprehensions
+        </a>
+      </li>
+    </ul>
   </div>
