@@ -9,6 +9,7 @@ text: |
   {% set name_error = 'NameError is raised' %}
   {% set flat_list_string = flat_list|repr %}
 
+  {# TODO: use jinja2 set/endset block assignment when jinja 2.8 is stable #}
   {% macro flat_explanation() %}
     That'll work as expected and flatten {{ list_var|highlight_inline }} list.
   {% endmacro %}
