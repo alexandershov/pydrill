@@ -43,10 +43,11 @@ explanation: |
     {{ 'log'|highlight_inline }} returns a function named {{ 'logging_fn'|highlight_inline }}
     so {% filter highlight_inline %}{{ name }}.__name__{% endfilter %} is basically the same as
     {% filter highlight_inline %}logging_fn.__name__{% endfilter %} and the correct answer is
-    {{ 'logging_fn'|highlight_inline }}.
+    {% filter highlight_inline %}'logging_fn'{% endfilter %}
   </div>
   <div class="paragraph">
-    Which is probably is not we want. We need to use {{ 'functool.wraps'|highlight_inline }}:
+    Which is probably not what we want. We need to use
+    <a href="https://docs.python.org/2/library/functools.html#functools.wraps">functool.wraps</a>:
     {% filter highlight %}
       from functools import wraps
 
@@ -67,7 +68,7 @@ explanation: |
       {{ name|repr }}  # yay!
     {% endfilter %}
 
-    {% filter highlight_inline %}@functools.wraps(fn){% endfilter %} does the right thing.
+    {% filter highlight_inline %}@wraps(fn){% endfilter %} does the right thing.
     The right thing being: assign {{ '__name__'|highlight_inline }} attribute
     (and some other attributes) of {{ name|highlight_inline }} to {{ 'logging_fn'|highlight_inline }}.
   </div>
