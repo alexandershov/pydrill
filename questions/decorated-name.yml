@@ -70,7 +70,7 @@ explanation: |
 
     {% filter highlight_inline %}@wraps(fn){% endfilter %} does the right thing.
     The right thing being: assign {{ '__name__'|highlight_inline }} attribute
-    (and some other attributes) of {{ name|highlight_inline }} to {{ 'logging_fn'|highlight_inline }}.
+    (and some other attributes) of {{ 'fn'|highlight_inline }} to {{ 'logging_fn'|highlight_inline }}.
   </div>
 
 

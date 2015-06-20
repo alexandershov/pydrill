@@ -68,7 +68,7 @@ explanation: |
        False
      {% endfilter %}
      That's the problem right here! {{ '@staticmethod'|highlight_inline }} creates, ahem, a {{ 'staticmethod'|highlight_inline }}
-     from a function. {{ 'staticmethod'|highlight_inline }} instances are descriptors, and they're not callable.
+     object from a function. {{ 'staticmethod'|highlight_inline }} instances are descriptors, and they're not callable.
   </div>
   <div class="paragraph">
     If we want to apply a decorator to a static method, then we should put
