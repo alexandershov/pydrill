@@ -18,7 +18,7 @@ explanation: |
   <div class="paragraph">
     We probably wanted to get {% filter highlight_inline %}{{ (x + y) / 2 }}{% endfilter %},
     but when we divide an integer by another integer in Python 2, we get an integer in result.
-    {% filter highlight_inline %}{{ (x + y) // 2}}{% endfilter %}.
+    The correct answer is {% filter highlight_inline %}{{ (x + y) // 2}}{% endfilter %}.
     That sucks. What can we do about it?
   </div>
   <div class="paragraph">
