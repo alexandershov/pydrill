@@ -32,10 +32,6 @@ class User(object):
         # converting to one-based indexing
         return redis_store.zrevrank('user_scores', self.id) + 1
 
-    @property
-    def percentile(self):
-        return 1 - safe_div(self.rank, redis_store.zcard('user_scores'))
-
     def answer(self, question, answer):
         self.last_question = question.id
         if answer.is_correct and question.id not in self.answered_questions:

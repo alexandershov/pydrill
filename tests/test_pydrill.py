@@ -10,6 +10,7 @@ from flask import session
 from pydrill import app, db, redis_store
 from pydrill import models
 from pydrill.utils import User
+from pydrill.jinja_env import get_score_text
 
 MAC_USER_AGENT = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 '
                   '(KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36')
@@ -219,3 +220,15 @@ def test_never_ask_the_same_question_twice_in_a_row(steve, i):
     rv = answer_question(steve, 'average', is_correct=True)
     # TODO: check that absolute url is correct
     assert re.search(url_re_for_either('average'), rv.location) is None
+
+
+@pytest.mark.parametrize('rank, total, expected_text', [
+    (1, 1, 'top 1%'),
+    (1, 2, 'top 1%'),
+    (2, 2, 'bottom 50%'),
+    (1, 3, 'top 1%'),
+    (2, 3, 'top 50%'),
+    (3, 3, 'bottom 33%'),
+])
+def test_get_score_text(rank, total, expected_text):
+    assert get_score_text(rank, total) == expected_text

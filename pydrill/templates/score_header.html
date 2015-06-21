@@ -2,6 +2,6 @@
 
 {% block message %}
     <div class="message">
-        {{ g.user.percentile|percentile_text }}
+        You're in the {{ g.user.rank|get_score_text(g.num_users) }}
     </div>
 {% endblock %}

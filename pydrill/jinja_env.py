@@ -1,3 +1,5 @@
+from __future__ import division
+
 from textwrap import dedent
 import random
 
@@ -68,16 +70,23 @@ def get_answer_message(answer_is_correct):
     return 'wrong!'
 
 
-@app.template_filter()
-def percentile_text(percentile):
-    if percentile >= 0.5:
-        return "You're in the top {:.0%}".format(max(1 - percentile, 0.01))
-    return "You're in the bottom {:.0%}".format(max(percentile, 0.01))
-
-
 @app.template_filter('repr')
 def repr_filter(obj):
     return repr(obj)
+
+
+@app.template_filter()
+def get_score_text(rank, total):
+    num_better = rank - 1
+    num_worse = total - rank
+    if not num_better:
+        return 'top 1%'
+    if num_worse > num_better:
+        return 'top {:.0%}'.format(1 - num_worse / total)
+    elif num_better == num_worse:
+        return 'top 50%'
+    else:
+        return 'bottom {:.0%}'.format(1 - num_better / total)
 
 
 @app.template_global()
