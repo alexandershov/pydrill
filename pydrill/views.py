@@ -11,13 +11,19 @@ urandom = SystemRandom()
 
 
 @app.route('/')
-def ask_next_question():
-    return redirect(url_for('ask', question_id=get_next_question().id, seed=make_seed()))
+def main():
+    return ask_question()
+
+
+def ask_question(question_id=None):
+    if question_id is None:
+        question_id = get_next_question().id
+    return redirect(url_for('ask', question_id=question_id, seed=make_seed()))
 
 
 @app.route('/ask/<question_id>/')
 def ask_with_random_seed(question_id):
-    return redirect(url_for('ask', question_id=question_id, seed=make_seed()))
+    return ask_question(question_id)
 
 
 @app.route('/ask/<question_id>/<seed>/')
@@ -30,7 +36,7 @@ def accept_answer(question_id, answer_id, seed):
     question, answer = get_cur_question_and_answer()
     g.user.answer(question, answer)
     remember_answer(answer)
-    return redirect(url_for('ask', question_id=get_next_question().id, seed=make_seed()))
+    return ask_question()
 
 
 def remember_answer(answer):
