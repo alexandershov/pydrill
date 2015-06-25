@@ -69,8 +69,9 @@ explanation: |
     {% endfilter %}
 
     {% filter highlight_inline %}@wraps(fn){% endfilter %} does the right thing.
-    The right thing being: assign {{ '__name__'|highlight_inline }} attribute
-    (and some other attributes) of {{ 'fn'|highlight_inline }} to {{ 'logging_fn'|highlight_inline }}.
+    The right thing is: assign {{ '__name__'|highlight_inline }} attribute
+    (and some other attributes) of {{ 'fn'|highlight_inline }}
+    (same thing as {{ 'sub'|highlight_inline }}) to {{ 'logging_fn'|highlight_inline }}.
   </div>
 
 
