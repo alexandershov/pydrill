@@ -16,7 +16,7 @@ text: |
 
   {% macro name_error_explanation() %}
     That'll throw a {{ 'NameError'|highlight_inline }}, because {{ sublist_var|highlight_inline }}
-    is not yet defined in the first (inner) loop.
+    is not defined in the first (outer) loop.
   {% endmacro %}
 
   {% set outer_loop, inner_loop, correct_answer, wrong_answer, extra_explanation = gen.choice([
