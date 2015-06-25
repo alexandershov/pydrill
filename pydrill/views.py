@@ -11,7 +11,7 @@ urandom = SystemRandom()
 
 
 @app.route('/')
-def main():
+def ask_next_question():
     return ask_question()
 
 

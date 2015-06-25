@@ -14,7 +14,7 @@
             {{ question|render_explained_question(given_answer) }}
             <div class="next-question">
                 <a class="btn btn-primary"
-                   href="{{ url_for('main') }}">Next question</a>
+                   href="{{ url_for('ask_next_question') }}">Next question</a>
             </div>
         </div>
     </div>
