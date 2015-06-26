@@ -8,8 +8,9 @@
 </head>
 <body>
 <div class="container-fluid">
-    {% block header %}{% include 'header.html' %}{% endblock %}
-    {% block main %}{% endblock %}
+    {% set question_preamble = [] %}
+    {% block header scoped %}{% include 'header.html' %}{% endblock %}
+    {% block main scoped %}{% endblock %}
 </div>
 </body>
 </html>

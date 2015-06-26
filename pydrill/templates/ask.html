@@ -3,6 +3,9 @@
 {% block main %}
     <div class="row">
         <div class="main">
+            {% for text in question_preamble %}
+                <div class="question-preamble">{{ text }}</div>
+            {% endfor %}
             {{ question|render_question }}
         </div>
     </div>

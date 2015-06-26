@@ -7379,6 +7379,11 @@ button.close {
     padding: 0;
   }
 }
+@media (max-width: 767px) {
+  .question-preamble {
+    padding: 0 0 0 1em;
+  }
+}
 @media (min-width: 768px) {
   .question {
     display: inline-block;

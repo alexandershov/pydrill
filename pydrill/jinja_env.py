@@ -94,4 +94,5 @@ def get_prev_answer():
     return session.pop('prev_answer', None)
 
 
+app.jinja_env.add_extension('jinja2.ext.do')
 app.jinja_env.globals.update(gen=gen)
