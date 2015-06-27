@@ -28,12 +28,12 @@ def ask_with_random_seed(question_id):
 
 @app.route('/ask/<question_id>/<seed>/')
 def ask(question_id, seed):
-    return render_template('ask.html', question=get_cur_question())
+    return render_template('ask.html', question=get_question(question_id))
 
 
 @app.route('/answer/<question_id>/<answer_id>/<seed>/', methods=['POST'])
 def accept_answer(question_id, answer_id, seed):
-    question, answer = get_cur_question_and_answer()
+    question, answer = get_cur_question_and_answer(question_id, answer_id)
     g.user.answer(question, answer)
     remember_answer(answer)
     return ask_question()
@@ -53,7 +53,7 @@ def show_score():
 
 @app.route('/explain/<question_id>/<answer_id>/<seed>/')
 def explain(question_id, answer_id, seed):
-    question, given_answer = get_cur_question_and_answer()
+    question, given_answer = get_cur_question_and_answer(question_id, answer_id)
     return render_template('explain.html', question=question, given_answer=given_answer)
 
 
@@ -96,20 +96,16 @@ def get_next_question():
     return question
 
 
-def get_cur_question():
-    return Question.query.get(request.view_args['question_id'])
+def get_question(question_id):
+    return Question.query.get(question_id)
 
 
-def get_cur_answer():
-    return Answer.query.get((request.view_args['answer_id'],
-                             request.view_args['question_id']))
+def get_answer(question_id, answer_id):
+    return Answer.query.get((answer_id, question_id))
 
 
-def get_cur_question_and_answer():
-    question = get_cur_question()
-    answer = get_cur_answer()
-    assert answer.question == question
-    return question, answer
+def get_cur_question_and_answer(question_id, answer_id):
+    return get_question(question_id), get_answer(question_id, answer_id)
 
 
 def make_seed():
