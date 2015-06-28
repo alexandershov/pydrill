@@ -15,7 +15,7 @@
                 {% for ts in teams_scores %}
                     <tr {% if ts.team in g.user.teams %}class="active" title="{{ ts.team }} is your team"{% endif %}>
                         <td>{{ ts.team }}</td>
-                        <td>{{ ts.score }}</td>
+                        <td>{{ '{:.1f}'.format(ts.score) }}</td>
                     </tr>
                 {% endfor %}
             </table>
