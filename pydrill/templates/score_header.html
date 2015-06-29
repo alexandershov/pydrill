@@ -2,6 +2,8 @@
 
 {% block message %}
     <div class="message">
-        You're in the {{ g.user.rank|get_score_text(g.num_users) }}
+        {% if g.user.answered_questions %}
+            You're in the {{ g.user.rank|get_score_text(g.num_users) }}
+        {% endif %}
     </div>
 {% endblock %}
