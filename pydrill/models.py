@@ -16,6 +16,9 @@ class Question(db.Model):
     difficulty = db.Column(db.Integer, nullable=False)
     answers = db.relationship('Answer', backref='question', lazy='dynamic')
 
+    def __repr__(self):
+        return 'Question(id={!r})'.format(self.id)
+
 
 class Answer(db.Model):
     __tablename__ = 'answers'

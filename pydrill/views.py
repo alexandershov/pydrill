@@ -28,7 +28,9 @@ def ask_with_random_seed(question_id):
 
 @app.route('/ask/<question_id>/<seed>/')
 def ask(question_id, seed):
-    return render_template('ask.html', question=get_question(question_id))
+    question = get_question(question_id)
+    g.user.was_asked(question)
+    return render_template('ask.html', question=question)
 
 
 @app.route('/answer/<question_id>/<answer_id>/<seed>/', methods=['POST'])
@@ -85,7 +87,8 @@ def save_user_and_execute_redis_pipeline(response):
 def get_next_question():
     distance_to_user_avg_score = func.abs(Question.difficulty - g.user.avg_score)
     question = (Question.query
-                .filter(~Question.id.in_(g.user.answered_questions))
+                .filter(~Question.id.in_(g.user.answered_questions)
+                        & (Question.id != g.user.last_question))
                 .order_by(distance_to_user_avg_score)
                 .first())
     if question is None:

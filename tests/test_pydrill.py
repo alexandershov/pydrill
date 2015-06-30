@@ -168,8 +168,14 @@ def get_any_wrong_answer(question):
     return get_answer(question, is_correct=False)
 
 
+def ask_question(client, question_id):
+    url = '/ask/{}/100/'.format(question_id)
+    check_get(client, url)
+
+
 # TODO: avoid passing client to all functions
 def answer_question(client, question_id, is_correct):
+    ask_question(client, question_id)
     question = models.Question.query.get(question_id)
     url = '/answer/{}/{:d}/100/'.format(question_id, get_answer(question, is_correct).id)
     rv = check_post(client, url)
