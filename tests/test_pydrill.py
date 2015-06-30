@@ -78,7 +78,7 @@ def get_user():
 
 def test_new_user(paul):
     with paul:
-        check_get(paul, '/ask/average/100/')
+        ask_question(paul, 'average')
         user = get_user()
         user_id = user.id
         assert len(user.id) == 36  # length of str(uuid4) is 36
@@ -88,7 +88,7 @@ def test_new_user(paul):
         assert_team_score('Linux', num_users=1, score_sum=0)
         assert_team_score('Hacker News', num_users=1, score_sum=0)
 
-        check_get(paul, '/ask/average/100/')
+        ask_question(paul, 'average')
         # id doesn't change after the first visit
         assert get_user().id == user_id
 
@@ -170,7 +170,7 @@ def get_any_wrong_answer(question):
 
 def ask_question(client, question_id):
     url = '/ask/{}/100/'.format(question_id)
-    check_get(client, url)
+    return check_get(client, url)
 
 
 # TODO: avoid passing client to all functions
