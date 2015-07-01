@@ -9,8 +9,8 @@ from flask import session
 
 from pydrill import app, db, redis_store
 from pydrill import models
-from pydrill.utils import User
 from pydrill.jinja_env import get_score_text
+from pydrill.utils import User
 
 MAC_USER_AGENT = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 '
                   '(KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36')
@@ -18,10 +18,18 @@ MAC_USER_AGENT = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/5
 LINUX_USER_AGENT = ('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '
                     '(KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36')
 
+MAC_USER_WITH_BAD_REFERER = {'HTTP_USER_AGENT': MAC_USER_AGENT,
+                             'HTTP_REFERER': 'parse this'}
+
+LINUX_USER_WITH_HN_REFERER = {'HTTP_USER_AGENT': LINUX_USER_AGENT,
+                              'HTTP_REFERER': 'https://news.ycombinator.com/item?id=test'}
+
+MAC_USER = {'HTTP_USER_AGENT': MAC_USER_AGENT}
+
 
 # TODO: switch to app.test_client when Flask 1.0 is ready
 def new_test_client(environ_base, *args, **kwargs):
-    """Copy-pasted from Flask.test_client because we need to pass environ_base
+    """Copy-pasted from Flask.test_client because we need to pass environ_base in .get() and .post()
     which test_client can do only from version 1.0 which is not production ready yet.
     """
     return Client(environ_base, app, app.response_class, *args, **kwargs)
@@ -59,17 +67,17 @@ def run_app_in_testing_mode():
 
 @pytest.fixture()
 def steve():
-    return new_test_client(STEVE)
+    return new_test_client(MAC_USER_WITH_BAD_REFERER)
 
 
 @pytest.fixture()
 def paul():
-    return new_test_client(PAUL)
+    return new_test_client(LINUX_USER_WITH_HN_REFERER)
 
 
 @pytest.fixture()
 def tim():
-    return new_test_client(TIM)
+    return new_test_client(MAC_USER)
 
 
 def get_user():
@@ -80,7 +88,6 @@ def test_new_user(paul):
     with paul:
         ask_question(paul, 'average')
         user = get_user()
-        user_id = user.id
         assert len(user.id) == 36  # length of str(uuid4) is 36
         assert user.score == 0
         assert_same_items(user.teams, ['Linux', 'Hacker News'])
@@ -90,7 +97,7 @@ def test_new_user(paul):
 
         ask_question(paul, 'average')
         # id doesn't change after the first visit
-        assert get_user().id == user_id
+        assert get_user().id == user.id
 
 
 def test_questions():
@@ -98,30 +105,29 @@ def test_questions():
 
 
 @pytest.mark.parametrize('question_id, are_correct, scores', [
-    # only the first correct answer can increase the score
     ('average', [True, True], [1, 1]),
     ('average', [False, True], [0, 0]),
 ])
-# TODO: more specific name
-def test_correct_answer(steve, question_id, are_correct, scores):
+def test_only_first_answer_can_increase_score(steve, question_id, are_correct, scores):
     assert len(are_correct) == len(scores)
     for is_correct, score in zip(are_correct, scores):
         answer_question(steve, question_id, is_correct=is_correct)
-        assert_team_score('Apple', num_users=1, score_sum=score)
+        assert_team_score('Apple', score_sum=score)
 
 
-def url_re_for_either(*question_ids):
+def matches_any_ask_url(*question_ids):
     parts = [r'/ask/{}/(\d+)/$'.format(q) for q in question_ids]
     return '|'.join(parts)
 
 
 # TODO: test it separate tests with good naming maybe?
 @pytest.mark.parametrize('question_ids, redirect_path_re', [
-    (['average'], url_re_for_either('static-decorator', 'assign-to-empty-list')),
-    (['static-decorator'], url_re_for_either('average', 'assign-to-empty-list')),
-    (['assign-to-empty-list'], url_re_for_either('static-decorator')),
-    (['average', 'static-decorator'], url_re_for_either('assign-to-empty-list')),
-    (['average', 'static-decorator', 'assign-to-empty-list'], url_re_for_either('.*'))
+    (['average'], matches_any_ask_url('static-decorator', 'assign-to-empty-list')),
+    (['static-decorator'], matches_any_ask_url('average', 'assign-to-empty-list')),
+    # TODO: why no 'average' here?
+    (['assign-to-empty-list'], matches_any_ask_url('static-decorator')),
+    (['average', 'static-decorator'], matches_any_ask_url('assign-to-empty-list')),
+    (['average', 'static-decorator', 'assign-to-empty-list'], matches_any_ask_url('.*'))
 ])
 def test_answer_redirects(steve, question_ids, redirect_path_re):
     for i, question_id in enumerate(question_ids):
@@ -129,15 +135,6 @@ def test_answer_redirects(steve, question_ids, redirect_path_re):
         if i == len(question_ids) - 1:
             # TODO: check that absolute url is correct
             assert re.search(redirect_path_re, rv.location)
-
-
-STEVE = {'HTTP_USER_AGENT': MAC_USER_AGENT,
-         'HTTP_REFERER': 'parse this'}
-
-PAUL = {'HTTP_USER_AGENT': LINUX_USER_AGENT,
-        'HTTP_REFERER': 'https://news.ycombinator.com/item?id=test'}
-
-TIM = {'HTTP_USER_AGENT': MAC_USER_AGENT}
 
 
 def check_get(client, url):
@@ -164,10 +161,6 @@ def get_correct_answer(question):
     return get_answer(question, is_correct=True)
 
 
-def get_any_wrong_answer(question):
-    return get_answer(question, is_correct=False)
-
-
 def ask_question(client, question_id):
     url = '/ask/{}/100/'.format(question_id)
     return check_get(client, url)
@@ -178,8 +171,7 @@ def answer_question(client, question_id, is_correct):
     ask_question(client, question_id)
     question = models.Question.query.get(question_id)
     url = '/answer/{}/{:d}/100/'.format(question_id, get_answer(question, is_correct).id)
-    rv = check_post(client, url)
-    return rv
+    return check_post(client, url)
 
 
 def test_ask_without_seed(paul):
@@ -207,9 +199,10 @@ def test_team_scores(steve, paul, tim):
     assert_team_score('Apple', num_users=2, score_sum=3)
 
 
-def assert_team_score(team, num_users, score_sum):
-    assert (redis_store.hgetall('team:{}'.format(team))
-            == {'num_users': str(num_users), 'score_sum': str(score_sum)})
+def assert_team_score(team, **expected):
+    score = {k: int(v) for k, v in redis_store.hgetall('team:{}'.format(team)).viewitems()}
+    for key, value in expected.viewitems():
+        assert score[key] == value
 
 
 # execute this test 10 times to thoroughly check random behaviour
@@ -218,14 +211,14 @@ def test_never_ask_the_same_question_twice_in_a_row(steve, i):
     # we need to answer every question, because otherwise
     # answer_question(steve, 'average', ...) will always redirect to
     # the unanswered question.
-    # We want to test that when every question
-    # is answered, then no question is asked twice in row anyway
+    # We want to test that even if every question is answered,
+    # then we don't ask the same question twice in row anyway.
     for question in models.Question.query.all():
         answer_question(steve, question.id, is_correct=True)
 
     rv = answer_question(steve, 'average', is_correct=True)
     # TODO: check that absolute url is correct
-    assert re.search(url_re_for_either('average'), rv.location) is None
+    assert re.search(matches_any_ask_url('average'), rv.location) is None
 
 
 @pytest.mark.parametrize('rank, total, expected_text', [
