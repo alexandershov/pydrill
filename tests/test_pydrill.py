@@ -221,7 +221,7 @@ def test_never_ask_the_same_question_twice_in_a_row(steve, i):
     assert re.search(matches_any_ask_url('average'), rv.location) is None
 
 
-@pytest.mark.parametrize('rank, total, expected_text', [
+@pytest.mark.parametrize('rank, num_users, expected_text', [
     (1, 1, 'top 1%'),
     (1, 2, 'top 1%'),
     (2, 2, 'bottom 50%'),
@@ -229,5 +229,5 @@ def test_never_ask_the_same_question_twice_in_a_row(steve, i):
     (2, 3, 'top 50%'),
     (3, 3, 'bottom 33%'),
 ])
-def test_get_score_text(rank, total, expected_text):
-    assert get_score_text(rank, total) == expected_text
+def test_get_score_text(rank, num_users, expected_text):
+    assert get_score_text(rank, num_users) == expected_text

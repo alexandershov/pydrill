@@ -76,17 +76,17 @@ def repr_filter(obj):
 
 
 @app.template_filter()
-def get_score_text(rank, total):
+def get_score_text(rank, num_users):
     num_better = rank - 1
-    num_worse = total - rank
+    num_worse = num_users - rank
     if not num_better:
         return 'top 1%'
     if num_worse > num_better:
-        return 'top {:.0%}'.format(1 - num_worse / total)
+        return 'top {:.0%}'.format(1 - num_worse / num_users)
     elif num_better == num_worse:
         return 'top 50%'
     else:
-        return 'bottom {:.0%}'.format(1 - num_better / total)
+        return 'bottom {:.0%}'.format(1 - num_better / num_users)
 
 
 @app.template_global()
