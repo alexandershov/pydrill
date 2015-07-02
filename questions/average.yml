@@ -24,7 +24,7 @@ explanation: |
     That sucks. What can we do about it?
   </div>
   <div class="paragraph">
-    <strong>1.</strong> The most radical way is to use Python 3. Integer division returns a
+    <strong>1.</strong> The simplest way is to use Python 3 because integer division returns a
     floating point number in Python 3:
     {% filter highlight('pycon') %}
       >>> # ATTENTION: THIS IS PYTHON 3
@@ -35,12 +35,15 @@ explanation: |
       {{ (x + y) / 2 }} # yay!
       >>> # ATTENTION: THAT WAS PYTHON 3
     {% endfilter %}
-    That's all well and good, but everybody knows that
+  </div>
+  <div class="paragraph">
+    <strong>2.</strong> The hardest way is to use Python 3 because porting existing codebase
+    from Python 2 to Python 3 is not easy. Also, everybody knows that
     <abbr title="Joke alert!">Python 2.7 is the future of Python</abbr>.
     So let's stick to Python 2.7.
   </div>
   <div class="paragraph">
-    <strong>2.</strong> We can convert numerator
+    <strong>3.</strong> We can convert numerator
     (that's {% filter highlight_inline %}{{ x }} + {{ y }}{% endfilter %})
     or denumerator (that's {{ 2|highlight_inline }}) to a floating point number.
     Floating point division returns a floating point number:
@@ -52,7 +55,7 @@ explanation: |
     {% endfilter %}
   </div>
   <div class="paragraph">
-    <strong>3.</strong> We can start our python modules with the line
+    <strong>4.</strong> We can start our python modules with the line
     {% filter highlight_inline %}from __future__ import division{% endfilter %}
     {% filter highlight('pycon') %}
       >>> # use python3-style division IN THE CURRENT MODULE ONLY!
