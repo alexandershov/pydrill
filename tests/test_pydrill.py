@@ -128,8 +128,6 @@ def matches_any_ask_url(*question_ids):
 # TODO: test it separate tests with good naming maybe?
 @pytest.mark.parametrize('question_ids, redirect_path_re', [
     ([EASY_Q], matches_any_ask_url(MEDIUM_Q, HARD_Q)),
-    ([MEDIUM_Q], matches_any_ask_url(EASY_Q, HARD_Q)),
-    ([HARD_Q], matches_any_ask_url(EASY_Q, MEDIUM_Q)),
     ([EASY_Q, MEDIUM_Q], matches_any_ask_url(HARD_Q)),
     ([EASY_Q, MEDIUM_Q, HARD_Q], matches_any_ask_url('.*'))
 ])
