@@ -179,10 +179,9 @@ def answer_question(client, question_id, is_correct):
 def test_ask_without_seed(paul):
     # TODO: factor out with app.new_test_client, subclass it,
     # TODO: pass user (e.g PAUL) to its __init__ method and handle seeds etc
-    rv = paul.get('/ask/average/')
+    rv = paul.get('/ask/{}/'.format(EASY_Q))
     assert rv.status_code == 302
-    # TODO: DRY it up with test_answer_redirects
-    assert re.search(r'/ask/average/(\d+)/', rv.location)
+    assert re.search(matches_any_ask_url(EASY_Q), rv.location)
 
 
 def test_team_scores(steve, paul, tim):
