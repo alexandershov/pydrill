@@ -3,6 +3,10 @@ import random
 import re
 from flask.testing import FlaskClient
 
+EASY_Q = 'average'
+MEDIUM_Q = 'static-decorator'
+HARD_Q = 'assign-to-empty-list'
+
 os.environ['PYDRILL_CONFIG'] = os.path.join(os.path.dirname(__file__), 'pydrill.cfg')
 
 import pytest
@@ -87,7 +91,7 @@ def get_user():
 
 def test_new_user(paul):
     with paul:
-        ask_question(paul, 'average')
+        ask_question(paul, EASY_Q)
         user = get_user()
         assert len(user.id) == 36  # length of str(uuid4) is 36
         assert user.score == 0
@@ -96,7 +100,7 @@ def test_new_user(paul):
         assert_team_score('Linux', num_users=1, score_sum=0)
         assert_team_score('Hacker News', num_users=1, score_sum=0)
 
-        ask_question(paul, 'average')
+        ask_question(paul, EASY_Q)
         # id doesn't change after the first visit
         assert get_user().id == user.id
 
@@ -106,8 +110,8 @@ def test_questions():
 
 
 @pytest.mark.parametrize('question_id, are_correct, scores', [
-    ('average', [True, True], [1, 1]),
-    ('average', [False, True], [0, 0]),
+    (EASY_Q, [True, True], [1, 1]),
+    (EASY_Q, [False, True], [0, 0]),
 ])
 def test_only_first_answer_can_increase_score(steve, question_id, are_correct, scores):
     assert len(are_correct) == len(scores)
@@ -123,11 +127,11 @@ def matches_any_ask_url(*question_ids):
 
 # TODO: test it separate tests with good naming maybe?
 @pytest.mark.parametrize('question_ids, redirect_path_re', [
-    (['average'], matches_any_ask_url('static-decorator', 'assign-to-empty-list')),
-    (['static-decorator'], matches_any_ask_url('average', 'assign-to-empty-list')),
-    (['assign-to-empty-list'], matches_any_ask_url('average', 'static-decorator')),
-    (['average', 'static-decorator'], matches_any_ask_url('assign-to-empty-list')),
-    (['average', 'static-decorator', 'assign-to-empty-list'], matches_any_ask_url('.*'))
+    ([EASY_Q], matches_any_ask_url(MEDIUM_Q, HARD_Q)),
+    ([MEDIUM_Q], matches_any_ask_url(EASY_Q, HARD_Q)),
+    ([HARD_Q], matches_any_ask_url(EASY_Q, MEDIUM_Q)),
+    ([EASY_Q, MEDIUM_Q], matches_any_ask_url(HARD_Q)),
+    ([EASY_Q, MEDIUM_Q, HARD_Q], matches_any_ask_url('.*'))
 ])
 def test_answer_redirects(steve, question_ids, redirect_path_re):
     for i, question_id in enumerate(question_ids):
@@ -184,18 +188,18 @@ def test_ask_without_seed(paul):
 
 
 def test_team_scores(steve, paul, tim):
-    answer_question(steve, 'average', is_correct=True)
+    answer_question(steve, EASY_Q, is_correct=True)
     assert_team_score('Apple', num_users=1, score_sum=1)
 
-    answer_question(tim, 'average', is_correct=False)
+    answer_question(tim, EASY_Q, is_correct=False)
     assert_team_score('Apple', num_users=2, score_sum=1)
 
-    answer_question(paul, 'average', is_correct=True)
+    answer_question(paul, EASY_Q, is_correct=True)
     assert_team_score('Apple', num_users=2, score_sum=1)  # paul is not in Apple team
     assert_team_score('Linux', num_users=1, score_sum=1)
     assert_team_score('Hacker News', num_users=1, score_sum=1)
 
-    answer_question(steve, 'static-decorator', is_correct=True)
+    answer_question(steve, MEDIUM_Q, is_correct=True)
     assert_team_score('Apple', num_users=2, score_sum=3)
 
 
@@ -209,16 +213,16 @@ def assert_team_score(team, **expected):
 @pytest.mark.parametrize('i', range(10))
 def test_never_ask_the_same_question_twice_in_a_row(steve, i):
     # we need to answer every question, because otherwise
-    # answer_question(steve, 'average', ...) will always redirect to
+    # answer_question(steve, EASY_Q, ...) will always redirect to
     # the unanswered question.
     # We want to test that even if every question is answered,
     # then we don't ask the same question twice in row anyway.
     for question in models.Question.query.all():
         answer_question(steve, question.id, is_correct=True)
 
-    rv = answer_question(steve, 'average', is_correct=True)
+    rv = answer_question(steve, EASY_Q, is_correct=True)
     # TODO: check that absolute url is correct
-    assert re.search(matches_any_ask_url('average'), rv.location) is None
+    assert re.search(matches_any_ask_url(EASY_Q), rv.location) is None
 
 
 @pytest.mark.parametrize('rank, num_users, expected_text', [
