@@ -1,4 +1,5 @@
 import os
+import random
 import re
 from flask.testing import FlaskClient
 
@@ -124,14 +125,13 @@ def matches_any_ask_url(*question_ids):
 @pytest.mark.parametrize('question_ids, redirect_path_re', [
     (['average'], matches_any_ask_url('static-decorator', 'assign-to-empty-list')),
     (['static-decorator'], matches_any_ask_url('average', 'assign-to-empty-list')),
-    # TODO: why no 'average' here?
-    (['assign-to-empty-list'], matches_any_ask_url('static-decorator')),
+    (['assign-to-empty-list'], matches_any_ask_url('average', 'static-decorator')),
     (['average', 'static-decorator'], matches_any_ask_url('assign-to-empty-list')),
     (['average', 'static-decorator', 'assign-to-empty-list'], matches_any_ask_url('.*'))
 ])
 def test_answer_redirects(steve, question_ids, redirect_path_re):
     for i, question_id in enumerate(question_ids):
-        rv = answer_question(steve, question_id, is_correct=True)
+        rv = answer_question(steve, question_id, is_correct=random.choice([True, False]))
         if i == len(question_ids) - 1:
             # TODO: check that absolute url is correct
             assert re.search(redirect_path_re, rv.location)
