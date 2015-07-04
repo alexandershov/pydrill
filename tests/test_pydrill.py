@@ -89,20 +89,26 @@ def get_user():
     return User(**session['user'])
 
 
-def test_new_user(paul):
+def test_user_id(paul):
     with paul:
         ask_question(paul, EASY_Q)
         user = get_user()
         assert len(user.id) == 36  # length of str(uuid4) is 36
-        assert user.score == 0
-        assert_same_items(user.teams, ['Linux', 'Hacker News'])
-
-        assert_team_score('Linux', num_users=1, score_sum=0)
-        assert_team_score('Hacker News', num_users=1, score_sum=0)
-
         ask_question(paul, EASY_Q)
         # id doesn't change after the first visit
         assert get_user().id == user.id
+
+
+def test_new_user_score(paul):
+    with paul:
+        ask_question(paul, EASY_Q)
+        assert get_user().score == 0
+
+
+def test_user_teams(paul):
+    with paul:
+        ask_question(paul, EASY_Q)
+        assert_same_items(get_user().teams, ['Linux', 'Hacker News'])
 
 
 def test_questions():
