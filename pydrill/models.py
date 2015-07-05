@@ -7,13 +7,19 @@ import yaml
 from pydrill import db
 
 
+class Column(db.Column):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('nullable', False)
+        super(Column, self).__init__(*args, **kwargs)
+
+
 class Question(db.Model):
     __tablename__ = 'questions'
 
-    id = db.Column(db.Text, primary_key=True)
-    text = db.Column(db.Text, nullable=False)
-    explanation = db.Column(db.Text, nullable=False)
-    difficulty = db.Column(db.Integer, nullable=False)
+    id = Column(db.Text, primary_key=True)
+    text = Column(db.Text)
+    explanation = Column(db.Text)
+    difficulty = Column(db.Integer)
     answers = db.relationship('Answer', backref='question', lazy='dynamic')
 
     def __repr__(self):
@@ -23,15 +29,18 @@ class Question(db.Model):
 class Answer(db.Model):
     __tablename__ = 'answers'
 
-    id = db.Column(db.Integer, primary_key=True)
-    question_id = db.Column(db.Integer, db.ForeignKey(Question.id), nullable=False,
-                            primary_key=True)
-    text = db.Column(db.Text, nullable=False)
-    is_correct = db.Column(db.Boolean, nullable=False)
+    id = Column(db.Integer, primary_key=True)
+    question_id = Column(db.Integer, db.ForeignKey(Question.id), primary_key=True)
+    text = Column(db.Text)
+    is_correct = Column(db.Boolean)
 
     @property
     def is_wrong(self):
         return not self.is_correct
+
+    def __repr__(self):
+        return ('Answer(id={self.id!r}, question_id={self.question_id!r}, '
+                'is_correct={self.is_correct!r})'.format(self=self))
 
 
 def load_questions(directory):
