@@ -30,17 +30,17 @@ class Answer(db.Model):
     __tablename__ = 'answers'
 
     id = Column(db.Integer, primary_key=True)
+    is_correct = Column(db.Boolean)
     question_id = Column(db.Integer, db.ForeignKey(Question.id), primary_key=True)
     text = Column(db.Text)
-    is_correct = Column(db.Boolean)
 
     @property
     def is_wrong(self):
         return not self.is_correct
 
     def __repr__(self):
-        return ('Answer(id={self.id!r}, question_id={self.question_id!r}, '
-                'is_correct={self.is_correct!r})'.format(self=self))
+        return ('Answer(id={self.id!r}, is_correct={self.is_correct!r}, '
+                'question={self.question!r})'.format(self=self))
 
 
 def load_questions(directory):
