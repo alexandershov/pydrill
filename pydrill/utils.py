@@ -8,6 +8,12 @@ from flask import g, request
 
 from pydrill import redis_store
 
+TEAM_APPLE = 'Apple'
+TEAM_WINDOWS = 'Windows'
+TEAM_LINUX = 'Linux'
+TEAM_HN = 'Hacker News'
+TEAM_REDDIT = 'Reddit'
+
 
 class User(object):
     @classmethod
@@ -32,6 +38,7 @@ class User(object):
         # converting to one-based indexing
         return redis_store.zrevrank('user_scores', self.id) + 1
 
+    # TODO: rename, name implies it's a predicate.
     def was_asked(self, question):
         self.last_question = question.id
 
@@ -48,20 +55,20 @@ def user_as_dict(user):
 
 
 _TEAM_BY_PLATFORM = {
-    'iphone': 'Apple',
-    'ipad': 'Apple',
-    'macos': 'Apple',
-    'windows': 'Windows',
-    'android': 'Linux',
-    'linux': 'Linux',
+    'iphone': TEAM_APPLE,
+    'ipad': TEAM_APPLE,
+    'macos': TEAM_APPLE,
+    'windows': TEAM_WINDOWS,
+    'android': TEAM_LINUX,
+    'linux': TEAM_LINUX,
 }
 
 _TEAM_BY_REFERRER = {
-    'news.ycombinator.com': 'Hacker News',
-    'www.reddit.com': 'Reddit',
+    'news.ycombinator.com': TEAM_HN,
+    'www.reddit.com': TEAM_REDDIT,
 }
 
-TEAMS = ['Apple', 'Windows', 'Linux', 'Hacker News', 'Reddit']
+TEAMS = [TEAM_APPLE, TEAM_WINDOWS, TEAM_LINUX, TEAM_HN, TEAM_REDDIT]
 
 
 def get_cur_teams():
