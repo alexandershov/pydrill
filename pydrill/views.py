@@ -79,7 +79,7 @@ def save_user_and_execute_redis_pipeline(response):
     if request.view_args is None:
         # no matching rule
         return response
-    session['user'] = utils.user_as_dict(g.user)
+    session['user'] = g.user.as_dict()
     g.redis_pipeline.execute()
     return response
 

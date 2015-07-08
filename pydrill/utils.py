@@ -47,11 +47,10 @@ class User(object):
             add_score(self, question.difficulty)
         self.answered_questions.add(question.id)
 
-
-def user_as_dict(user):
-    return {'id': user.id, 'score': user.score, 'teams': user.teams,
-            'last_question': user.last_question,
-            'answered_questions': list(user.answered_questions)}  # set is not JSON serializable
+    def as_dict(self):
+        return {'id': self.id, 'score': self.score, 'teams': self.teams,
+                'last_question': self.last_question,
+                'answered_questions': list(self.answered_questions)}  # set is not JSON serializable
 
 
 _TEAM_BY_PLATFORM = {
