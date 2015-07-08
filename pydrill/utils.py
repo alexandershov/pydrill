@@ -38,11 +38,11 @@ class User(object):
         # converting to one-based indexing
         return redis_store.zrevrank('user_scores', self.id) + 1
 
-    # TODO: rename, name implies it's a predicate.
-    def was_asked(self, question):
+    def ask(self, question):
         self.last_question = question.id
 
     def answer(self, question, answer):
+        self.ask(question)
         if answer.is_correct and question.id not in self.answered_questions:
             add_score(self, question.difficulty)
         self.answered_questions.add(question.id)

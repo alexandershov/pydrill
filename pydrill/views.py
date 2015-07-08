@@ -29,7 +29,7 @@ def ask_with_random_seed(question_id):
 @app.route('/ask/<question_id>/<seed>/')
 def ask(question_id, seed):
     question = get_question(question_id)
-    g.user.was_asked(question)
+    g.user.ask(question)
     return render_template('ask.html', question=question)
 
 
