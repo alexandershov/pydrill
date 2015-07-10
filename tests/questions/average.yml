@@ -1,4 +1,6 @@
-text: What's the value of 1 / 2
+text: |
+  {% set x = gen.integer(1, 1) %}
+  What's the value of {{ x }} / 2?
 explanation: 0 in python2, 0.5 in python3
 difficulty: 1
 answers:

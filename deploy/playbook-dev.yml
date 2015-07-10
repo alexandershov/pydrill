@@ -19,8 +19,8 @@
     - name: create directories
       file: path={{ item }} state=directory owner=pydrill
       with_items:
-        - /etc/pydrill
-        - /var/lib/pydrill
+        - /etc/pydrill      # directory with configs
+        - /var/lib/pydrill  # directory with .sqlite3 database
 
     - template: src=templates/flask_config.j2 dest=/etc/pydrill/pydrill.cfg owner=pydrill
     - service: name=redis-server state=started

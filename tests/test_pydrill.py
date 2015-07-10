@@ -238,3 +238,8 @@ def test_never_ask_the_same_question_twice_in_a_row(steve, i):
 ])
 def test_get_score_text(rank, num_users, expected_text):
     assert get_score_text(rank, num_users) == expected_text
+
+
+def test_question_rendering(steve):
+    rv = ask_question(steve, 'average')
+    assert '1 / 2' in rv.data
