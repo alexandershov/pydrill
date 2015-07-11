@@ -35,7 +35,7 @@ def ask(question_id, seed):
 
 @app.route('/answer/<question_id>/<answer_id>/<seed>/', methods=['POST'])
 def accept_answer(question_id, answer_id, seed):
-    question, answer = get_cur_question_and_answer(question_id, answer_id)
+    question, answer = get_question_and_answer(question_id, answer_id)
     g.user.answer(question, answer)
     remember_answer(answer)
     return ask_question()
@@ -55,7 +55,7 @@ def show_score():
 
 @app.route('/explain/<question_id>/<answer_id>/<seed>/')
 def explain(question_id, answer_id, seed):
-    question, given_answer = get_cur_question_and_answer(question_id, answer_id)
+    question, given_answer = get_question_and_answer(question_id, answer_id)
     return render_template('explain.html', question=question, given_answer=given_answer)
 
 
@@ -107,7 +107,7 @@ def get_answer(question_id, answer_id):
     return Answer.query.get((answer_id, question_id))
 
 
-def get_cur_question_and_answer(question_id, answer_id):
+def get_question_and_answer(question_id, answer_id):
     return get_question(question_id), get_answer(question_id, answer_id)
 
 
