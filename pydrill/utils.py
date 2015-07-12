@@ -14,6 +14,22 @@ TEAM_LINUX = 'Linux'
 TEAM_HN = 'Hacker News'
 TEAM_REDDIT = 'Reddit'
 
+TEAMS = [TEAM_APPLE, TEAM_WINDOWS, TEAM_LINUX, TEAM_HN, TEAM_REDDIT]
+
+_TEAM_BY_PLATFORM = {
+    'iphone': TEAM_APPLE,
+    'ipad': TEAM_APPLE,
+    'macos': TEAM_APPLE,
+    'windows': TEAM_WINDOWS,
+    'android': TEAM_LINUX,
+    'linux': TEAM_LINUX,
+}
+
+_TEAM_BY_REFERRER = {
+    'news.ycombinator.com': TEAM_HN,
+    'www.reddit.com': TEAM_REDDIT,
+}
+
 
 class User(object):
     @classmethod
@@ -51,23 +67,6 @@ class User(object):
         return {'id': self.id, 'score': self.score, 'teams': self.teams,
                 'last_question': self.last_question,
                 'answered_questions': list(self.answered_questions)}  # set is not JSON serializable
-
-
-_TEAM_BY_PLATFORM = {
-    'iphone': TEAM_APPLE,
-    'ipad': TEAM_APPLE,
-    'macos': TEAM_APPLE,
-    'windows': TEAM_WINDOWS,
-    'android': TEAM_LINUX,
-    'linux': TEAM_LINUX,
-}
-
-_TEAM_BY_REFERRER = {
-    'news.ycombinator.com': TEAM_HN,
-    'www.reddit.com': TEAM_REDDIT,
-}
-
-TEAMS = [TEAM_APPLE, TEAM_WINDOWS, TEAM_LINUX, TEAM_HN, TEAM_REDDIT]
 
 
 def get_cur_teams():

@@ -4,8 +4,8 @@ from flask import g, redirect, render_template, request, session, url_for
 from sqlalchemy import func
 
 from pydrill import app, redis_store
-from pydrill import utils
 from pydrill.models import Answer, Question
+from pydrill.utils import get_teams_scores, get_cur_teams, User
 
 urandom = SystemRandom()
 
@@ -50,7 +50,7 @@ def remember_answer(answer):
 
 @app.route('/score/')
 def show_score():
-    return render_template('score.html', teams_scores=utils.get_teams_scores())
+    return render_template('score.html', teams_scores=get_teams_scores())
 
 
 @app.route('/explain/<question_id>/<answer_id>/<seed>/')
@@ -64,13 +64,13 @@ def set_globals():
     if request.view_args is None:
         # no matching rule
         return
-    # setting g.redis_pipeline first because it's used by utils.create_user
+    # setting g.redis_pipeline first because it's used by User.create
     g.redis_pipeline = redis_store.pipeline(transaction=False)
     g.seed = request.view_args.get('seed')
     if 'user' not in session:
-        g.user = utils.User.create(teams=utils.get_cur_teams())
+        g.user = User.create(teams=get_cur_teams())
     else:
-        g.user = utils.User(**session['user'])
+        g.user = User(**session['user'])
     g.num_users = redis_store.zcard('user_scores')
 
 
