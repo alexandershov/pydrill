@@ -8,6 +8,10 @@ from flask import g, request
 
 from pydrill import redis_store
 
+NUM_USERS = 'num_users'
+SCORE_SUM = 'score_sum'
+USER_SCORES = 'user_scores'
+
 TEAM_APPLE = 'Apple'
 TEAM_WINDOWS = 'Windows'
 TEAM_LINUX = 'Linux'
@@ -52,7 +56,7 @@ class User(object):
     @property
     def rank(self):
         # converting to one-based indexing
-        return redis_store.zrevrank('user_scores', self.id) + 1
+        return redis_store.zrevrank(USER_SCORES, self.id) + 1
 
     def ask(self, question):
         self.last_question = question.id
@@ -87,9 +91,13 @@ def get_teams_scores(teams=TEAMS):
     teams_attrs = hgetall_many(map(get_team_key, teams))
     for team, attrs in zip(teams, teams_attrs):
         teams_scores.append(TeamScore(team=team,
-                                      num_users=int(attrs.get('num_users', 0)),
-                                      score_sum=int(attrs.get('score_sum', 0))))
+                                      num_users=_get_int(attrs, NUM_USERS),
+                                      score_sum=_get_int(attrs, SCORE_SUM)))
     return sorted(teams_scores, key=lambda ts: ts.score, reverse=True)
+
+
+def _get_int(attrs, name, default=0):
+    return attrs.get(name, default)
 
 
 def hgetall_many(keys):
@@ -106,19 +114,19 @@ def get_team_key(team):
 def init_user_score(user):
     add_score(user, 0)
     for team in user.teams:
-        g.redis_pipeline.hincrby(get_team_key(team), 'num_users', 1)
+        g.redis_pipeline.hincrby(get_team_key(team), NUM_USERS, 1)
 
 
 def add_score(user, delta):
     user.score += delta
-    g.redis_pipeline.zincrby('user_scores', user.id, delta)
+    g.redis_pipeline.zincrby(USER_SCORES, user.id, delta)
     for team in user.teams:
-        g.redis_pipeline.hincrby(get_team_key(team), 'score_sum', delta)
+        g.redis_pipeline.hincrby(get_team_key(team), SCORE_SUM, delta)
     g.redis_pipeline.execute()
 
 
 # TODO: create and use Team class instead
-class TeamScore(namedtuple('TeamScore', ['team', 'num_users', 'score_sum'])):
+class TeamScore(namedtuple('TeamScore', ['team', NUM_USERS, SCORE_SUM])):
     __slots__ = ()
 
     @property
