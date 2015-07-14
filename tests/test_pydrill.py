@@ -174,6 +174,11 @@ def ask_question(client, question_id):
     return check_get(client, url)
 
 
+def explain_question(client, question_id):
+    url = '/explain/{}/1/100/'.format(question_id)
+    return check_get(client, url)
+
+
 # TODO: avoid passing client to all functions
 def answer_question(client, question_id, is_correct):
     ask_question(client, question_id)
@@ -244,3 +249,8 @@ def test_question_rendering(steve):
     rv = ask_question(steve, 'average')
     # checking that XXX / 2 is highlighted
     assert '<span class="o">/</span> <span class="mi">2</span>' in rv.data
+
+
+def test_explain_question_rendering(steve):
+    rv = explain_question(steve, 'average')
+    assert '__future__' in rv.data
