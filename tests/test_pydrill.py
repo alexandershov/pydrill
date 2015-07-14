@@ -245,7 +245,7 @@ def test_get_score_text(rank, num_users, expected_text):
     assert get_score_text(rank, num_users) == expected_text
 
 
-def test_question_rendering(steve):
+def test_ask_question_rendering(steve):
     rv = ask_question(steve, 'average')
     # checking that XXX / 2 is highlighted
     assert '<span class="o">/</span> <span class="mi">2</span>' in rv.data
