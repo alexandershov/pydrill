@@ -97,7 +97,7 @@ def get_teams_scores(teams=TEAMS):
 
 
 def _get_int(attrs, name, default=0):
-    return attrs.get(name, default)
+    return int(attrs.get(name, default))
 
 
 def hgetall_many(keys):

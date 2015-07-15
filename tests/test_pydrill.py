@@ -254,3 +254,9 @@ def test_ask_question_rendering(steve):
 def test_explain_question_rendering(steve):
     rv = explain_question(steve, EASY_Q)
     assert '__future__' in rv.data
+
+
+def test_score_rendering(steve):
+    ask_question(steve, EASY_Q)  # so scores aren't empty
+    rv = check_get(steve, '/score/')
+    assert 'Apple is your team' in rv.data
