@@ -246,11 +246,11 @@ def test_get_score_text(rank, num_users, expected_text):
 
 
 def test_ask_question_rendering(steve):
-    rv = ask_question(steve, 'average')
+    rv = ask_question(steve, EASY_Q)
     # checking that XXX / 2 is highlighted
     assert '<span class="o">/</span> <span class="mi">2</span>' in rv.data
 
 
 def test_explain_question_rendering(steve):
-    rv = explain_question(steve, 'average')
+    rv = explain_question(steve, EASY_Q)
     assert '__future__' in rv.data
