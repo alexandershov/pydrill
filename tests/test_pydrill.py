@@ -259,3 +259,16 @@ def test_score_rendering(steve):
     ask_question(steve, EASY_Q)  # so scores aren't empty
     rv = check_get(steve, '/score/')
     assert 'Apple is your team' in rv.data
+
+
+def test_score_top_text(steve, paul):
+    answer_question(steve, EASY_Q, is_correct=True)
+    rv = check_get(steve, '/score/')
+    assert "You're in the top 1%" in rv.data
+
+    answer_question(paul, MEDIUM_Q, is_correct=True)
+    rv = check_get(paul, '/score/')
+    assert "You're in the top 1%" in rv.data
+
+    rv = check_get(steve, '/score/')
+    assert "You're in the bottom 50%" in rv.data
