@@ -1,21 +1,20 @@
 import os
 import random
 import re
-from flask.testing import FlaskClient
-
-EASY_Q = 'average'
-MEDIUM_Q = 'static-decorator'
-HARD_Q = 'assign-to-empty-list'
-
-os.environ['PYDRILL_CONFIG'] = os.path.join(os.path.dirname(__file__), 'pydrill.cfg')
 
 import pytest
+from flask.testing import FlaskClient
 from flask import session
 
+os.environ['PYDRILL_CONFIG'] = os.path.join(os.path.dirname(__file__), 'pydrill.cfg')
 from pydrill import app, db, redis_store
 from pydrill import models
 from pydrill.jinja_env import get_score_text
 from pydrill.utils import User
+
+EASY_Q = 'average'
+MEDIUM_Q = 'static-decorator'
+HARD_Q = 'assign-to-empty-list'
 
 MAC_USER_AGENT = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 '
                   '(KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36')
