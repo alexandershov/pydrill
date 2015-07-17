@@ -272,3 +272,9 @@ def test_score_top_text(steve, paul):
 
     rv = check_get(steve, '/score/')
     assert "You're in the bottom 50%" in rv.data
+
+
+def test_score_during_ask(steve):
+    rv = ask_question(steve, EASY_Q)
+    # TODO: don't test markup with string comparisons, use css selectors
+    assert 'Score: <strong>0</strong>' in rv.data
