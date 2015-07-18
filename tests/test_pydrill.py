@@ -256,8 +256,9 @@ def test_explain_question_rendering(steve):
 
 
 def test_score_rendering(steve):
-    ask_question(steve, EASY_Q)  # so scores aren't empty
+    answer_question(steve, EASY_Q, is_correct=True)  # so scores aren't empty
     rv = check_get(steve, '/score/')
+    assert_has_score(rv, 1)
     assert 'Apple is your team' in rv.data
 
 
@@ -276,5 +277,9 @@ def test_score_top_text(steve, paul):
 
 def test_score_during_ask(steve):
     rv = ask_question(steve, EASY_Q)
-    # TODO: don't test markup with string comparisons, use css selectors
-    assert 'Score: <strong>0</strong>' in rv.data
+    assert_has_score(rv, 0)
+
+
+# TODO: don't test markup with string comparisons, use css selectors
+def assert_has_score(rv, expected_score):
+    assert 'Score: <strong>{:d}</strong>'.format(expected_score) in rv.data
