@@ -47,32 +47,32 @@ class Client(FlaskClient):
     def get(self, *args, **kwargs):
         return super(Client, self).get(*args, environ_base=self.__environ_base, **kwargs)
 
-    def check_get(self, url):
+    def checked_get(self, url):
         rv = self.get(url)
         assert rv.status_code == 200
-        return rv
-
-    def check_post(self, url):
-        rv = self.post(url)
-        assert rv.status_code == 302
         return rv
 
     def post(self, *args, **kwargs):
         return super(Client, self).post(*args, environ_base=self.__environ_base, **kwargs)
 
-    def ask_question(self, question_id):
+    def checked_post(self, url):
+        rv = self.post(url)
+        assert rv.status_code == 302
+        return rv
+
+    def ask_me(self, question_id):
         url = '/ask/{}/100/'.format(question_id)
-        return self.check_get(url)
+        return self.checked_get(url)
 
-    def explain_question(self, question_id):
+    def explain_to_me(self, question_id):
         url = '/explain/{}/1/100/'.format(question_id)
-        return self.check_get(url)
+        return self.checked_get(url)
 
-    def answer_question(self, question_id, is_correct):
-        self.ask_question(question_id)
+    def answer(self, question_id, is_correct):
+        self.ask_me(question_id)
         question = models.Question.query.get(question_id)
         url = '/answer/{}/{:d}/100/'.format(question_id, get_answer(question, is_correct).id)
-        return self.check_post(url)
+        return self.checked_post(url)
 
 
 @pytest.fixture(autouse=True)
@@ -114,23 +114,23 @@ def get_user():
 
 def test_user_id(paul):
     with paul:
-        paul.ask_question(EASY_Q)
+        paul.ask_me(EASY_Q)
         user = get_user()
         assert len(user.id) == 36  # length of str(uuid4) is 36
-        paul.ask_question(EASY_Q)
+        paul.ask_me(EASY_Q)
         # id doesn't change after the first visit
         assert get_user().id == user.id
 
 
 def test_new_user_score(paul):
     with paul:
-        paul.ask_question(EASY_Q)
+        paul.ask_me(EASY_Q)
         assert get_user().score == 0
 
 
 def test_user_teams(paul):
     with paul:
-        paul.ask_question(EASY_Q)
+        paul.ask_me(EASY_Q)
         assert_same_items(get_user().teams, ['Linux', 'Hacker News'])
 
 
@@ -145,7 +145,7 @@ def test_questions():
 def test_only_first_answer_can_increase_score(steve, question_id, are_correct, scores):
     assert len(are_correct) == len(scores)
     for is_correct, score in zip(are_correct, scores):
-        steve.answer_question(question_id, is_correct=is_correct)
+        steve.answer(question_id, is_correct=is_correct)
         assert_team_score('Apple', score_sum=score)
 
 
@@ -162,7 +162,7 @@ def matches_any_ask_url(*question_ids):
 ])
 def test_answer_redirects(steve, question_ids, redirect_path_re):
     for i, question_id in enumerate(question_ids):
-        rv = steve.answer_question(question_id, is_correct=random.choice([True, False]))
+        rv = steve.answer(question_id, is_correct=random.choice([True, False]))
         if i == len(question_ids) - 1:
             # TODO: check that absolute url is correct
             assert re.search(redirect_path_re, rv.location)
@@ -189,18 +189,18 @@ def test_ask_without_seed(paul):
 
 
 def test_team_scores(steve, paul, tim):
-    steve.answer_question(EASY_Q, is_correct=True)
+    steve.answer(EASY_Q, is_correct=True)
     assert_team_score('Apple', num_users=1, score_sum=1)
 
-    tim.answer_question(EASY_Q, is_correct=False)
+    tim.answer(EASY_Q, is_correct=False)
     assert_team_score('Apple', num_users=2, score_sum=1)
 
-    paul.answer_question(EASY_Q, is_correct=True)
+    paul.answer(EASY_Q, is_correct=True)
     assert_team_score('Apple', num_users=2, score_sum=1)  # paul is not in Apple team
     assert_team_score('Linux', num_users=1, score_sum=1)
     assert_team_score('Hacker News', num_users=1, score_sum=1)
 
-    steve.answer_question(MEDIUM_Q, is_correct=True)
+    steve.answer(MEDIUM_Q, is_correct=True)
     assert_team_score('Apple', num_users=2, score_sum=3)
 
 
@@ -214,14 +214,14 @@ def assert_team_score(team, **expected):
 @pytest.mark.parametrize('i', range(10))
 def test_never_ask_the_same_question_twice_in_a_row(steve, i):
     # we need to answer every question, because otherwise
-    # answer_question(steve, EASY_Q, ...) will always redirect to
+    # answer(steve, EASY_Q, ...) will always redirect to
     # the unanswered question.
     # We want to test that even if every question is answered,
     # then we don't ask the same question twice in row anyway.
     for question in models.Question.query.all():
-        steve.answer_question(question.id, is_correct=True)
+        steve.answer(question.id, is_correct=True)
 
-    rv = steve.answer_question(EASY_Q, is_correct=True)
+    rv = steve.answer(EASY_Q, is_correct=True)
     # TODO: check that absolute url is correct
     assert re.search(matches_any_ask_url(EASY_Q), rv.location) is None
 
@@ -239,38 +239,38 @@ def test_get_score_text(rank, num_users, expected_text):
 
 
 def test_ask_question_rendering(steve):
-    rv = steve.ask_question(EASY_Q)
+    rv = steve.ask_me(EASY_Q)
     # checking that XXX / 2 is highlighted
     assert '<span class="o">/</span> <span class="mi">2</span>' in rv.data
 
 
 def test_explain_question_rendering(steve):
-    rv = steve.explain_question(EASY_Q)
+    rv = steve.explain_to_me(EASY_Q)
     assert '__future__' in rv.data
 
 
 def test_score_rendering(steve):
-    steve.answer_question(EASY_Q, is_correct=True)  # so scores aren't empty
-    rv = steve.check_get('/score/')
+    steve.answer(EASY_Q, is_correct=True)  # so scores aren't empty
+    rv = steve.checked_get('/score/')
     assert_has_score(rv, 1)
     assert 'Apple is your team' in rv.data
 
 
 def test_score_top_text(steve, paul):
-    steve.answer_question(EASY_Q, is_correct=True)
-    rv = steve.check_get('/score/')
+    steve.answer(EASY_Q, is_correct=True)
+    rv = steve.checked_get('/score/')
     assert "You're in the top 1%" in rv.data
 
-    paul.answer_question(MEDIUM_Q, is_correct=True)
-    rv = paul.check_get('/score/')
+    paul.answer(MEDIUM_Q, is_correct=True)
+    rv = paul.checked_get('/score/')
     assert "You're in the top 1%" in rv.data
 
-    rv = steve.check_get('/score/')
+    rv = steve.checked_get('/score/')
     assert "You're in the bottom 50%" in rv.data
 
 
 def test_score_during_ask(steve):
-    rv = steve.ask_question(EASY_Q)
+    rv = steve.ask_me(EASY_Q)
     assert_has_score(rv, 0)
 
 
