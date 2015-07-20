@@ -74,6 +74,12 @@ class Client(FlaskClient):
         url = '/answer/{}/{:d}/100/'.format(question_id, get_answer(question, is_correct).id)
         return self.checked_post(url)
 
+    def answer_correct(self, question_id):
+        return self.answer(question_id, is_correct=True)
+
+    def answer_wrong(self, question_id):
+        return self.answer(question_id, is_correct=False)
+
 
 @pytest.fixture(autouse=True)
 def flush_redis_db():
@@ -189,18 +195,18 @@ def test_ask_without_seed(paul):
 
 
 def test_team_scores(steve, paul, tim):
-    steve.answer(EASY_Q, is_correct=True)
+    steve.answer_correct(EASY_Q)
     assert_team_score('Apple', num_users=1, score_sum=1)
 
-    tim.answer(EASY_Q, is_correct=False)
+    tim.answer_wrong(EASY_Q)
     assert_team_score('Apple', num_users=2, score_sum=1)
 
-    paul.answer(EASY_Q, is_correct=True)
+    paul.answer_correct(EASY_Q)
     assert_team_score('Apple', num_users=2, score_sum=1)  # paul is not in Apple team
     assert_team_score('Linux', num_users=1, score_sum=1)
     assert_team_score('Hacker News', num_users=1, score_sum=1)
 
-    steve.answer(MEDIUM_Q, is_correct=True)
+    steve.answer_correct(MEDIUM_Q)
     assert_team_score('Apple', num_users=2, score_sum=3)
 
 
@@ -219,9 +225,9 @@ def test_never_ask_the_same_question_twice_in_a_row(steve, i):
     # We want to test that even if every question is answered,
     # then we don't ask the same question twice in row anyway.
     for question in models.Question.query.all():
-        steve.answer(question.id, is_correct=True)
+        steve.answer_correct(question.id)
 
-    rv = steve.answer(EASY_Q, is_correct=True)
+    rv = steve.answer_correct(EASY_Q)
     # TODO: check that absolute url is correct
     assert re.search(matches_any_ask_url(EASY_Q), rv.location) is None
 
@@ -250,18 +256,18 @@ def test_explain_question_rendering(steve):
 
 
 def test_score_rendering(steve):
-    steve.answer(EASY_Q, is_correct=True)  # so scores aren't empty
+    steve.answer_correct(EASY_Q)  # so scores aren't empty
     rv = steve.checked_get('/score/')
     assert_has_score(rv, 1)
     assert 'Apple is your team' in rv.data
 
 
 def test_score_top_text(steve, paul):
-    steve.answer(EASY_Q, is_correct=True)
+    steve.answer_correct(EASY_Q)
     rv = steve.checked_get('/score/')
     assert "You're in the top 1%" in rv.data
 
-    paul.answer(MEDIUM_Q, is_correct=True)
+    paul.answer_correct(MEDIUM_Q)
     rv = paul.checked_get('/score/')
     assert "You're in the top 1%" in rv.data
 
