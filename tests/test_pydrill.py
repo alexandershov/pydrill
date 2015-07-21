@@ -10,7 +10,7 @@ os.environ['PYDRILL_CONFIG'] = os.path.join(os.path.dirname(__file__), 'pydrill.
 from pydrill import app, db, redis_store
 from pydrill import models
 from pydrill.jinja_env import get_score_text
-from pydrill.utils import User
+from pydrill.utils import User, TEAM_APPLE, TEAM_HN, TEAM_LINUX
 
 EASY_Q = 'average'
 MEDIUM_Q = 'static-decorator'
@@ -137,7 +137,7 @@ def test_new_user_score(paul):
 def test_user_teams(paul):
     with paul:
         paul.ask_me(EASY_Q)
-        assert_same_items(get_user().teams, ['Linux', 'Hacker News'])
+        assert_same_items(get_user().teams, [TEAM_LINUX, TEAM_HN])
 
 
 def test_questions():
@@ -152,7 +152,7 @@ def test_only_first_answer_can_increase_score(steve, question_id, are_correct, s
     assert len(are_correct) == len(scores)
     for is_correct, score in zip(are_correct, scores):
         steve.answer(question_id, is_correct=is_correct)
-        assert_team_score('Apple', score_sum=score)
+        assert_team_score(TEAM_APPLE, score_sum=score)
 
 
 def matches_any_ask_url(*question_ids):
@@ -196,18 +196,18 @@ def test_ask_without_seed(paul):
 
 def test_team_scores(steve, paul, tim):
     steve.answer_correct(EASY_Q)
-    assert_team_score('Apple', num_users=1, score_sum=1)
+    assert_team_score(TEAM_APPLE, num_users=1, score_sum=1)
 
     tim.answer_wrong(EASY_Q)
-    assert_team_score('Apple', num_users=2, score_sum=1)
+    assert_team_score(TEAM_APPLE, num_users=2, score_sum=1)
 
     paul.answer_correct(EASY_Q)
-    assert_team_score('Apple', num_users=2, score_sum=1)  # paul is not in Apple team
-    assert_team_score('Linux', num_users=1, score_sum=1)
-    assert_team_score('Hacker News', num_users=1, score_sum=1)
+    assert_team_score(TEAM_APPLE, num_users=2, score_sum=1)  # paul is not in Apple team
+    assert_team_score(TEAM_LINUX, num_users=1, score_sum=1)
+    assert_team_score(TEAM_HN, num_users=1, score_sum=1)
 
     steve.answer_correct(MEDIUM_Q)
-    assert_team_score('Apple', num_users=2, score_sum=3)
+    assert_team_score(TEAM_APPLE, num_users=2, score_sum=3)
 
 
 def assert_team_score(team, **expected):
@@ -259,7 +259,7 @@ def test_score_rendering(steve):
     steve.answer_correct(EASY_Q)  # so scores aren't empty
     rv = steve.checked_get('/score/')
     assert_has_score(rv, 1)
-    assert 'Apple is your team' in rv.data
+    assert '{} is your team'.format(TEAM_APPLE) in rv.data
 
 
 def test_score_top_text(steve, paul):
