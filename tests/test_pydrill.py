@@ -272,15 +272,12 @@ def test_score_rendering(steve):
 
 def test_score_top_text(steve, paul):
     steve.answer_correct(EASY_Q)
-    rv = steve.score()
-    assert "You're in the top 1%" in rv.data
+    assert "You're in the top 1%" in steve.score().data
 
     paul.answer_correct(MEDIUM_Q)
-    rv = paul.score()
-    assert "You're in the top 1%" in rv.data
+    assert "You're in the top 1%" in paul.score().data
 
-    rv = steve.score()
-    assert "You're in the bottom 50%" in rv.data
+    assert "You're in the bottom 50%" in steve.score().data
 
 
 def test_score_during_ask(steve):
