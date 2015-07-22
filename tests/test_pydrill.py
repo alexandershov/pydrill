@@ -80,6 +80,9 @@ class Client(FlaskClient):
     def answer_wrong(self, question_id):
         return self.answer(question_id, is_correct=False)
 
+    def score(self):
+        return self.checked_get('/score/')
+
 
 def make_path(*path_parts):
     seed = str(random.randint(1, 100))
@@ -262,21 +265,21 @@ def test_explain_question_rendering(steve):
 
 def test_score_rendering(steve):
     steve.answer_correct(EASY_Q)  # so scores aren't empty
-    rv = steve.checked_get('/score/')
+    rv = steve.score()
     assert_has_score(rv, 1)
     assert '{} is your team'.format(TEAM_APPLE) in rv.data
 
 
 def test_score_top_text(steve, paul):
     steve.answer_correct(EASY_Q)
-    rv = steve.checked_get('/score/')
+    rv = steve.score()
     assert "You're in the top 1%" in rv.data
 
     paul.answer_correct(MEDIUM_Q)
-    rv = paul.checked_get('/score/')
+    rv = paul.score()
     assert "You're in the top 1%" in rv.data
 
-    rv = steve.checked_get('/score/')
+    rv = steve.score()
     assert "You're in the bottom 50%" in rv.data
 
 
