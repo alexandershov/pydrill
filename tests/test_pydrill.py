@@ -61,17 +61,17 @@ class Client(FlaskClient):
         return rv
 
     def ask_me(self, question_id):
-        url = '/ask/{}/100/'.format(question_id)
+        url = make_path('ask', question_id)
         return self.checked_get(url)
 
     def explain_to_me(self, question_id):
-        url = '/explain/{}/1/100/'.format(question_id)
+        url = make_path('explain', question_id, 1)
         return self.checked_get(url)
 
     def answer(self, question_id, is_correct):
         self.ask_me(question_id)
         question = models.Question.query.get(question_id)
-        url = '/answer/{}/{:d}/100/'.format(question_id, get_answer(question, is_correct).id)
+        url = make_path('answer', question_id, get_answer(question, is_correct).id)
         return self.checked_post(url)
 
     def answer_correct(self, question_id):
@@ -79,6 +79,11 @@ class Client(FlaskClient):
 
     def answer_wrong(self, question_id):
         return self.answer(question_id, is_correct=False)
+
+
+def make_path(*path_parts):
+    seed = str(random.randint(1, 100))
+    return '/'.join([''] + map(str, path_parts) + [seed, ''])
 
 
 @pytest.fixture(autouse=True)
