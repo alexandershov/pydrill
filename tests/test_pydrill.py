@@ -47,32 +47,32 @@ class Client(FlaskClient):
     def get(self, *args, **kwargs):
         return super(Client, self).get(*args, environ_base=self.__environ_base, **kwargs)
 
-    def checked_get(self, url):
-        rv = self.get(url)
+    def checked_get(self, path):
+        rv = self.get(path)
         assert rv.status_code == 200
         return rv
 
     def post(self, *args, **kwargs):
         return super(Client, self).post(*args, environ_base=self.__environ_base, **kwargs)
 
-    def checked_post(self, url):
-        rv = self.post(url)
+    def checked_post(self, path):
+        rv = self.post(path)
         assert rv.status_code == 302
         return rv
 
     def ask_me(self, question_id):
-        url = make_path_with_seed('ask', question_id)
-        return self.checked_get(url)
+        path = make_path_with_seed('ask', question_id)
+        return self.checked_get(path)
 
     def explain_to_me(self, question_id):
-        url = make_path_with_seed('explain', question_id, 1)
-        return self.checked_get(url)
+        path = make_path_with_seed('explain', question_id, 1)
+        return self.checked_get(path)
 
     def answer(self, question_id, is_correct):
         self.ask_me(question_id)
         question = models.Question.query.get(question_id)
-        url = make_path_with_seed('answer', question_id, get_answer(question, is_correct).id)
-        return self.checked_post(url)
+        path = make_path_with_seed('answer', question_id, get_answer(question, is_correct).id)
+        return self.checked_post(path)
 
     def answer_correct(self, question_id):
         return self.answer(question_id, is_correct=True)
@@ -167,16 +167,16 @@ def test_only_first_answer_can_increase_score(steve, question_id, are_correct, s
         assert_team_score(TEAM_APPLE, score_sum=score)
 
 
-def matches_any_ask_url(*question_ids):
+def matches_any_ask_path(*question_ids):
     parts = [r'/ask/{}/(\d+)/$'.format(q) for q in question_ids]
     return '|'.join(parts)
 
 
 # TODO: test it separate tests with good naming maybe?
 @pytest.mark.parametrize('question_ids, redirect_path_re', [
-    ([EASY_Q], matches_any_ask_url(MEDIUM_Q, HARD_Q)),
-    ([EASY_Q, MEDIUM_Q], matches_any_ask_url(HARD_Q)),
-    ([EASY_Q, MEDIUM_Q, HARD_Q], matches_any_ask_url('.*'))
+    ([EASY_Q], matches_any_ask_path(MEDIUM_Q, HARD_Q)),
+    ([EASY_Q, MEDIUM_Q], matches_any_ask_path(HARD_Q)),
+    ([EASY_Q, MEDIUM_Q, HARD_Q], matches_any_ask_path('.*'))
 ])
 def test_answer_redirects(steve, question_ids, redirect_path_re):
     for i, question_id in enumerate(question_ids):
@@ -203,7 +203,7 @@ def test_ask_without_seed(paul):
     # TODO: pass user (e.g PAUL) to its __init__ method and handle seeds etc
     rv = paul.get('/ask/{}/'.format(EASY_Q))
     assert rv.status_code == 302
-    assert re.search(matches_any_ask_url(EASY_Q), rv.location)
+    assert re.search(matches_any_ask_path(EASY_Q), rv.location)
 
 
 def test_team_scores(steve, paul, tim):
@@ -241,7 +241,7 @@ def test_never_ask_the_same_question_twice_in_a_row(steve, i):
 
     rv = steve.answer_correct(EASY_Q)
     # TODO: check that absolute url is correct
-    assert re.search(matches_any_ask_url(EASY_Q), rv.location) is None
+    assert re.search(matches_any_ask_path(EASY_Q), rv.location) is None
 
 
 @pytest.mark.parametrize('rank, num_users, expected_text', [
