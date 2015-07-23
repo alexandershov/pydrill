@@ -61,17 +61,17 @@ class Client(FlaskClient):
         return rv
 
     def ask_me(self, question_id):
-        url = make_path('ask', question_id)
+        url = make_path_with_seed('ask', question_id)
         return self.checked_get(url)
 
     def explain_to_me(self, question_id):
-        url = make_path('explain', question_id, 1)
+        url = make_path_with_seed('explain', question_id, 1)
         return self.checked_get(url)
 
     def answer(self, question_id, is_correct):
         self.ask_me(question_id)
         question = models.Question.query.get(question_id)
-        url = make_path('answer', question_id, get_answer(question, is_correct).id)
+        url = make_path_with_seed('answer', question_id, get_answer(question, is_correct).id)
         return self.checked_post(url)
 
     def answer_correct(self, question_id):
@@ -84,9 +84,13 @@ class Client(FlaskClient):
         return self.checked_get('/score/')
 
 
+def make_path_with_seed(*path_parts):
+    with_seed = path_parts + (random.randint(1, 100),)
+    return make_path(*with_seed)
+
+
 def make_path(*path_parts):
-    seed = str(random.randint(1, 100))
-    return '/'.join([''] + map(str, path_parts) + [seed, ''])
+    return '/'.join([''] + map(str, path_parts) + [''])
 
 
 @pytest.fixture(autouse=True)
