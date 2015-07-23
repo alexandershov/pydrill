@@ -64,6 +64,10 @@ class Client(FlaskClient):
         path = make_path_with_seed('ask', question_id)
         return self.checked_get(path)
 
+    def ask_me_without_seed(self, question_id):
+        path = make_path('ask', question_id)
+        return self.get(path)
+
     def explain_to_me(self, question_id):
         path = make_path_with_seed('explain', question_id, 1)
         return self.checked_get(path)
@@ -199,9 +203,7 @@ def get_correct_answer(question):
 
 
 def test_ask_without_seed(paul):
-    # TODO: factor out with app.new_test_client, subclass it,
-    # TODO: pass user (e.g PAUL) to its __init__ method and handle seeds etc
-    rv = paul.get('/ask/{}/'.format(EASY_Q))
+    rv = paul.ask_me_without_seed(EASY_Q)
     assert rv.status_code == 302
     assert re.search(matches_any_ask_path(EASY_Q), rv.location)
 
