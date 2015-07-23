@@ -61,21 +61,21 @@ class Client(FlaskClient):
         return rv
 
     def ask_me(self, question_id):
-        path = make_path_with_seed('ask', question_id)
+        path = make_path('ask', question_id)
         return self.checked_get(path)
 
     def ask_me_without_seed(self, question_id):
-        path = make_path('ask', question_id)
+        path = make_path_without_seed('ask', question_id)
         return self.get(path)
 
     def explain_to_me(self, question_id):
-        path = make_path_with_seed('explain', question_id, 1)
+        path = make_path('explain', question_id, 1)
         return self.checked_get(path)
 
     def answer(self, question_id, is_correct):
         self.ask_me(question_id)
         question = models.Question.query.get(question_id)
-        path = make_path_with_seed('answer', question_id, get_answer(question, is_correct).id)
+        path = make_path('answer', question_id, get_answer(question, is_correct).id)
         return self.checked_post(path)
 
     def answer_correct(self, question_id):
@@ -88,12 +88,12 @@ class Client(FlaskClient):
         return self.checked_get('/score/')
 
 
-def make_path_with_seed(*path_parts):
-    with_seed = path_parts + (random.randint(1, 100),)
-    return make_path(*with_seed)
-
-
 def make_path(*path_parts):
+    with_seed = path_parts + (random.randint(1, 100),)
+    return make_path_without_seed(*with_seed)
+
+
+def make_path_without_seed(*path_parts):
     return '/'.join([''] + map(str, path_parts) + [''])
 
 
