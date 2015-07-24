@@ -1,4 +1,3 @@
-# TODO: add extra links to explanation
 text: |
   {% set name, args, expr = gen.choice([
     ('add', 'x, y', 'x + y'),
@@ -74,4 +73,12 @@ explanation: |
     (same thing as {{ 'sub'|highlight_inline }}) to {{ 'logging_fn'|highlight_inline }}.
   </div>
 
+  <div class="paragraph">
+    Extra reading:
+    <ul>
+      <li>
+        <a href="http://stackoverflow.com/a/309000/1240162">What does functools.wraps do?</a>
+      </li>
+    </ul>
+  </div>
 
