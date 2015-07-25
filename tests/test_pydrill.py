@@ -186,7 +186,6 @@ def test_answer_redirects(steve, question_ids, redirect_path_re):
     for i, question_id in enumerate(question_ids):
         rv = steve.answer(question_id, is_correct=random.choice([True, False]))
         if i == len(question_ids) - 1:
-            # TODO: check that absolute url is correct
             assert re.search(redirect_path_re, rv.location)
 
 
@@ -242,7 +241,6 @@ def test_never_ask_the_same_question_twice_in_a_row(steve, i):
         steve.answer_correct(question.id)
 
     rv = steve.answer_correct(EASY_Q)
-    # TODO: check that absolute url is correct
     assert re.search(matches_any_ask_path(EASY_Q), rv.location) is None
 
 
