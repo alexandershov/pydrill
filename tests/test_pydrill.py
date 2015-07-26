@@ -102,6 +102,7 @@ def flush_redis_db():
     redis_store.flushdb()
 
 
+# this fixture runs once
 @pytest.fixture(autouse=True, scope='session')
 def create_sql_db():
     db.drop_all()
@@ -184,9 +185,13 @@ def matches_any_ask_path(*question_ids):
 ])
 def test_answer_redirects(steve, question_ids, redirect_path_re):
     for i, question_id in enumerate(question_ids):
-        rv = steve.answer(question_id, is_correct=random.choice([True, False]))
+        rv = steve.answer(question_id, is_correct=random_boolean())
         if i == len(question_ids) - 1:
             assert re.search(redirect_path_re, rv.location)
+
+
+def random_boolean():
+    return random.choice([True, False])
 
 
 def assert_same_items(xs, ys):
@@ -229,12 +234,11 @@ def assert_team_score(team, **expected):
         assert score[key] == value
 
 
-# execute this test 10 times to thoroughly check random behaviour
+# executing this test 10 times to thoroughly check random behaviour
 @pytest.mark.parametrize('i', range(10))
 def test_never_ask_the_same_question_twice_in_a_row(steve, i):
     # we need to answer every question, because otherwise
-    # answer(steve, EASY_Q, ...) will always redirect to
-    # the unanswered question.
+    # steve.answer_answer_correct(EASY_Q) will always redirect to the unanswered question.
     # We want to test that even if every question is answered,
     # then we don't ask the same question twice in row anyway.
     for question in models.Question.query.all():
@@ -280,7 +284,6 @@ def test_score_top_text(steve, paul):
 
     paul.answer_correct(MEDIUM_Q)
     assert "You're in the top 1%" in paul.score().data
-
     assert "You're in the bottom 50%" in steve.score().data
 
 
