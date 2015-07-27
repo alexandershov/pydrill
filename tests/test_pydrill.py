@@ -1,3 +1,4 @@
+from functools import wraps
 import os
 import random
 import re
@@ -116,22 +117,33 @@ def run_app_in_testing_mode():
     app.config['TESTING'] = True
 
 
-@pytest.yield_fixture
+def client_fixture(fn):
+    """
+    :param fn: callable returning test client
+    """
+
+    @pytest.yield_fixture
+    @wraps(fn)
+    def yielding_fn():
+        with fn() as client:
+            yield client
+
+    return yielding_fn
+
+
+@client_fixture
 def steve():
-    with new_test_client(MAC_USER_WITH_BAD_REFERER) as client:
-        yield client
+    return new_test_client(MAC_USER_WITH_BAD_REFERER)
 
 
-@pytest.yield_fixture
+@client_fixture
 def paul():
-    with new_test_client(LINUX_USER_WITH_HN_REFERER) as client:
-        yield client
+    return new_test_client(LINUX_USER_WITH_HN_REFERER)
 
 
-@pytest.yield_fixture
+@client_fixture
 def tim():
-    with new_test_client(MAC_USER) as client:
-        yield client
+    return new_test_client(MAC_USER)
 
 
 def get_user():
