@@ -116,19 +116,22 @@ def run_app_in_testing_mode():
     app.config['TESTING'] = True
 
 
-@pytest.fixture()
+@pytest.yield_fixture
 def steve():
-    return new_test_client(MAC_USER_WITH_BAD_REFERER)
+    with new_test_client(MAC_USER_WITH_BAD_REFERER) as client:
+        yield client
 
 
-@pytest.fixture()
+@pytest.yield_fixture
 def paul():
-    return new_test_client(LINUX_USER_WITH_HN_REFERER)
+    with new_test_client(LINUX_USER_WITH_HN_REFERER) as client:
+        yield client
 
 
-@pytest.fixture()
+@pytest.yield_fixture
 def tim():
-    return new_test_client(MAC_USER)
+    with new_test_client(MAC_USER) as client:
+        yield client
 
 
 def get_user():
@@ -136,25 +139,22 @@ def get_user():
 
 
 def test_user_id(paul):
-    with paul:
-        paul.ask_me(EASY_Q)
-        user = get_user()
-        assert len(user.id) == 36  # length of str(uuid4) is 36
-        paul.ask_me(EASY_Q)
-        # id doesn't change after the first visit
-        assert get_user().id == user.id
+    paul.ask_me(EASY_Q)
+    user = get_user()
+    assert len(user.id) == 36  # length of str(uuid4) is 36
+    paul.ask_me(EASY_Q)
+    # id doesn't change after the first visit
+    assert get_user().id == user.id
 
 
 def test_new_user_score(paul):
-    with paul:
-        paul.ask_me(EASY_Q)
-        assert get_user().score == 0
+    paul.ask_me(EASY_Q)
+    assert get_user().score == 0
 
 
 def test_user_teams(paul):
-    with paul:
-        paul.ask_me(EASY_Q)
-        assert_same_items(get_user().teams, [TEAM_LINUX, TEAM_HN])
+    paul.ask_me(EASY_Q)
+    assert_same_items(get_user().teams, [TEAM_LINUX, TEAM_HN])
 
 
 def test_questions():
