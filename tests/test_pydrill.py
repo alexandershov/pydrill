@@ -173,15 +173,16 @@ def test_questions():
     assert models.Question.query.count() == 3
 
 
-@pytest.mark.parametrize('question_id, are_correct, scores', [
-    (EASY_Q, [True, True], [1, 1]),
-    (EASY_Q, [False, True], [0, 0]),
-])
-def test_only_first_answer_can_increase_score(steve, question_id, are_correct, scores):
-    assert len(are_correct) == len(scores)
-    for is_correct, score in zip(are_correct, scores):
-        steve.answer(question_id, is_correct=is_correct)
-        assert_team_score(TEAM_APPLE, score_sum=score)
+def test_only_first_answer_can_increase_score(steve):
+    steve.answer_wrong(EASY_Q)
+    steve.answer_correct(EASY_Q)
+    assert_team_score(TEAM_APPLE, score_sum=0)
+
+
+def test_cant_increase_score_twice(steve):
+    steve.answer_correct(EASY_Q)
+    steve.answer_correct(EASY_Q)
+    assert_team_score(TEAM_APPLE, score_sum=1)
 
 
 def matches_any_ask_path(*question_ids):
