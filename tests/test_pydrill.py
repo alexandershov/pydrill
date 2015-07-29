@@ -181,6 +181,7 @@ def test_only_first_answer_can_increase_score(steve):
 
 def test_cant_increase_score_twice(steve):
     steve.answer_correct(EASY_Q)
+    assert_team_score(TEAM_APPLE, score_sum=1)
     steve.answer_correct(EASY_Q)
     assert_team_score(TEAM_APPLE, score_sum=1)
 
@@ -190,17 +191,11 @@ def matches_any_ask_path(*question_ids):
     return '|'.join(parts)
 
 
-# TODO: test it separate tests with good naming maybe?
-@pytest.mark.parametrize('question_ids, redirect_path_re', [
-    ([EASY_Q], matches_any_ask_path(MEDIUM_Q, HARD_Q)),
-    ([EASY_Q, MEDIUM_Q], matches_any_ask_path(HARD_Q)),
-    ([EASY_Q, MEDIUM_Q, HARD_Q], matches_any_ask_path('.*'))
-])
-def test_answer_redirects(steve, question_ids, redirect_path_re):
-    for i, question_id in enumerate(question_ids):
-        rv = steve.answer(question_id, is_correct=random_boolean())
-        if i == len(question_ids) - 1:
-            assert re.search(redirect_path_re, rv.location)
+def test_answer_redirects(steve):
+    rv = steve.answer_correct(EASY_Q)
+    assert re.search(matches_any_ask_path(MEDIUM_Q, HARD_Q), rv.location)
+    rv = steve.answer_correct(MEDIUM_Q)
+    assert re.search(matches_any_ask_path(HARD_Q), rv.location)
 
 
 def random_boolean():
