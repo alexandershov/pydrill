@@ -73,7 +73,9 @@ class Client(FlaskClient):
         path = make_path('explain', question_id, 1)
         return self.checked_get(path)
 
-    def answer(self, question_id, is_correct):
+    def answer(self, question_id, is_correct=None):
+        if is_correct is None:
+            is_correct = random_boolean()
         self.ask_me(question_id)
         question = models.Question.query.get(question_id)
         path = make_path('answer', question_id, get_answer(question, is_correct).id)
@@ -192,9 +194,9 @@ def matches_any_ask_path(*question_ids):
 
 
 def test_answer_redirects(steve):
-    rv = steve.answer_correct(EASY_Q)
+    rv = steve.answer(EASY_Q)
     assert re.search(matches_any_ask_path(MEDIUM_Q, HARD_Q), rv.location)
-    rv = steve.answer_correct(MEDIUM_Q)
+    rv = steve.answer(MEDIUM_Q)
     assert re.search(matches_any_ask_path(HARD_Q), rv.location)
 
 
@@ -246,13 +248,13 @@ def assert_team_score(team, **expected):
 @pytest.mark.parametrize('i', range(10))
 def test_never_ask_the_same_question_twice_in_a_row(steve, i):
     # we need to answer every question, because otherwise
-    # steve.answer_answer_correct(EASY_Q) will always redirect to the unanswered question.
+    # steve.answer(EASY_Q) will always redirect to the unanswered question.
     # We want to test that even if every question is answered,
     # then we don't ask the same question twice in row anyway.
     for question in models.Question.query.all():
-        steve.answer_correct(question.id)
+        steve.answer(question.id)
 
-    rv = steve.answer_correct(EASY_Q)
+    rv = steve.answer(EASY_Q)
     assert re.search(matches_any_ask_path(EASY_Q), rv.location) is None
 
 
