@@ -195,9 +195,13 @@ def matches_any_ask_path(*question_ids):
 
 def test_answer_redirects(steve):
     rv = steve.answer(EASY_Q)
-    assert re.search(matches_any_ask_path(MEDIUM_Q, HARD_Q), rv.location)
+    assert redirects_to_regex(rv, matches_any_ask_path(MEDIUM_Q, HARD_Q))
     rv = steve.answer(MEDIUM_Q)
-    assert re.search(matches_any_ask_path(HARD_Q), rv.location)
+    assert redirects_to_regex(rv, matches_any_ask_path(HARD_Q))
+
+
+def redirects_to_regex(rv, regex):
+    return re.search(regex, rv.location)
 
 
 def random_boolean():
@@ -219,7 +223,7 @@ def get_correct_answer(question):
 def test_ask_without_seed(paul):
     rv = paul.ask_me_without_seed(EASY_Q)
     assert rv.status_code == 302
-    assert re.search(matches_any_ask_path(EASY_Q), rv.location)
+    assert redirects_to_regex(rv, matches_any_ask_path(EASY_Q))
 
 
 def test_team_scores(steve, paul, tim):
@@ -255,7 +259,7 @@ def test_never_ask_the_same_question_twice_in_a_row(steve, i):
         steve.answer(question.id)
 
     rv = steve.answer(EASY_Q)
-    assert re.search(matches_any_ask_path(EASY_Q), rv.location) is None
+    assert not redirects_to_regex(rv, matches_any_ask_path(EASY_Q))
 
 
 @pytest.mark.parametrize('rank, num_users, expected_text', [
@@ -282,7 +286,7 @@ def test_explain_question_rendering(steve):
 
 
 def test_score_rendering(steve):
-    steve.answer_correct(EASY_Q)  # so scores aren't empty
+    steve.answer_correct(EASY_Q)
     rv = steve.score()
     assert_has_score(rv, 1)
     assert '{} is your team'.format(TEAM_APPLE) in rv.data
