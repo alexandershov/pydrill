@@ -12,6 +12,8 @@ import pygments
 from pydrill import app
 from pydrill import gen
 
+DEFAULT_LANGUAGE = 'python'
+
 
 @app.template_filter()
 def render_question(question):
@@ -34,16 +36,18 @@ def get_template_vars(question):
 
 
 @app.template_filter()
-def render(template, vars={}):
+def render(template, vars=None):
+    if vars is None:
+        vars = {}
     random.seed(g.seed)
     return Markup(render_template_string(template, **vars))
 
 
 @app.template_filter()
 def in_random_order(iterable):
-    items = list(iterable)
-    random.shuffle(items)
-    return items
+    seq = list(iterable)
+    random.shuffle(seq)
+    return seq
 
 
 def highlight_with_css_class(s, language, css_class):
@@ -54,12 +58,12 @@ def highlight_with_css_class(s, language, css_class):
 
 
 @app.template_filter()
-def highlight(s, language='python'):
+def highlight(s, language=DEFAULT_LANGUAGE):
     return highlight_with_css_class(s, language, 'highlight')
 
 
 @app.template_filter()
-def highlight_inline(s, language='python'):
+def highlight_inline(s, language=DEFAULT_LANGUAGE):
     return highlight_with_css_class(s, language, 'highlight-inline')
 
 
@@ -80,13 +84,25 @@ def get_score_text(rank, num_users):
     num_better = rank - 1
     num_worse = num_users - rank
     if not num_better:
-        return 'top 1%'
+        return top(1)
     if num_worse > num_better:
-        return 'top {:.0%}'.format(1 - num_worse / num_users)
+        return top(make_percentage(1 - num_worse / num_users))
     elif num_better == num_worse:
-        return 'top 50%'
+        return top(50)
     else:
-        return 'bottom {:.0%}'.format(1 - num_better / num_users)
+        return bottom(make_percentage(1 - num_better / num_users))
+
+
+def top(percentage):
+    return 'top {:d}%'.format(percentage)
+
+
+def bottom(percentage):
+    return 'bottom {:d}%'.format(percentage)
+
+
+def make_percentage(n):
+    return int(100 * n)
 
 
 @app.template_global()
