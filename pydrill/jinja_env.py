@@ -12,7 +12,7 @@ import pygments
 from pydrill import app
 from pydrill import gen
 
-DEFAULT_LANGUAGE = 'python'
+PYTHON = 'python'
 
 
 @app.template_filter()
@@ -50,20 +50,21 @@ def in_random_order(iterable):
     return seq
 
 
-def highlight_with_css_class(s, language, css_class):
+def highlight_with_css_class(text, language, css_class):
     formatter = HtmlFormatter(cssclass=css_class)
     # TODO: can we do without strip?
-    return pygments.highlight(dedent(unicode(s)), get_lexer_by_name(language),
+    return pygments.highlight(dedent(unicode(text)),
+                              get_lexer_by_name(language),
                               formatter).strip()
 
 
 @app.template_filter()
-def highlight(s, language=DEFAULT_LANGUAGE):
+def highlight(s, language=PYTHON):
     return highlight_with_css_class(s, language, 'highlight')
 
 
 @app.template_filter()
-def highlight_inline(s, language=DEFAULT_LANGUAGE):
+def highlight_inline(s, language=PYTHON):
     return highlight_with_css_class(s, language, 'highlight-inline')
 
 
@@ -106,7 +107,7 @@ def make_percentage(n):
 
 
 @app.template_global()
-def get_prev_answer():
+def pop_prev_answer():
     return session.pop('prev_answer', None)
 
 

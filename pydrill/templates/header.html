@@ -4,7 +4,7 @@
     </div>
     {% block message %}
         <div class="message">
-            {% with prev_answer = get_prev_answer() %}
+            {% with prev_answer = pop_prev_answer() %}
                 {% if prev_answer is not none %}
                     {% do question_preamble.append('Next question:') %}
                     <span class="{% if prev_answer['is_correct'] %}prev-correct{% else %}prev-wrong{% endif %}">
