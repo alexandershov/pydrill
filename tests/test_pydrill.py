@@ -31,6 +31,8 @@ LINUX_USER_WITH_HN_REFERER = {'HTTP_USER_AGENT': LINUX_USER_AGENT,
 
 MAC_USER = {'HTTP_USER_AGENT': MAC_USER_AGENT}
 
+FIRST_ANSWER = 1
+
 
 # TODO: switch to app.test_client when Flask 1.0 is ready
 def new_test_client(environ_base, *args, **kwargs):
@@ -70,7 +72,7 @@ class Client(FlaskClient):
         return self.get(path)
 
     def explain_to_me(self, question_id):
-        path = make_path('explain', question_id, 1)
+        path = make_path('explain', question_id, FIRST_ANSWER)
         return self.checked_get(path)
 
     def answer(self, question_id, is_correct=None):
