@@ -17,19 +17,22 @@ EASY_Q = 'average'
 MEDIUM_Q = 'static-decorator'
 HARD_Q = 'assign-to-empty-list'
 
+REFERER = 'HTTP_REFERER'
+USER_AGENT = 'HTTP_USER_AGENT'
+
 MAC_USER_AGENT = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 '
                   '(KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36')
 
 LINUX_USER_AGENT = ('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '
                     '(KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36')
 
-MAC_USER_WITH_BAD_REFERER = {'HTTP_USER_AGENT': MAC_USER_AGENT,
-                             'HTTP_REFERER': 'parse this'}
+MAC_USER_WITH_BAD_REFERER = {USER_AGENT: MAC_USER_AGENT,
+                             REFERER: 'parse this'}
 
-LINUX_USER_WITH_HN_REFERER = {'HTTP_USER_AGENT': LINUX_USER_AGENT,
-                              'HTTP_REFERER': 'https://news.ycombinator.com/item?id=test'}
+LINUX_USER_WITH_HN_REFERER = {USER_AGENT: LINUX_USER_AGENT,
+                              REFERER: 'https://news.ycombinator.com/item?id=test'}
 
-MAC_USER = {'HTTP_USER_AGENT': MAC_USER_AGENT}
+MAC_USER = {USER_AGENT: MAC_USER_AGENT}
 
 
 # TODO: switch to app.test_client when Flask 1.0 is ready
