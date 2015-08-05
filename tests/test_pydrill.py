@@ -26,14 +26,6 @@ MAC_USER_AGENT = ('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/5
 LINUX_USER_AGENT = ('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '
                     '(KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36')
 
-MAC_USER_WITH_BAD_REFERER = {USER_AGENT: MAC_USER_AGENT,
-                             REFERER: 'parse this'}
-
-LINUX_USER_WITH_HN_REFERER = {USER_AGENT: LINUX_USER_AGENT,
-                              REFERER: 'https://news.ycombinator.com/item?id=test'}
-
-MAC_USER = {USER_AGENT: MAC_USER_AGENT}
-
 
 # TODO: switch to app.test_client when Flask 1.0 is ready
 def new_test_client(environ_base, *args, **kwargs):
@@ -139,17 +131,19 @@ def client_fixture(fn):
 
 @client_fixture
 def steve():
-    return new_test_client(MAC_USER_WITH_BAD_REFERER)
+    return new_test_client({USER_AGENT: MAC_USER_AGENT,
+                            REFERER: 'parse this'})
 
 
 @client_fixture
 def paul():
-    return new_test_client(LINUX_USER_WITH_HN_REFERER)
+    return new_test_client({USER_AGENT: LINUX_USER_AGENT,
+                            REFERER: 'https://news.ycombinator.com/item?id=test'})
 
 
 @client_fixture
 def tim():
-    return new_test_client(MAC_USER)
+    return new_test_client({USER_AGENT: MAC_USER_AGENT})
 
 
 def get_user():
