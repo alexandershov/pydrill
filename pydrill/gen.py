@@ -2,8 +2,8 @@ from functools import partial
 import random
 
 
-def integer(min_value, max_value):
-    return random.randint(min_value, max_value)
+# better named alias, used as gen.integer
+integer = random.randint
 
 
 def var_name(n=1):
