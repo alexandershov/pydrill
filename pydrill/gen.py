@@ -18,8 +18,11 @@ def choice(seq):
 
 
 def nested_list(num_lists=2, num_items=2, make_value=partial(integer, 1, 5), with_flat=True):
-    nested = [[make_value() for j in range(num_items)]
-              for i in range(num_lists)]
+    nested = [random_list(num_items, make_value) for _ in range(num_lists)]
     if with_flat:
         return nested, sum(nested, [])
     return nested
+
+
+def random_list(length, make_value):
+    return [make_value() for _ in range(length)]
