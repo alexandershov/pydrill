@@ -23,3 +23,40 @@ def nested_list(length=2, sublist_length=2, make_value=partial(integer, 1, 5), w
 
 def random_list(length, make_value):
     return [make_value() for _ in range(length)]
+
+
+class Graph(object):
+    def __init__(self, nodes):
+        self.nodes = nodes
+
+
+class Node(object):
+    def __init__(self, value, connected=None):
+        if connected is None:
+            connected = []
+        self.value = value
+        self.connected = connected
+
+
+def get_animals():
+    human = Node('Human')
+    monkey = Node('Monkey', connected=[human])
+    smart = Node('Smart', connected=[monkey, human])
+    cat = Node('Cat')
+    dog = Node('Dog')
+    animal = Node('Animal', connected=[dog, cat, monkey])
+    return Graph([animal, dog, cat, smart, monkey, human])
+
+
+def hierarchy(graph):
+    not_connected = {node.value: node for node in graph.nodes}
+    for node in graph.nodes:
+        for cn in node.connected:
+            not_connected.pop(cn.value, None)
+    roots = not_connected.values()
+    root = random.choice(roots)
+    path = [root]
+    while root.connected:
+        root = random.choice(root.connected)
+        path.append(root)
+    return path
