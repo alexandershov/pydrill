@@ -51,7 +51,7 @@ def get_animals():
     return Graph([animal, dog, cat, smart, monkey, human])
 
 
-def hierarchy(graph):
+def class_hierarchy(graph):
     not_connected = {node.value: node for node in graph.nodes}
     for node in graph.nodes:
         for cn in node.connected:
