@@ -37,6 +37,9 @@ class Node(object):
         self.value = value
         self.connected = connected
 
+    def __repr__(self):
+        return 'Node(value={!r}, connected={!r})'.format(self.value, self.connected)
+
 
 def get_animals():
     human = Node('Human')
