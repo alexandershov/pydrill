@@ -3,6 +3,7 @@
 {% block main %}
     <div class="row">
         <div class="main">
+            {# question_preamble is set/changed in base.html/header.html #}
             {% for text in question_preamble %}
                 <div class="question-preamble">{{ text }}</div>
             {% endfor %}

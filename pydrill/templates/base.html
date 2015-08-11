@@ -8,6 +8,7 @@
 </head>
 <body>
 <div class="container-fluid">
+    {# question_preamble is changed in header.html #}
     {% set question_preamble = [] %}
     {% block header scoped %}{% include 'header.html' %}{% endblock %}
     {% block main scoped %}{% endblock %}

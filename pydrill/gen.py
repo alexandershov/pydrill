@@ -42,12 +42,13 @@ class Node(object):
 
 
 def get_animals():
+    scooby = Node('Scooby')
     human = Node('Human')
     monkey = Node('Monkey', connected=[human])
     smart = Node('Smart', connected=[monkey, human])
     cat = Node('Cat')
-    dog = Node('Dog')
-    animal = Node('Animal', connected=[dog, cat, monkey])
+    dog = Node('Dog', connected=[scooby])
+    animal = Node('Animal', connected=[dog, cat, monkey, scooby])
     return Graph([animal, dog, cat, smart, monkey, human])
 
 
