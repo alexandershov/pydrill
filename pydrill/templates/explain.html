@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-{# TODO: remove duplication with ask.html #}
 {% block header %}
     {% include 'explain_header.html' %}
 {% endblock %}
@@ -13,8 +12,9 @@
         <div class="main explain">
             {{ question|render_explained_question(given_answer) }}
             <div class="next-question">
-                <a class="btn btn-primary"
-                   href="{{ url_for('ask_next_question') }}">Next question</a>
+                <a class="btn btn-primary" href="{{ url_for('ask_next_question') }}">
+                    Next question
+                </a>
             </div>
         </div>
     </div>
