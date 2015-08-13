@@ -48,17 +48,22 @@ def load_questions(directory):
     if not question_paths:
         raise ValueError("directory {} doesn't have any .yml files".format(directory))
     for path in question_paths:
-        with open(path) as stream:
-            question_dict = yaml.load(stream)
-            question_id = os.path.splitext(os.path.basename(path))[0]
-            answer_dicts = question_dict.pop('answers')
-            answer_ids = get_answer_ids(question_id, len(answer_dicts))
-            question = Question(id=question_id, **question_dict)
-            db.session.add(question)
-            for answer_id, answer_dict in zip(answer_ids, answer_dicts):
-                answer = Answer(id=answer_id, question_id=question_id, **answer_dict)
-                db.session.add(answer)
+        read_question(path)
     db.session.commit()
+
+
+def read_question(path):
+    with open(path) as stream:
+        question_dict = yaml.load(stream)
+    question_id = os.path.splitext(os.path.basename(path))[0]
+    answer_dicts = question_dict.pop('answers')
+    answer_ids = get_answer_ids(question_id, len(answer_dicts))
+    question = Question(id=question_id, **question_dict)
+    db.session.add(question)
+    for answer_id, answer_dict in zip(answer_ids, answer_dicts):
+        answer = Answer(id=answer_id, question_id=question_id, **answer_dict)
+        db.session.add(answer)
+    return question
 
 
 def get_answer_ids(question_id, num_answers):
