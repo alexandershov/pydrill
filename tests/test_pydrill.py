@@ -106,8 +106,13 @@ def flush_redis_db():
 def create_sql_db():
     db.drop_all()
     db.create_all()
+    # TODO: clean it up
     questions_dir = os.path.join(os.path.dirname(__file__), 'questions')
-    models.load_questions(questions_dir)
+    real_questions_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'questions')
+    for question in [EASY_Q, MEDIUM_Q]:
+        models.read_question(os.path.join(real_questions_dir, question + '.yml'))
+    models.read_question(os.path.join(questions_dir, HARD_Q + '.yml'))
+    db.session.commit()
 
 
 @pytest.fixture(autouse=True)
