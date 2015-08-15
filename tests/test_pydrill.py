@@ -15,7 +15,7 @@ from pydrill.utils import User, TEAM_APPLE, TEAM_HN, TEAM_LINUX
 
 EASY_Q = 'average'
 MEDIUM_Q = 'static-decorator'
-HARD_Q = 'assign-to-empty-list'
+HARD_Q = 'mro'
 
 REFERER = 'HTTP_REFERER'
 USER_AGENT = 'HTTP_USER_AGENT'
@@ -106,12 +106,9 @@ def flush_redis_db():
 def create_sql_db():
     db.drop_all()
     db.create_all()
-    # TODO: clean it up
-    questions_dir = os.path.join(os.path.dirname(__file__), 'questions')
-    real_questions_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'questions')
-    for question in [EASY_Q, MEDIUM_Q]:
-        models.read_question(os.path.join(real_questions_dir, question + '.yml'))
-    models.read_question(os.path.join(questions_dir, HARD_Q + '.yml'))
+    questions_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'questions')
+    for question in [EASY_Q, MEDIUM_Q, HARD_Q]:
+        models.read_question(os.path.join(questions_dir, question + '.yml'))
     db.session.commit()
 
 

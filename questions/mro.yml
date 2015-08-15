@@ -24,7 +24,8 @@ answers:
     text: '{{ correct_answer }}'
   - is_correct: false
     text: '{{ wrong_answer }}'
-difficulty: 2
+# TODO: change difficulty to 2 (3 is a temp solution, so we can test 3 kinds of difficulties)
+difficulty: 3
 explanation: |
   <div class="paragraph">
     Here's what happens. {% filter highlight_inline %}IntegerField('x').check(){% endfilter %}
