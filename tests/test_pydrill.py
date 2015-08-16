@@ -195,12 +195,13 @@ def matches_any_ask_path(*question_ids):
 
 def test_answer_redirects(steve):
     rv = steve.answer(EASY_Q)
-    assert redirects_to_regex(rv, matches_any_ask_path(MEDIUM_Q, HARD_Q))
+    assert redirects_to_question(rv, MEDIUM_Q) or redirects_to_question(rv, HARD_Q)
     rv = steve.answer(MEDIUM_Q)
-    assert redirects_to_regex(rv, matches_any_ask_path(HARD_Q))
+    assert redirects_to_question(rv, HARD_Q)
 
 
-def redirects_to_regex(rv, regex):
+def redirects_to_question(rv, question_id):
+    regex = matches_any_ask_path(question_id)
     return re.search(regex, rv.location)
 
 
@@ -228,7 +229,7 @@ def get_correct_answer(question):
 def test_ask_without_seed(paul):
     rv = paul.ask_me_without_seed(EASY_Q)
     assert rv.status_code == 302
-    assert redirects_to_regex(rv, matches_any_ask_path(EASY_Q))
+    assert redirects_to_question(rv, EASY_Q)
 
 
 def test_team_scores(steve, paul, tim):
@@ -264,7 +265,7 @@ def test_never_ask_the_same_question_twice_in_a_row(steve, i):
         steve.answer(question.id)
 
     rv = steve.answer(EASY_Q)
-    assert not redirects_to_regex(rv, matches_any_ask_path(EASY_Q))
+    assert not redirects_to_question(rv, EASY_Q)
 
 
 @pytest.mark.parametrize('rank, num_users, expected_text', [
