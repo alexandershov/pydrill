@@ -2,7 +2,8 @@
   vars_files: ['secret_vars.yml']
   sudo: yes
   tasks:
-    - apt: update_cache=yes
+    - name: update aptitude cache
+      apt: update_cache=yes
 
     - name: install dependencies
       apt: name={{ item }}
@@ -11,10 +12,13 @@
         - python-pip
         - redis-server
 
-    - pip: name=file:///vagrant extra_args='-e'
-    - pip: name=pytest
+    - name: install pydrill as .egg-link
+      pip: name=file:///vagrant extra_args='-e'
+    - name: install pytest
+      pip: name=pytest
 
-    - user: name=pydrill
+    - name: ensure user pydrill exists
+      user: name=pydrill
 
     - name: create directories
       file: path={{ item }} state=directory owner=pydrill
@@ -22,5 +26,7 @@
         - /etc/pydrill      # directory with configs
         - /var/lib/pydrill  # directory with .sqlite3 database
 
-    - template: src=templates/flask_config.j2 dest=/etc/pydrill/pydrill.cfg owner=pydrill
-    - service: name=redis-server state=started
+    - name: copy pydrill.cfg to /etc/pydrill
+      template: src=templates/flask_config.j2 dest=/etc/pydrill/pydrill.cfg owner=pydrill
+    - name: start redis server
+      service: name=redis-server state=started
