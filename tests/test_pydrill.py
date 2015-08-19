@@ -249,14 +249,13 @@ def test_team_scores(steve, paul, tim):
 
 
 def assert_team_score(team, **expected):
-    score = {k: int(v) for k, v in redis_store.hgetall('team:{}'.format(team)).viewitems()}
+    team_score = redis_store.hgetall('team:{}'.format(team))
+    score = {k: int(v) for k, v in team_score.viewitems()}
     for key, value in expected.viewitems():
         assert score[key] == value
 
 
-# executing this test 10 times to thoroughly check random behaviour
-@pytest.mark.parametrize('i', range(10))
-def test_never_ask_the_same_question_twice_in_a_row(steve, i):
+def test_never_ask_the_same_question_twice_in_a_row(steve):
     # we need to answer every question, because otherwise
     # steve.answer(EASY_Q) will always redirect to the unanswered question.
     # We want to test that even if every question is answered,
@@ -282,13 +281,13 @@ def test_get_score_text(rank, num_users, expected_text):
 
 def test_ask_question_rendering(steve):
     rv = steve.ask_me(EASY_Q)
-    # checking that XXX / 2 is highlighted
+    # checking that  '... / 2' is highlighted
     assert '<span class="o">/</span> <span class="mi">2</span>' in rv.data
 
 
 def test_explain_question_rendering(steve):
     rv = steve.explain_to_me(EASY_Q)
-    assert '__future__' in rv.data
+    assert '__future__' in rv.data  # 'from __future__ import division' part
 
 
 def test_score_rendering(steve):
