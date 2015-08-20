@@ -12,6 +12,7 @@ redis_store = FlaskRedis(app)
 
 
 # adding views, models, and jinja2 stuff to our app
+from pydrill import manage  # noqa
 from pydrill import models  # noqa
 from pydrill import views  # noqa
 from pydrill import jinja_env  # noqa
