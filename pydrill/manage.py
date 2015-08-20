@@ -1,6 +1,6 @@
 from flask.ext.script import Manager
 
-from pydrill import app, db
+from pydrill import app
 from pydrill import models
 
 
@@ -13,7 +13,7 @@ def load_questions(directory):
     for model in [models.Answer, models.Question]:
         model.query.delete()
     models.load_questions(directory)
-    db.session.commit()  # models.load_questions() commits itself, but better be explicit
+    # no explicit commit because models.load_questions() commits itself
 
 
 if __name__ == '__main__':
