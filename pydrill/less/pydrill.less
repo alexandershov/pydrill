@@ -2,6 +2,7 @@
 @import "bootstrap/less/bootstrap.less";
 
 @logo-font-size: 20px;
+@highlight-color: #e9f0f8;
 
 .xs-padding(@padding) {
   @media (max-width: @screen-xs-max) {
@@ -100,8 +101,7 @@
   }
 }
 
-.highlighted() {
-  background-color: #e1e8f0;
+.code() {
   .border-radius(0.25em);
 }
 
@@ -113,7 +113,8 @@
 }
 
 .highlight {
-  .highlighted();
+  .code();
+  background-color: @highlight-color;
   padding: 0.3em;
   margin: 0.1em 0 0.4em 0;
   pre {
@@ -121,8 +122,9 @@
   }
 }
 
+// TODO: find out why .highlight-inline still has background color
 .highlight-inline {
-  .highlighted();
+  .code();
   display: inline-block;
   padding: 0 0.2em;
 
