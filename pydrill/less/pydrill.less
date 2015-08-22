@@ -10,6 +10,10 @@
   }
 }
 
+.xs-align {
+  .xs-padding(0 0 0 1em);
+}
+
 .xs-padding-left(@padding) {
   @media (max-width: @screen-xs-max) {
     padding-left: @padding;
@@ -25,8 +29,8 @@
   margin-bottom: 1em;
 
   .logo {
-    .make-md-column(2);
     .hidden-xs();
+    .make-md-column(2);
     font-size: @logo-font-size;
     text-align: right;
     padding-right: 0;
@@ -37,7 +41,7 @@
     .make-md-column(3);
     padding-top: @logo-font-size - @font-size-base;
     // TODO: add variable @xs-left-padding
-    .xs-padding(0 0 0 1em);
+    .xs-align();
   }
 
   .prev-message() {
@@ -88,8 +92,7 @@
 }
 
 .question-preamble {
-  // TODO: remove duplication with .question .text
-  .xs-padding(0 0 0 1em);
+  .xs-align();
 }
 
 .question {
@@ -97,7 +100,7 @@
 
   .text {
     margin: 0 0 1em 0;
-    .xs-padding(0 0 0 1em);
+    .xs-align();
   }
 }
 
