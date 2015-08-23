@@ -7360,6 +7360,10 @@ button.close {
     padding: 0 1em 0 1em;
   }
 }
+.score-header {
+  margin-bottom: 0;
+  border-bottom: none;
+}
 .main {
   float: left;
   width: 100%;

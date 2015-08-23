@@ -1,5 +1,7 @@
 {% extends 'header.html' %}
 
+{% block header_class %}header score-header{% endblock %}
+
 {% block message %}
     <div class="message">
         {% if g.user.answered_questions %}
