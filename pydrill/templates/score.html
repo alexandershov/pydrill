@@ -10,12 +10,12 @@
             <table class="table table-bordered">
                 <tr>
                     <th>Team</th>
-                    <th>Score</th>
+                    <th class="score-cell">Score</th>
                 </tr>
                 {% for ts in teams_scores %}
-                    <tr {% if ts.team in g.user.teams %}class="active" title="{{ ts.team }} is your team"{% endif %}>
+                    <tr {% if ts.team in g.user.teams %}class="active" title="{{ ts.team }} is your team!"{% endif %}>
                         <td>{{ ts.team }}</td>
-                        <td>{{ '{:.1f}'.format(ts.score) }}</td>
+                        <td class="score-cell">{{ '{:.1f}'.format(ts.score) }}</td>
                     </tr>
                 {% endfor %}
             </table>

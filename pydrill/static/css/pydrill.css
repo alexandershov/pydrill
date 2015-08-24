@@ -7303,7 +7303,7 @@ button.close {
 }
 .header .message {
   float: left;
-  width: 66.66666667%;
+  width: 58.33333333%;
   position: relative;
   min-height: 1px;
   padding-left: 15px;
@@ -7341,7 +7341,7 @@ button.close {
 }
 .header .score {
   float: left;
-  width: 33.33333333%;
+  width: 41.66666667%;
   position: relative;
   min-height: 1px;
   padding-left: 15px;
@@ -7363,6 +7363,9 @@ button.close {
 .score-header {
   margin-bottom: 0;
   border-bottom: none;
+}
+.score-cell {
+  text-align: right;
 }
 .main {
   float: left;

@@ -21,7 +21,7 @@
     <div class="score">
         <a href="{{ url_for('show_score') }}"
            {% if g.user.answered_questions %}title="Place #{{ g.user.rank }} out of {{ g.num_users }}"{% endif %}>
-            Score: <strong>{{ g.user.score }}</strong>
+            {% block score_title %}Score{% endblock %}: <strong>{{ g.user.score }}</strong>
         </a>
     </div>
 </div>

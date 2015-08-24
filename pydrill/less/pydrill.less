@@ -37,7 +37,7 @@
   }
 
   .message {
-    .make-xs-column(8);
+    .make-xs-column(7);
     .make-md-column(3);
     padding-top: @logo-font-size - @font-size-base;
     // TODO: add variable @xs-left-padding
@@ -62,7 +62,7 @@
   }
 
   .score {
-    .make-xs-column(4);
+    .make-xs-column(5);
     .make-md-column(3);
     padding-top: @logo-font-size - @font-size-base;
     .xs-padding(0 1em 0 1em);
@@ -74,6 +74,10 @@
 .score-header {
   margin-bottom: 0;
   border-bottom: none;
+}
+
+.score-cell {
+  text-align: right;
 }
 
 .border-radius(@radius) {

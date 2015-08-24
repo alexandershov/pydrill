@@ -313,4 +313,4 @@ def test_score_during_ask(steve):
 
 # TODO: don't test markup with string comparisons, use css selectors
 def assert_has_score(rv, expected_score):
-    assert 'Score: <strong>{:d}</strong>'.format(expected_score) in rv.data
+    assert 'score: <strong>{:d}</strong>'.format(expected_score) in rv.data.lower()
