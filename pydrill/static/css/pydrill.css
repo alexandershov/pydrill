@@ -7364,9 +7364,6 @@ button.close {
   margin-bottom: 0;
   border-bottom: none;
 }
-.score-cell {
-  text-align: right;
-}
 .main {
   float: left;
   width: 100%;
